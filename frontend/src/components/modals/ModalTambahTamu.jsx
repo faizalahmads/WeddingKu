@@ -1,17 +1,27 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
 
-const ModalTambahTamu = ({ show, handleClose, handleSubmit }) => {
+const ModalTambahTamu = ({ show, handleClose, handleSubmit, isEdit = false, dataEdit = {} }) => {
   const [namaTamu, setNamaTamu] = useState("");
   const [kategori, setKategori] = useState("");
   const [cppCpw, setCppCpw] = useState("");
 
+  // 🧠 Isi otomatis saat edit
+  useEffect(() => {
+    if (isEdit && dataEdit) {
+      setNamaTamu(dataEdit.name || "");
+      setKategori(dataEdit.category || "");
+      setCppCpw(dataEdit.type || "");
+    } else {
+      setNamaTamu("");
+      setKategori("");
+      setCppCpw("");
+    }
+  }, [isEdit, dataEdit]);
+
   const submitForm = (e) => {
     e.preventDefault();
-    handleSubmit({ namaTamu, kategori, cppCpw });
-    setNamaTamu("");
-    setKategori("");
-    setCppCpw("");
+    handleSubmit({ namaTamu, kategori, cppCpw, id: dataEdit?.id });
   };
 
   return (
@@ -22,16 +32,16 @@ const ModalTambahTamu = ({ show, handleClose, handleSubmit }) => {
     >
       <div className="modal-dialog modal-dialog-centered modal-lg">
         <div className="modal-content" style={{ borderRadius: 10 }}>
-          {/* Header */}
           <div
             className="modal-header"
             style={{ background: "white", borderBottom: "2px solid #D1D1D1" }}
           >
-            <h5 className="modal-title fw-bold">Detail Tamu</h5>
+            <h5 className="modal-title fw-bold">
+              {isEdit ? "Edit Tamu" : "Tambah Tamu"}
+            </h5>
             <button type="button" className="btn-close" onClick={handleClose}></button>
           </div>
 
-          {/* Body */}
           <form onSubmit={submitForm}>
             <div className="modal-body" style={{ background: "#EFF3F8" }}>
               <div className="mb-3">
@@ -81,7 +91,6 @@ const ModalTambahTamu = ({ show, handleClose, handleSubmit }) => {
               </div>
             </div>
 
-            {/* Footer */}
             <div
               className="modal-footer"
               style={{ background: "white", borderTop: "2px solid #D1D1D1" }}
@@ -91,7 +100,7 @@ const ModalTambahTamu = ({ show, handleClose, handleSubmit }) => {
                 className="btn fw-bold"
                 style={{ background: "#0B5AFD", color: "white", borderRadius: 15 }}
               >
-                Tambah
+                {isEdit ? "Simpan Perubahan" : "Tambah"}
               </button>
               <button
                 type="button"

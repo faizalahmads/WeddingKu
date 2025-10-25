@@ -12,6 +12,8 @@ import EyeIcon from "../../assets/icons/eye-blue.svg";
 import Swal from "sweetalert2";
 
 const DataTamu = () => {
+  const [isEdit, setIsEdit] = useState(false);
+  const [dataEdit, setDataEdit] = useState(null);
   const [tamu, setTamu] = useState([]);
   const [search, setSearch] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
@@ -37,53 +39,87 @@ const DataTamu = () => {
   );
 
   
-  const handleTambahTamu = (dataBaru) => {
+  // 🧹 Hapus tamu
+  const handleDeleteClick = (id) => {
+    Swal.fire({
+      title: "Yakin hapus tamu ini?",
+      text: "Data yang dihapus tidak dapat dikembalikan!",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#d33",
+      cancelButtonColor: "#3085d6",
+      confirmButtonText: "Ya, hapus!",
+      cancelButtonText: "Batal",
+    }).then((result) => {
+      if (result.isConfirmed) {
+        fetch(`http://localhost:5000/api/guests/${id}`, { method: "DELETE" })
+          .then((res) => {
+            if (!res.ok) throw new Error("Gagal hapus tamu");
+            setTamu((prev) => prev.filter((t) => t.id !== id));
+            Swal.fire("Terhapus!", "Data tamu berhasil dihapus.", "success");
+          })
+          .catch((err) => {
+            Swal.fire("Error!", "Terjadi kesalahan saat hapus data.", "error");
+            console.error(err);
+          });
+      }
+    });
+  };
+
+  // ✏️ Edit tamu
+  const handleEditClick = (item) => {
+    setDataEdit(item);
+    setIsEdit(true);
+    setShowModal(true);
+  };
+
+  // ✅ Simpan Tambah/Edit
+  const handleTambahTamu = (data) => {
     const adminId = localStorage.getItem("admin_id");
 
-    fetch("http://localhost:5000/api/guests", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
+    const url = isEdit
+      ? `http://localhost:5000/api/guests/${data.id}`
+      : "http://localhost:5000/api/guests";
+
+    const method = isEdit ? "PUT" : "POST";
+
+    fetch(url, {
+      method,
+      headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
-        name: dataBaru.namaTamu,
-        category: dataBaru.kategori,
-        type: dataBaru.cppCpw,
+        name: data.namaTamu,
+        category: data.kategori,
+        type: data.cppCpw,
         admin_id: adminId,
       }),
     })
       .then((res) => {
-        if (!res.ok) {
-          throw new Error("Gagal menambahkan tamu");
-        }
+        if (!res.ok) throw new Error("Gagal menyimpan data tamu");
         return res.json();
       })
-      .then((data) => {
+      .then(() => {
         Swal.fire({
           icon: "success",
           title: "Berhasil!",
-          text: "Data tamu berhasil ditambahkan.",
+          text: isEdit ? "Data tamu berhasil diperbarui." : "Data tamu berhasil ditambahkan.",
           timer: 1500,
           showConfirmButton: false,
         });
-
-        // ✅ Ambil ulang data terbaru dari backend
+        // Refresh data
         fetch(`http://localhost:5000/api/guests/${adminId}`)
           .then((res) => res.json())
-          .then((data) => setTamu(data))
-          .catch((err) => console.error("Gagal ambil data tamu:", err));
+          .then((data) => setTamu(data));
 
         setShowModal(false);
+        setIsEdit(false);
+        setDataEdit(null);
       })
       .catch((err) => {
-        console.error("Gagal tambah tamu:", err);
-        Swal.fire({
-          icon: "error",
-          title: "Gagal!",
-          text: "Terjadi kesalahan saat menambah tamu.",
-        });
+        Swal.fire("Error!", "Terjadi kesalahan saat menyimpan data.", "error");
+        console.error(err);
       });
   };
+
 
   if (!adminId) {
     Swal.fire({
@@ -157,10 +193,14 @@ const DataTamu = () => {
                     <td data-label="CPP/CPW">{item.type}</td>
                     <td data-label="Action" className="Action flex-wrap">
                       <div className="d-flex justify-content-center gap-2">
-                        <button className="btn btn-sm me-2">
+                        <button 
+                          className="btn btn-sm me-2"
+                          onClick={() => handleDeleteClick(item.id)}>
                           <img src={TrashIcon} alt="hapus" />
                         </button>
-                        <button className="btn btn-sm me-2">
+                        <button 
+                          className="btn btn-sm me-2"
+                          onClick={() => handleEditClick(item)}>
                           <img src={EditIcon} alt="edit" />
                         </button>
                         <a
@@ -203,8 +243,14 @@ const DataTamu = () => {
         {/* 📌 Modal Tambah Tamu */}
         <ModalTambahTamu
           show={showModal}
-          handleClose={() => setShowModal(false)}
+          handleClose={() => {
+            setShowModal(false);
+            setIsEdit(false);
+            setDataEdit(null);
+          }}
           handleSubmit={handleTambahTamu}
+          isEdit={isEdit}
+          dataEdit={dataEdit}
         />
       </div>
 

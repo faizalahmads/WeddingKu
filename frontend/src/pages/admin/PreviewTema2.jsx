@@ -11,15 +11,15 @@ import MailRsvp from "../../assets/images/mail-rsvp.png";
 import LogoBRI  from "../../assets/images/icon-BRI.png";
 import LogoMandiri  from "../../assets/images/icon-mandiri.png";
 import IconSalin  from "../../assets/images/copy-icon.png";
-import FotoGrom from "../../../public/images/foto-groom-2.jpg";
-import FotoBride from "../../../public/images/foto-bride-2.jpg";
-import Galeri1  from "../../../public/images/2-galeri-1.png";
-import Galeri2  from "../../../public/images/2-galeri-2.png";
-import Galeri3  from "../../../public/images/2-galeri-3.png";
-import Galeri4  from "../../../public/images/2-galeri-4.png";
-import Galeri5  from "../../../public/images/2-galeri-1.png";
-import Galeri6  from "../../../public/images/2-galeri-2.png";
-import FpMade  from "../../../public/images/fp-made.png";
+import FotoGrom from "../../images/foto-groom-2.jpg";
+import FotoBride from "../../images/foto-bride-2.jpg";
+import Galeri1  from "../../images/2-galeri-1.png";
+import Galeri2  from "../../images/2-galeri-2.png";
+import Galeri3  from "../../images/2-galeri-3.png";
+import Galeri4  from "../../images/2-galeri-4.png";
+import Galeri5  from "../../images/2-galeri-1.png";
+import Galeri6  from "../../images/2-galeri-2.png";
+import FpMade  from "../../images/fp-made.png";
 import LogoMade from "../../assets/icons/Logo.svg";
 
 
