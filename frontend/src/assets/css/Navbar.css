@@ -1,0 +1,92 @@
+/* Umum */
+.navbar {
+    transition: all 0.3s ease;
+}
+
+.navbar-logo .logo-img {
+    height: 40px;
+}
+
+.navbar-wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  padding: 0rem 3rem;
+  /* jarak kiri-kanan */
+}
+
+.navbar-logo {
+  height: auto;
+  width: 8rem;
+}
+
+.navbar-container {
+  width: auto;
+  height: auto;
+  display: inline-flex;
+  justify-content: flex-start;
+  align-items: center;
+}
+
+.nav-item {
+  display: inline-flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+  overflow: hidden;
+  padding: 5px 20px;
+  border-radius: 20px;
+  align-items: center;
+  text-decoration: none;
+  color: #0A0A0A;
+  font-size: 25px;
+  font-weight: 500;
+  transition: all 0.2s ease;
+}
+
+.nav-item.active {
+  outline: 3px solid #FC8EAC;
+  outline-offset: -3px;
+}
+
+.nav-item:hover {
+  color: #F33A6B;
+}
+
+.nav-text {
+  align-self: stretch;
+  font-family: 'PT Sans Caption', sans-serif;
+  font-size: 18px;
+  word-wrap: break-word;
+}
+
+.nav-item.active .nav-text {
+  color: #F33A6B;
+  font-weight: 700;
+}
+
+.logout-btn {
+    color: white !important;
+    border: none;
+}
+
+/* Warna tema tiap role */
+.navbar-super-admin {
+    background-color: #02225A;
+    /* biru tua */
+}
+
+.navbar-admin {
+    background-color: #FFE0DC;
+    /* pink lembut */
+}
+
+.navbar-tamu {
+    background-color: #7cc674;
+    /* hijau muda */
+}
+
+.navbar-default {
+    background-color: #333;
+}

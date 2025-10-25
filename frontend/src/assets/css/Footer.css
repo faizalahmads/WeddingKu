@@ -1,0 +1,41 @@
+.footer {
+  width: 100%;
+  font-size: 0.9rem;
+  letter-spacing: 0.3px;
+  transition: background-color 0.3s ease;
+}
+
+/* === WARNA SESUAI ROLE === */
+
+/* Super Admin → biru tua profesional */
+.footer-super-admin {
+  background-color: #02225a; /* sama seperti navbar super admin */
+  color: #ffffff;
+}
+
+/* Admin → pink lembut elegan */
+.footer-admin {
+  background-color: #FFE0DC; /* sama seperti navbar admin */
+  color: #0A0A0A;
+}
+
+/* Penerima Tamu → hijau segar & hangat */
+.footer-tamu {
+  background-color: #7cc674; /* sama seperti navbar penerima tamu */
+  color: #ffffff;
+}
+
+/* Default (kalau role belum ada) */
+.footer-default {
+  background-color: #333333;
+  color: #ffffff;
+}
+
+/* Tambahan */
+.footer p {
+  margin: 0;
+}
+
+.footer span {
+  color: #0A0A0A;
+}

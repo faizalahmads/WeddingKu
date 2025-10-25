@@ -1,0 +1,295 @@
+.bg-latar {
+  background-color: #EFF3F8;
+}
+
+.auth-title {
+  color: #EB2F59;
+  font-family: "PT Sans Caption", sans-serif;
+}
+
+.auth-input {
+  border: none;
+  border-bottom: 1px solid #000;
+  width: 100%;
+  outline: none;
+  padding: 0.5rem 0;
+  font-size: 0.9rem;
+}
+
+.auth-input:focus {
+  border-bottom: 2px solid #eb2f59;
+}
+
+.auth-button {
+  width: 100%;
+  background: #000;
+  color: #fff;
+  border: none;
+  padding: 0.6rem;
+  border-radius: 5px;
+  font-weight: 600;
+  margin-top: 1rem;
+}
+
+.auth-button:hover {
+  background: #333;
+}
+
+.auth-link {
+  color: #eb2f59;
+  font-size: 0.9rem;
+  cursor: pointer;
+  text-decoration: none;
+}
+
+.auth-link:hover {
+  text-decoration: underline;
+}
+
+.auth-small-text {
+  text-align: center;
+  font-size: 0.85rem;
+  margin-top: 1rem;
+}
+
+.eye-toggle {
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.eye-icon {
+  transition: all 0.2s ease-in-out;
+  transform-origin: center;
+}
+
+.fade-in {
+  opacity: 1;
+  transform: scale(1);
+}
+
+.fade-out {
+  opacity: 0.7;
+  transform: scale(0.9);
+}
+
+.dashboard-card {
+  padding: 32px 24px;
+  background: #ffffff;
+  border-radius: 8px;
+  border: 1px solid #E8E8E8;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  min-height: 228px;
+}
+
+.dashboard-card-title {
+  font-family: 'PT Sans Caption', sans-serif;
+  font-weight: 400;
+  font-size: 20px;
+  line-height: 24px;
+  color: black;
+  margin: 0 0 8px 0;
+}
+
+.dashboard-card-number-container {
+  display: flex;
+  justify-content: flex-end;
+  /* angka di kanan */
+  border-bottom: 1px solid #8C8C8C;
+  /* border full */
+  padding-bottom: 10px;
+  width: 100%;
+  /* border full */
+}
+
+.dashboard-card-number {
+  font-family: 'Poppins', sans-serif;
+  font-weight: 600;
+  font-size: 36px;
+  line-height: 44px;
+  color: black;
+  text-transform: capitalize;
+  margin: 0;
+  /* hapus margin default */
+}
+
+.dashboard-card-body {
+  display: flex;
+  flex-direction: row;
+  /* pie kiri, legend kanan */
+  align-items: center;
+  gap: 32px;
+}
+
+.pie-chart-container {
+  position: relative;
+  width: 120px;
+  height: 120px;
+  flex-shrink: 0;
+}
+
+.dashboard-card-legend {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.legend-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-family: 'PT Sans Caption', sans-serif;
+  font-weight: 400;
+  font-size: 20px;
+  line-height: 24px;
+  color: black;
+}
+
+.legend-color {
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+}
+
+.legend-color.cpp {
+  background: #0088FF;
+}
+
+.legend-color.cpw {
+  background: #EF5DA8;
+}
+
+.legend-color.tambahan {
+  background: #975102;
+}
+
+.review-item {
+  align-self: stretch;
+  height: 64px;
+  padding: 10px;
+  border-bottom: 1px solid #8C8C8C;
+  display: inline-flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: flex-start;
+}
+
+.review-name {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  color: black;
+  font-size: 14px;
+  font-family: 'Roboto', sans-serif;
+  font-weight: 700;
+  line-height: 20px;
+  letter-spacing: 0.10px;
+  word-wrap: break-word;
+}
+
+.review-comment {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  color: #595959;
+  /* var(--Miscellaneous-Keyboards-Glyphs---Primary, #595959) */
+  font-size: 12px;
+  font-family: 'Roboto', sans-serif;
+  font-weight: 500;
+  line-height: 16px;
+  letter-spacing: 0.50px;
+  word-wrap: break-word;
+}
+
+.fixed-table {
+  table-layout: fixed;
+  width: 100%;
+}
+
+.fixed-table th,
+.fixed-table td {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+
+/* 📱 Tampilan mobile / tablet */
+@media (max-width: 768px) {
+
+  .fixed-table,
+  .fixed-table thead,
+  .fixed-table tbody,
+  .fixed-table th,
+  .fixed-table td,
+  .fixed-table tr {
+    display: block;
+    width: 100%;
+  }
+
+  .fixed-table thead tr {
+    display: none;
+    /* sembunyikan header di mobile */
+  }
+
+  .fixed-table tr {
+    margin-bottom: 1rem;
+    border: 1px solid #dee2e6;
+    border-radius: 6px;
+    background: #fff;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  }
+
+  .fixed-table td {
+    text-align: left;
+    padding: 0.5rem;
+    display: flex;
+    justify-content: space-between;
+    white-space: normal;
+    /* agar teks panjang turun ke bawah */
+  }
+
+  .fixed-table td::before {
+    content: attr(data-label);
+    font-weight: 600;
+    color: #555;
+    flex-basis: 40%;
+    text-align: left;
+  }
+
+  .fixed-table td.Action {
+    display: flex;
+    justify-content: space-between;
+    gap: 5px;
+    align-items: center;
+  }
+  
+  .fixed-table td.Action img {
+    display: block;
+    width: 20px;
+    height: 20px;
+  }
+
+  .fixed-table td.Action .btn {
+    display: flex;
+    align-items: end;
+    padding: 4px;
+    border-radius: 50%;
+  }
+    
+}
+
+/* 📱 Tablet layout (770px - 990px) */
+@media (min-width: 770px) and (max-width: 990px) {
+  .fixed-table td.Action img {
+    width: 17px;
+    height: 17px;
+  }
+  
+  .gap-2 {
+    gap: 0.5rem !important;
+  }
+}

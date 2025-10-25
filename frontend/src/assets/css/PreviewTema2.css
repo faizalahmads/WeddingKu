@@ -1,0 +1,737 @@
+.undangan-bg {
+    background-image: url("../images/bg-flower-pastel.png");
+    background-size: cover;
+    background-position: center;
+    background-attachment: fixed;
+    min-height: 100vh;
+    overflow-y: auto;
+    scroll-behavior: smooth;
+}
+
+/* Setiap halaman undangan */
+.section-card {
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.undangan-card {
+    width: 100%;
+    max-width: 720px;
+    padding: 40px;
+    background: rgba(255, 255, 255, 0.75);
+    border-radius: 16px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+    margin: auto;
+}
+
+/* Typography dan detail */
+.judul {
+  font-family: "Playfair Display SC";
+  font-size: 36px;
+}
+
+.nama {
+  font-family: "Great Vibes";
+  font-size: 72px;
+  margin-top: 20px;
+}
+
+.tanggal {
+  font-family: "Italiana";
+  font-size: 24px;
+  margin-top: 20px;
+}
+
+.lokasi {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  margin-top: 20px;
+  font-family: "Poppins";
+  font-size: 20px;
+}
+
+.lokasi img {
+  width: 32px;
+  height: 32px;
+}
+
+.ucapan {
+  margin-top: 30px;
+  font-family: "Poppins";
+  font-size: 18px;
+}
+
+.kepada {
+  margin-top: 30px;
+  font-family: "Century";
+  font-size: 24px;
+}
+
+.qr img {
+  width: 150px;
+  height: 150px;
+  margin-top: 30px;
+}
+
+/* Halaman 2 */
+.judul2 {
+  font-family: "Great Vibes";
+  font-size: 45px;
+  margin-bottom: 20px;
+  color: #68561C;
+}
+
+.foto-couple img {
+  width: 330px;
+  max-height: 430px;
+  border-top-left-radius: 100px;
+  border-top-right-radius: 100px;
+  border: 10px solid #BAA14F;
+  object-fit: cover;
+}
+
+.nama-couple {
+  font-family: "Great Vibes";
+  font-size: 35px;
+  margin-top: 15px;
+}
+
+.ortu {
+  font-family: "Poppins";
+  font-size: 20apx;
+}
+
+.sosmed-container {
+  width: auto;
+  max-height: 50px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+  padding: 5px;
+  background: #98653b;
+  border-radius: 50px;
+  text-decoration: none;
+  transition: transform 0.2s ease, background 0.2s ease;
+  margin-top: 15px;
+}
+
+.sosmed-container:hover {
+  background: #7a4f2f;
+  transform: scale(1.05);
+}
+
+.sosmed-icon {
+  width: 30px;
+  height: 30px;
+}
+
+.sosmed-username {
+  color: #fffafa;
+  font-family: "Platypi", serif;
+  font-size: 18px;
+  font-weight: 400;
+  line-height: 30px;
+  text-align: center;
+  word-wrap: break-word;
+}
+
+/* ===== Animasi Fade + Zoom ===== */
+@keyframes fadeZoomIn {
+    0% {
+        opacity: 0;
+        transform: scale(0.95);
+    }
+
+    100% {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+/* Default: sembunyikan dulu */
+.section-card {
+    opacity: 0;
+    transform: scale(0.97);
+    transition: opacity 0.5s ease-out, transform 0.5s ease-out;
+}
+
+/* Ketika terlihat di layar */
+.section-card.animate {
+    animation: fadeZoomIn 1.2s ease-in-out forwards;
+}
+
+@media (max-width: 768px) {
+    .undangan-card {
+        width: 90%;
+        height: auto;
+        padding: 2rem 1rem;
+    }
+}
+
+/* Halaman 2 */
+.akad-section {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 5px;
+  margin-bottom: 10px;
+}
+
+.akad-title {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 20px;
+}
+
+.akad-line {
+  width: 89px;
+  height: 0;
+  border-top: 5px solid #68561C;
+  border-radius: 20px;
+}
+
+.akad-heading {
+  font-family: "Pacifico";
+  color: #68561C;
+  font-size: 50px;
+  margin: 0;
+}
+
+.akad-date-time {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.akad-date {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: start;
+  gap: 10px;
+  margin-bottom: 10px;
+}
+
+.akad-day {
+  font-family: "Platypi";
+  font-size: 80px;
+  color: #3D3D3D;
+  line-height: 30px;
+}
+
+.akad-month {
+  font-family: "Platypi";
+  font-size: 25px;
+  color: #3D3D3D;
+}
+
+.akad-detail {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+}
+
+.akad-text {
+  font-family: "Platypi";
+  font-size: 20px;
+  color: #3D3D3D;
+  margin: 0;
+}
+
+.akad-address {
+  font-family: "Platypi", serif;
+  font-size: 20px;
+  color: #3D3D3D;
+  line-height: 40px;
+  text-align: center;
+}
+
+.clock-icon {
+  width: 30px;
+  height: 30px;
+}
+
+.location-icon {
+  width: 40px;
+  height: 40px;
+}
+
+.btn-map {
+  background-color: #634F62;
+  color: #fff;
+  font-size: 15px;
+  font-family: "Poppins";
+  border-radius: 30px;
+  padding: 10px 30px;
+  border: none;
+  transition: background 0.3s ease;
+}
+
+.btn-map:hover {
+  background-color: #4a3b4c;
+}
+
+/* Halaman 5 */
+.save-date {
+  font-family: "Pacifico";
+  color: #3D3D3D;
+  font-size: 30px;
+  margin: 25px;
+}
+
+.countdown-container {
+  display: inline-flex;
+  justify-content: flex-start;
+  align-items: flex-start;
+  gap: 30px;
+}
+
+.countdown-box {
+  width: 93px;
+  padding: 5px 10px;
+  background: #68561C;
+  border-radius: 20px;
+  display: inline-flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.countdown-value {
+  text-align: center;
+  color: white;
+  font-size: 30px;
+  font-family: "Pacifico", cursive;
+  font-weight: 400;
+  word-wrap: break-word;
+}
+
+.countdown-label {
+  text-align: center;
+  color: white;
+  font-size: 20px;
+  font-family: "Poppins", sans-serif;
+  font-weight: 700;
+  line-height: 50px;
+  word-wrap: break-word;
+}
+
+.save-text {
+  width: 320px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  font-family: "Platypi";
+  color: #3D3D3D;
+  font-size: 20px;
+  margin: 25px auto;
+}
+
+.save-text p {
+  margin: 0;
+}
+
+.rsvp-button {
+  padding: 10px;
+  background: #68561C;
+  overflow: hidden;
+  border-radius: 20px;
+  display: inline-flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 5px;
+  text-decoration: none;
+  color: inherit;
+}
+
+.rsvp-button img {
+  width: 35px;
+  height: 35px;
+}
+
+.rsvp-text {
+  width: 236px;
+  text-align: center;
+  color: white;
+  font-size: 20px;
+  font-family: "Poppins";
+  font-weight: 400;
+  line-height: 30px;
+  word-wrap: break-word;
+}
+
+/* Halaman 6 */
+.galeri-2x3 {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr); /* dua kolom */
+  grid-template-rows: repeat(3, auto);   /* tiga baris */
+  gap: 20px; /* jarak antar gambar */
+  justify-items: center;
+  align-items: center;
+  width: 100%;
+  max-width: 720px; /* agar tidak terlalu lebar */
+  margin: 0 auto; /* posisi tengah */
+  padding: 20px 0;
+}
+
+.galeri-2x3 img {
+  width: 100%;
+  max-width: 336px;
+  height: 460px;
+  object-fit: cover;
+  border-radius: 10px;
+  border: 3px solid black;
+  transition: transform 0.3s ease;
+}
+
+.galeri-2x3 img:hover {
+  transform: scale(1.05);
+}
+
+/* Responsif untuk HP */
+@media (max-width: 768px) {
+  .galeri-2x3 {
+    grid-template-columns: 1fr;
+  }
+
+  .galeri-2x3 img {
+    max-width: 90%;
+    height: auto;
+  }
+}
+
+/* Halaman 7 */
+.rsvp-container {
+  width: 100%;
+  max-width: 720px;
+  padding: 0 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 30px;
+  margin: auto;
+}
+
+.rsvp-header {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 20px;
+}
+
+.rsvp-title {
+  font-family: "Platypi";
+  font-size: 50px;
+  color: #3d3d3d;
+  margin: 0;
+}
+
+.rsvp-icon {
+  width: 50px;
+  height: 50px;
+}
+
+.rsvp-form {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 15px;
+}
+
+.form-group {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  text-align: left;
+  gap: 5px;
+}
+
+.form-label {
+  font-family: "Pacifico", cursive;
+  font-size: 15px;
+  color: #3d3d3d;
+}
+
+.form-input,
+.form-textarea {
+  border-radius: 2px;
+  outline: 1px solid #010919;
+  padding: 8px 10px;
+  font-family: "Poppins";
+  font-weight: 500;
+  font-size: 12px;
+  color: black;
+}
+
+.form-textarea {
+  height: 100px;
+}
+
+.form-option {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  font-family: "Pacifico";
+  font-size: 12px;
+  color: #3d3d3d;
+}
+
+.checkbox {
+  width: 10px;
+  height: 10px;
+  background: white;
+  border: 0.5px solid black;
+  border-radius: 2px;
+}
+
+.btn-kirim {
+  background: #02225a;
+  color: white;
+  border: none;
+  border-radius: 10px;
+  padding: 6px 20px;
+  font-family: "Pacifico";
+  font-size: 15px;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.btn-kirim:hover {
+  background: #0b5afd;
+}
+
+.rsvp-list {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 15px;
+  max-height: 250px; /* kamu bisa ubah sesuai kebutuhan */
+  overflow-y: auto;
+  padding: 0 5px 10px 5px; /* agar scrollbar tidak menutupi teks */
+  scroll-behavior: smooth;
+}
+
+/* Scrollbar lebih halus dan estetik (opsional) */
+.rsvp-list::-webkit-scrollbar {
+  width: 6px;
+}
+
+.rsvp-list::-webkit-scrollbar-thumb {
+  background: #02225a;
+  border-radius: 10px;
+}
+
+.rsvp-list::-webkit-scrollbar-thumb:hover {
+  background: #0b5afd;
+}
+
+.rsvp-list-title {
+  font-family: "Platypi";
+  font-size: 25px;
+  color: #3d3d3d;
+}
+
+.ucapan-item {
+  width: 95%;
+  background: rgba(255, 255, 255, 0.5);
+  border-radius: 2px;
+  outline: 1px solid black;
+  padding: 10px;
+  box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+  line-height: 1.5;
+}
+
+.ucapan-nama {
+  text-align: left;
+  font-family: "Platypi", bold;
+  font-size: 15px;
+  font-weight: 500;
+  color: black;
+}
+
+.ucapan-teks {
+  text-align: left;
+  font-family: "Poppins";
+  font-size: 12px;
+  font-weight: 300;
+  color: black;
+}
+
+/* Halaman 8 */
+.tanda-kasih-section {
+  padding: 1rem 1rem;
+}
+
+.tanda-kasih-title {
+  font-family: "Great Vibes", cursive;
+  font-size: 4.5rem;
+  color: #baa14f;
+  line-height: 1.2;
+}
+
+.tanda-kasih-subtitle {
+  font-family: "Poppins", sans-serif;
+  font-size: 20px;
+  color: #000;
+  line-height: 2rem;
+  max-width: 700px;
+  margin: 0 auto;
+}
+
+.rekening-card {
+  background: #fff;
+  border-radius: 20px;
+  outline: 10px solid #baa14f;
+  outline-offset: -10px;
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+  padding: 1rem 1.5rem;
+  height: 240px;
+  width: 470px;
+  max-width: 500px;
+  justify-content: center;
+}
+
+.rekening-logo {
+  width: auto;
+  max-height: 55px;
+  object-fit: contain;
+}
+
+.rekening-info {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.8rem;
+}
+
+.rekening-number,
+.rekening-name {
+  font-family: "PT Sans Caption";
+  font-size: 1.5rem;
+  color: #000;
+  text-align: left;
+}
+
+.btn-salin {
+  background-color: #662640;
+  color: #fff;
+  border-radius: 15px;
+  padding: 0.75rem 1.5rem;
+  font-family: "Poppins";
+  font-weight: 700;
+  font-size: 1rem;
+  border: none;
+  transition: 0.3s;
+}
+
+.btn-salin:hover {
+  background-color: #8a335d;
+  transform: scale(1.03);
+}
+
+.salin-icon {
+  width: 35px;
+  height: 35px;
+}
+
+@media (max-width: 576px) {
+  .tanda-kasih-title {
+    font-size: 3rem;
+  }
+  .rekening-card {
+    flex-direction: column;
+    text-align: center;
+  }
+  .rekening-info {
+    align-items: center;
+  }
+}
+
+/* Halaman 9 */
+.closing-section {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+}
+
+/* Gambar utama */
+.closing-image {
+  width: 270px;
+  height: 380px;
+  background: #d9d9d9;
+  border-radius: 100px;
+  outline: 5px solid #baa14f;
+  outline-offset: -5px;
+  object-fit: cover;
+}
+
+/* Teks utama */
+.closing-text {
+  max-width: 600px;
+}
+
+.closing-message {
+  font-family: "Poppins";
+  font-size: 18px;
+  line-height: 1.8rem;
+  color: #000;
+}
+
+.closing-thank {
+  font-family: "PT Sans Caption";
+  font-size: 18px;
+  color: #000;
+}
+
+.closing-names {
+  font-family: "Playfair Display SC";
+  font-size: 3rem;
+  line-height: 3rem;
+  color: #baa14f;
+  text-shadow:
+    0px 1px 1px rgba(255, 255, 255, 0.5),   /* cahaya atas */
+    0px -2px 3px rgba(0, 0.4, 0, 0.4); 
+}
+
+/* Bagian bawah (footer) */
+.closing-footer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.6rem;
+}
+
+.closing-made {
+  font-family: "Roboto", ;
+  font-size: 1rem;
+  color: #000;
+}
+
+.closing-icons img {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+}
+
+.closing-brand {
+  width: 100px;
+  width: 50px;
+  margin-top: 10px;
+}
+
