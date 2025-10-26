@@ -1,6 +1,93 @@
 /* Umum */
+
+header {
+  height: 70px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0rem 2rem;
+}
+
+header .nav-btn {
+  padding: 5px;
+  cursor: pointer;
+  background: transparent;
+  border: none;
+  outline: none;
+  color: var(--primary-color);
+  visibility: hidden;
+  opacity: 0;
+}
+
+@media only screen and (max-width: 1024px){
+  header {
+    height: 70px;
+  }
+
+  header .nav-btn {
+    visibility: visible;
+    opacity: 1;
+  }
+
+  .navbar {
+    position: fixed !important;
+    inset: 0;
+    height: 100% !important;
+    width: 100%;
+    display: flex; 
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 1.5rem;
+    background-color: var(--primary-color);
+    transition: 1s;
+    transform: translateY(-100vh);
+    z-index: 9999;
+  }
+
+  header .responsive_nav {
+    transform: none;
+  }
+
+  nav .nav-close-btn {
+    position: absolute;
+    top: 2rem;
+    right: 2rem;
+  }
+
+  .navbar-wrapper,
+  .navbar-links {
+    display: flex !important;
+    flex-direction: column !important;
+    justify-content: center !important;
+    align-items: center !important;
+    width: 100%;
+    gap: 1.5rem;
+  }
+
+  .nav-item {
+    font-size: 1.3rem !important;
+    color: #3D3D3D !important;
+  }
+
+  .nav-item.active {
+    outline: 3px solid #3D3D3D;
+    outline-offset: 4px;
+  }
+
+  .logout-btn {
+    margin-top: auto;
+    color: #3D3D3D !important;
+    font-weight: 600;
+    padding-bottom: 2rem;
+    margin-left: 0 !important;
+  }
+
+}
+
 .navbar {
     transition: all 0.3s ease;
+    height: 70px;
 }
 
 .navbar-logo .logo-img {
@@ -12,7 +99,6 @@
   align-items: center;
   justify-content: flex-start;
   padding: 0rem 3rem;
-  /* jarak kiri-kanan */
 }
 
 .navbar-logo {
@@ -67,26 +153,32 @@
 }
 
 .logout-btn {
-    color: white !important;
+    color: #3D3D3D !important;
     border: none;
+    font-weight: 800;
 }
 
 /* Warna tema tiap role */
 .navbar-super-admin {
     background-color: #02225A;
+    width: 100%;
     /* biru tua */
 }
 
 .navbar-admin {
     background-color: #FFE0DC;
+    width: 100%;
     /* pink lembut */
 }
 
 .navbar-tamu {
     background-color: #7cc674;
+    width: 100%;
     /* hijau muda */
 }
 
 .navbar-default {
     background-color: #333;
+    width: 100%;
+    /* hitam */
 }
