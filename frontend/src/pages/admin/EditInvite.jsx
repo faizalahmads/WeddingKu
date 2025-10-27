@@ -25,7 +25,7 @@ const EditInvite = () => {
       if (id) {
         setLoading(true);
         try {
-          const res = await axios.get(`http://192.168.16.1:5000/api/admin/${id}`);
+          const res = await axios.get(`http://10.90.132.153:5000/api/admin/${id}`);
           setFormData(res.data);
           setPreview(res.data.gallery_images || []);
         } catch (err) {

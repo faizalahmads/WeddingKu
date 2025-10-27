@@ -50,7 +50,7 @@ const Register = () => {
   return (
     <div className="d-flex flex-column min-vh-100">
       <main className="flex-grow-1 d-flex justify-content-center align-items-center">
-        <div className="p-4 w-25">
+        <div className="auth-container p-4">
           <h2 className="text-center fw-bold fs-2 auth-title">Daftar</h2>
 
           {/* Pesan error */}

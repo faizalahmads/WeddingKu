@@ -38,7 +38,7 @@ const Dashboard = () => {
             return;
         }
 
-        fetch(`http://192.168.16.1:5000/api/guests/summary/${adminId}`)
+        fetch(`http://10.90.132.153:5000/api/guests/summary/${adminId}`)
             .then((res) => res.json())
             .then((data) => {
                 setTotalTamu(data);

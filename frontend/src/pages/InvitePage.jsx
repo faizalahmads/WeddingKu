@@ -13,7 +13,7 @@ const InvitePage = () => {
     console.log("Kode undangan:", code);
     const fetchInvite = async () => {
       try {
-        const res = await axios.get(`http://192.168.16.1:5000/api/invite/${code}`);
+        const res = await axios.get(`http://10.90.132.153:5000/api/invite/${code}`);
         console.log("API Response:", res.data);
         setInvite(res.data);
       } catch (err) {
