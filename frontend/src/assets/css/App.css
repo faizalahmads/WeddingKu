@@ -2,6 +2,10 @@
   background-color: #EFF3F8;
 }
 
+.auth-container {
+  width: 30% !important;
+}
+
 .auth-title {
   color: #EB2F59;
   font-family: "PT Sans Caption", sans-serif;
@@ -72,6 +76,78 @@
 .fade-out {
   opacity: 0.7;
   transform: scale(0.9);
+}
+
+/* 🧩 Laptop kecil (≤ 992px) */
+@media (max-width: 992px) {
+  .auth-container {
+    width: 50% !important;
+  }
+}
+
+/* 🧩 Tablet (≤ 768px) */
+@media (max-width: 768px) {
+  .auth-container {
+    width: 70% !important;
+  }
+
+  .auth-input {
+    font-size: 1rem;
+  }
+
+  .auth-title {
+    font-size: 1.8rem;
+  }
+
+  .auth-button {
+    font-size: 1rem;
+  }
+}
+
+/* 🧩 Handphone (≤ 576px) */
+@media (max-width: 576px) {
+  .auth-container {
+    width: 90% !important;
+    padding: 1.5rem !important;
+  }
+
+  .auth-title {
+    font-size: 1.5rem;
+  }
+
+  .auth-input {
+    font-size: 0.95rem;
+  }
+
+  .auth-button {
+    font-size: 0.9rem;
+    padding: 0.7rem;
+  }
+
+  .text-end {
+    text-align: left !important;
+  }
+}
+
+/* 📱 Super kecil (≤ 400px) */
+@media (max-width: 400px) {
+  .auth-container {
+    width: 95% !important;
+    padding: 1rem !important;
+  }
+
+  .auth-title {
+    font-size: 1.3rem;
+  }
+
+  .auth-input {
+    font-size: 0.9rem;
+  }
+
+  .auth-button {
+    font-size: 0.85rem;
+    padding: 0.6rem;
+  }
 }
 
 .dashboard-card {

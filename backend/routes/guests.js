@@ -41,7 +41,7 @@ router.get("/undangan/:name/:code", async (req, res) => {
     }
 
     const data = results[0];
-    data.inviteUrl = `http://192.168.16.1:5173/undangan-${data.groom_name}-${data.bride_name}/${data.guest_code}`;
+    data.inviteUrl = `http://10.90.132.153:5173/undangan-${data.groom_name}-${data.bride_name}/${data.guest_code}`;
 
     // Parse gallery_images
     if (data.gallery_images) {
@@ -150,7 +150,7 @@ router.get("/invite/:code", async (req, res) => {
     }
 
     const guest = results[0];
-    guest.inviteUrl = `http://192.168.16.1:5173/invite/${guest.code}`;
+    guest.inviteUrl = `http://10.90.132.153:5173/invite/${guest.code}`;
     res.json(guest);
   } catch (err) {
     console.error("Database error:", err);

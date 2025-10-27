@@ -26,7 +26,7 @@ const Login = () => {
     setError("");
 
     try {
-      const res = await axios.post("http://localhost:5000/auth/login", formData);
+      const res = await axios.post("http://10.90.132.153:5000/auth/login", formData);
       const { token, user } = res.data;
 
       // ✅ Simpan token & role ke localStorage (hapus yang ganda)
@@ -51,7 +51,7 @@ const Login = () => {
   return (
     <div className="d-flex flex-column min-vh-100">
       <main className="flex-grow-1 d-flex justify-content-center align-items-center">
-        <div className="p-4 w-25">
+        <div className="auth-container p-4">
           <h2 className="text-center fw-bold fs-2 auth-title mb-4">Masuk</h2>
 
           {error && (

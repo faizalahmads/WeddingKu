@@ -35,10 +35,10 @@ function App() {
         {/* <Route path="/undangan/:code" element={<InviteWrapper />} /> */}
         {/* Halaman publik */}
         <Route path="/login" element={<Login />} />
+        <Route path="/register" element={<Register />} />
+
         {/* Halaman yang butuh login */}
         <Route element={<ProtectedRoute />}>
-          
-          <Route path="/register" element={<Register />} />
           <Route path="/admin/dashboard" element={<Dashboard />} />
           <Route path="/admin/data-tamu" element={<DataTamu />} />
           <Route path="/admin/undangan-saya" element={<UndanganSaya />} />

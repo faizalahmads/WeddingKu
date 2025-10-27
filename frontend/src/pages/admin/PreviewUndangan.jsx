@@ -10,7 +10,7 @@ const PreviewUndangan = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const res = await axios.get("http://192.168.16.1:5000/api/themes");
+        const res = await axios.get("http://10.90.132.153:5000/api/themes");
         setThemes(res.data);
       } catch (err) {
         console.error("Gagal mengambil data tema:", err);

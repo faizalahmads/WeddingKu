@@ -32,7 +32,7 @@ const ManageInvite = () => {
       }
 
       try {
-        const res = await axios.get(`http://192.168.16.1:5000/api/undangan/admin/${adminId}`);
+        const res = await axios.get(`http://10.90.132.153:5000/api/undangan/admin/${adminId}`);
         if (res.data && res.data.id) {
           // ✅ Jika undangan sudah ada, arahkan ke halaman edit undangan
           alert("Anda sudah memiliki undangan. Mengarahkan ke halaman edit...");
@@ -73,7 +73,7 @@ const ManageInvite = () => {
     images.forEach((img) => data.append("images[]", img));
 
     try {
-      const res = await axios.post("http://192.168.16.1:5000/api/undangan", data, {
+      const res = await axios.post("http://10.90.132.153:5000/api/undangan", data, {
         headers: { "Content-Type": "multipart/form-data" },
       });
       alert("Data undangan berhasil disimpan!");

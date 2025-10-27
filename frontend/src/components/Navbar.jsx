@@ -16,7 +16,7 @@ const Navbar = () => {
   };
 
   const handleLogout = async () => {
-    await fetch("http://localhost:5000/api/logout", {
+    await fetch("http://10.90.132.153:5000/api/logout", {
       method: "POST",
       credentials: "include",
     });

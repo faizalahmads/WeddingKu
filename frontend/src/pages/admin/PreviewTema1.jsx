@@ -21,7 +21,7 @@ const PreviewTema1 = () => {
   const isUndanganLink = location.pathname.includes("/undangan/");
 
   const handleShareWhatsApp = () => {
-    const link = `http://192.168.16.1:5173/${invite.groom_name}-${invite.bride_name}?to=${invite.guest_name}/${invite.guest_code}`;
+    const link = `http://10.90.132.153:5173/${invite.groom_name}-${invite.bride_name}?to=${invite.guest_name}/${invite.guest_code}`;
     const message = `
 Kepada Yth.
 Bapak/Ibu/Saudara/i
@@ -73,7 +73,7 @@ Terima kasih 💖
         <h1 className="guest-name">Sumarji dan Partner</h1>
           {/* {invite?.guest_category === "VIP" && ( <p className="guest-name">{invite.guest_category}</p> )}  */}
         <QRCode
-          value={`http://192.168.16.1:5173/preview`}
+          value={`http://10.90.132.153:5173/preview`}
           size={180}
           className="my-3"
         />
