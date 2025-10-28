@@ -204,7 +204,7 @@ const DataTamu = () => {
                           <img src={EditIcon} alt="edit" />
                         </button>
                         <a
-                          href={`http://10.90.132.153:5173/undangan/${item.groom_name}-${item.bride_name}?to=${item.name}/${item.code}`}
+                          href={`http://localhost:5173/undangan/${item.groom_name}-${item.bride_name}?to=${item.name}/${item.code}`}
                           target="_blank"
                           rel="noopener noreferrer"
                           className="btn btn-sm"

@@ -22,7 +22,7 @@ const UndanganSaya = () => {
 
       try {
         // Cek apakah admin sudah punya undangan
-        const res = await axios.get(`http://10.90.132.153:5000/api/admin/${adminId}`);
+        const res = await axios.get(`http://localhost:5000/api/admin/${adminId}`);
         if (res.data && res.data.id) {
           setHasInvitation(true);
         } else {
@@ -39,7 +39,7 @@ const UndanganSaya = () => {
 
       try {
         // Ambil daftar tema dari endpoint API
-        const themesRes = await axios.get("http://10.90.132.153:5000/themes");
+        const themesRes = await axios.get("http://localhost:5000/themes");
         setThemes(themesRes.data);
       } catch (err) {
         console.error("Gagal memuat daftar tema:", err);

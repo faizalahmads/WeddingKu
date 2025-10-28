@@ -49,7 +49,7 @@ function App() {
           <Route path="/admin/edit-invite/:id" element={<EditInvite />} />
           <Route path="/undangan/:slug" element={<Undangan />} />
           <Route path="/:slug" element={<Undangan />} />
-          <Route path="/preview/:id" element={<PreviewTema/>} />
+          <Route path="/preview-undangan/:id" element={<PreviewTema/>} />
           {/* Contoh untuk undangan QR */}
           <Route path="/invite/:code" element={<InvitePage />} />
           {/* <Route path="/admin/pilih-tema" element={<SelectTheme />} /> */}

@@ -4,6 +4,7 @@ const db = require("../db");
 const QRCode = require("qrcode");
 const multer = require("multer");
 const upload = multer({ dest: "uploads/" });
+const { verifyToken } = require("../middleware/auth");
 
 // ========================
 // GET: Undangan berdasarkan name & code
@@ -41,7 +42,7 @@ router.get("/undangan/:name/:code", async (req, res) => {
     }
 
     const data = results[0];
-    data.inviteUrl = `http://10.90.132.153:5173/undangan-${data.groom_name}-${data.bride_name}/${data.guest_code}`;
+    data.inviteUrl = `http://localhost:5173/undangan-${data.groom_name}-${data.bride_name}/${data.guest_code}`;
 
     // Parse gallery_images
     if (data.gallery_images) {
@@ -90,26 +91,69 @@ router.get("/undangan/:id", async (req, res) => {
 // ========================
 // POST: Tambah undangan
 // ========================
-router.post("/undangan", upload.array("images[]", 10), async (req, res) => {
-  const { groom_name, bride_name, wedding_date, location, maps_link, description, theme_id } = req.body;
-  const gallery_images = req.files ? JSON.stringify(req.files.map(file => `/uploads/${file.filename}`)) : "[]";
+router.post("/undangan", verifyToken, upload.array("images[]", 10), async (req, res) => {
+  const admin_id = req.user.id; // 🔹 diambil dari token JWT
+  const {
+    title,
+    groom_name,
+    bride_name,
+    wedding_date,
+    location,
+    maps_link,
+    description,
+    theme_id
+  } = req.body;
 
-  const sql = `
-    INSERT INTO invitations (groom_name, bride_name, wedding_date, location, maps_link, description, theme_id, gallery_images)
-    VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+  const gallery_images = req.files
+    ? JSON.stringify(req.files.map((file) => `/uploads/${file.filename}`))
+    : "[]";
+
+  const code = Math.random().toString(36).substring(2, 8).toUpperCase();
+  const unique_code = Date.now().toString(36).toUpperCase();
+
+  const sqlInsert = `
+    INSERT INTO invitations 
+    (title, groom_name, bride_name, wedding_date, location, maps_link, description, theme_id, gallery_images, code, unique_code, admin_id)
+    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
   `;
 
   try {
-    const [result] = await db.query(sql, [
-      groom_name, bride_name, wedding_date, location, maps_link, description, theme_id, gallery_images
+    // 🔹 1. Simpan undangan baru
+    const [result] = await db.query(sqlInsert, [
+      title,
+      groom_name,
+      bride_name,
+      wedding_date,
+      location,
+      maps_link,
+      description,
+      theme_id,
+      gallery_images,
+      code,
+      unique_code,
+      admin_id
     ]);
 
-    res.status(201).json({ message: "Undangan berhasil dibuat", id: result.insertId });
+    const invitationId = result.insertId;
+
+    // 🔹 2. Update kolom invitation_id di tabel users
+    const sqlUpdate = "UPDATE users SET invitation_id = ? WHERE id = ?";
+    await db.query(sqlUpdate, [invitationId, admin_id]);
+
+    // 🔹 3. Kirim respon
+    res.status(201).json({
+      message: "✅ Undangan berhasil dibuat dan dikaitkan dengan admin",
+      id: invitationId,
+      admin_id,
+      code,
+      unique_code
+    });
   } catch (err) {
-    console.error("Gagal tambah undangan:", err);
+    console.error("❌ Gagal tambah undangan:", err);
     res.status(500).json({ error: "Gagal menyimpan undangan" });
   }
 });
+
 
 // ========================
 // PUT: Update undangan
@@ -150,7 +194,7 @@ router.get("/invite/:code", async (req, res) => {
     }
 
     const guest = results[0];
-    guest.inviteUrl = `http://10.90.132.153:5173/invite/${guest.code}`;
+    guest.inviteUrl = `http://localhost:5173/invite/${guest.code}`;
     res.json(guest);
   } catch (err) {
     console.error("Database error:", err);

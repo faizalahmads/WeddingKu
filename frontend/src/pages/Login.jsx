@@ -26,7 +26,7 @@ const Login = () => {
     setError("");
 
     try {
-      const res = await axios.post("http://10.90.132.153:5000/auth/login", formData);
+      const res = await axios.post("http://localhost:5000/auth/login", formData);
       const { token, user } = res.data;
 
       // ✅ Simpan token & role ke localStorage (hapus yang ganda)
