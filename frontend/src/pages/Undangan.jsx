@@ -22,7 +22,7 @@ const Undangan = () => {
   useEffect(() => {
     const fetchInvite = async () => {
       try {
-        const res = await axios.get(`http://10.90.132.153:5000/api/undangan/${name}/${code}`);
+        const res = await axios.get(`http://localhost:5000/api/undangan/${name}/${code}`);
         setInvite(res.data);
       } catch (err) {
         console.error(err);
@@ -46,7 +46,7 @@ const Undangan = () => {
   }
 
   const handleShareWhatsApp = () => {
-    const link = `http://10.90.132.153:5173/${invite.groom_name}-${invite.bride_name}?to=${invite.guest_name}/${invite.guest_code}`;
+    const link = `http://localhost:5173/${invite.groom_name}-${invite.bride_name}?to=${invite.guest_name}/${invite.guest_code}`;
     const message = `
 Kepada Yth.
 Bapak/Ibu/Saudara/i
@@ -99,7 +99,7 @@ Terima kasih 💖
         <h1 className="guest-name">{invite?.guest_name || "Tamu Undangan"}</h1>
           {invite?.guest_category === "VIP" && ( <p className="guest-name">{invite.guest_category}</p> )} 
         <QRCode
-          value={`http://10.90.132.153:5173/undangan/${invite.groom_name}-${invite.bride_name}?to=${invite.guest_name}/${invite.guest_code}`}
+          value={`http://localhost:5173/undangan/${invite.groom_name}-${invite.bride_name}?to=${invite.guest_name}/${invite.guest_code}`}
           size={180}
           className="my-3"
         />
@@ -111,7 +111,7 @@ Terima kasih 💖
             {galleryImages.length > 0 ? ( galleryImages.map((img, index) =>( 
               <div className="col-6 col-md-4" key={index}>
                 <div className="gallery-item">
-                  <img src="http://10.90.132.153:5000/uploads/${img}"
+                  <img src="http://localhost:5000/uploads/${img}"
                   alt="galeri-${index}"
                   className="img-fluid rounded shadow" />
                 </div>

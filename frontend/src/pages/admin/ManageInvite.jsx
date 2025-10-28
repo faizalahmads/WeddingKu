@@ -32,7 +32,7 @@ const ManageInvite = () => {
       }
 
       try {
-        const res = await axios.get(`http://10.90.132.153:5000/api/undangan/admin/${adminId}`);
+        const res = await axios.get(`http://localhost:5000/api/undangan/admin/${adminId}`);
         if (res.data && res.data.id) {
           // ✅ Jika undangan sudah ada, arahkan ke halaman edit undangan
           alert("Anda sudah memiliki undangan. Mengarahkan ke halaman edit...");
@@ -67,21 +67,27 @@ const ManageInvite = () => {
     }
 
     const adminId = localStorage.getItem("admin_id");
+    const token = localStorage.getItem("token"); // ✅ tambahkan ini
+
     const data = new FormData();
     Object.entries(form).forEach(([key, value]) => data.append(key, value));
     data.append("admin_id", adminId);
     images.forEach((img) => data.append("images[]", img));
 
     try {
-      const res = await axios.post("http://10.90.132.153:5000/api/undangan", data, {
-        headers: { "Content-Type": "multipart/form-data" },
+      const res = await axios.post("http://localhost:5000/api/undangan", data, {
+        headers: {
+          "Authorization": `Bearer ${token}`, // ✅ token pasti terisi
+          "Content-Type": "multipart/form-data",
+        },
       });
-      alert("Data undangan berhasil disimpan!");
+
+      alert("✅ Data undangan berhasil disimpan!");
       console.log(res.data);
       navigate(`/preview-undangan/${form.theme_id}`);
     } catch (err) {
-      alert("Gagal menyimpan undangan");
-      console.error(err);
+      alert("❌ Gagal menyimpan undangan");
+      console.error("DETAIL ERROR:", err.response?.data || err.message);
     }
   };
 
