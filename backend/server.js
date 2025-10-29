@@ -21,9 +21,7 @@ const themesRoute = require("./routes/themes");
 // Pakai routes
 app.use("/auth", authRoutes);
 app.use("/api", guestRoutes);
-app.use("/api", invitationRoutes);
-app.use("/api/undangan", undanganRoutes);
-app.use("/api/guests", guestRoutes);
+app.use("/api", undanganRoutes);
 app.use("/themes", themesRoute);
 
 app.get("/admin/secret", verifyToken, authorizeRoles("super_admin"), (req, res) => {

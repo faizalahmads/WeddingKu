@@ -166,17 +166,6 @@ const ManageInvite = () => {
           </div>
 
           <div className="mb-3">
-            <label>Deskripsi Tambahan</label>
-            <textarea
-              name="description"
-              value={form.description}
-              onChange={handleChange}
-              className="form-control"
-              rows="3"
-            />
-          </div>
-
-          <div className="mb-3">
             <label>Upload Galeri</label>
             <input
               type="file"
