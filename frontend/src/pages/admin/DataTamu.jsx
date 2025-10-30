@@ -5,11 +5,13 @@ import "../../assets/css/App.css";
 import Navbar from "../../components/Navbar";
 import Footer from "../../components/Footer";
 import ModalTambahTamu from "../../components/modals/ModalTambahTamu";
+import ModalImportTamu from "../../components/modals/ModalImportTamu";
 import Pagination from "../../components/Pagination";
 import TrashIcon from "../../assets/icons/trash-red.svg";
 import EditIcon from "../../assets/icons/edit-green.svg";
 import EyeIcon from "../../assets/icons/eye-blue.svg";
 import Swal from "sweetalert2";
+import Papa from "papaparse";
 
 const DataTamu = () => {
   const [isEdit, setIsEdit] = useState(false);
@@ -19,6 +21,8 @@ const DataTamu = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [isLoading, setIsLoading] = useState(true);
   const [showModal, setShowModal] = useState(false);
+  const [csvPreview, setCsvPreview] = useState([]);
+  const [showCsvModal, setShowCsvModal] = useState(false);
   const adminId = localStorage.getItem("admin_id");
   const tamuPerPage = 10;
 
@@ -120,6 +124,117 @@ const DataTamu = () => {
       });
   };
 
+  const handleImportCSV = (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+
+    Papa.parse(file, {
+      header: true,
+      skipEmptyLines: true,
+      complete: (results) => {
+        // ✅ Pastikan ada data
+        if (!results.data || results.data.length === 0) {
+          Swal.fire({
+            icon: "warning",
+            title: "File Kosong",
+            text: "File CSV tidak memiliki data untuk diimpor.",
+          });
+          return;
+        }
+
+        const validColumns = ["name", "category", "type"];
+        const headers = Object.keys(results.data[0] || {});
+        const missingCols = validColumns.filter((col) => !headers.includes(col));
+
+        // ✅ Validasi kolom
+        if (missingCols.length > 0) {
+          Swal.fire({
+            icon: "error",
+            title: "Format CSV Salah",
+            text: `Kolom berikut tidak ditemukan: ${missingCols.join(", ")}`,
+          });
+          return;
+        }
+
+        // ✅ Filter baris kosong
+        const cleanData = results.data.filter(
+          (r) => r.name && r.category && r.type
+        );
+
+        if (cleanData.length === 0) {
+          Swal.fire({
+            icon: "warning",
+            title: "Data Tidak Valid",
+            text: "Tidak ada baris valid dalam file CSV.",
+          });
+          return;
+        }
+
+        // ✅ Tampilkan preview data ke modal
+        setCsvPreview(cleanData);
+        setShowCsvModal(true);
+      },
+      error: (error) => {
+        Swal.fire({
+          icon: "error",
+          title: "Gagal Parsing CSV",
+          text: `Terjadi kesalahan saat membaca file: ${error.message}`,
+        });
+      },
+    });
+  };
+
+  const handleConfirmImport = async () => {
+    console.log("Konfirmasi Import diklik");
+    const adminId = localStorage.getItem("admin_id");
+
+    try {
+      const response = await fetch("http://localhost:5000/api/guests/import", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ admin_id: adminId, guests: csvPreview }),
+      });
+
+      if (!response.ok) throw new Error("Gagal mengimpor CSV");
+
+      Swal.fire({
+        icon: "success",
+        title: "Berhasil!",
+        text: "Data tamu berhasil diimpor.",
+        timer: 1500,
+        showConfirmButton: false,
+      });
+
+      // Refresh data
+      const res = await fetch(`http://localhost:5000/api/guests/${adminId}`);
+      const data = await res.json();
+      setTamu(data);
+      setShowCsvModal(false);
+    } catch (error) {
+      Swal.fire("Error!", "Terjadi kesalahan saat mengimpor data.", "error");
+      console.error(error);
+    }
+  };
+
+  const handleDownloadTemplate = () => {
+    // ✅ Isi contoh template CSV
+    const csvContent =
+      "name,category,type\n" +
+      "Budi Santoso,Keluarga CPP,CPP\n" +
+      "Siti Aminah,Teman CPW,CPW\n" +
+      "Andi Saputra,Rekan Kerja,CPP\n";
+
+    // Buat file blob dan trigger download
+    const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8;" });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement("a");
+    link.href = url;
+    link.setAttribute("download", "template_tamu.csv");
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  };
+
 
   if (!adminId) {
     Swal.fire({
@@ -148,13 +263,38 @@ const DataTamu = () => {
 
       <div className="container mt-5">
         <div className="mb-3">
-          {/* Tombol Tambah Tamu di atas */}
-          <div className="d-flex justify-content-end mb-2">
-            <button 
+          <div className="d-flex justify-content-between mb-2">
+            <button
               className="btn btn-success fw-semibold"
-              onClick={() => setShowModal(true)}>
+              onClick={() => setShowModal(true)}
+            >
               Tambah Tamu
             </button>
+
+            {/* ✅ Tombol Import CSV */}
+            <div>
+              <input
+                type="file"
+                accept=".csv"
+                id="import-csv"
+                style={{ display: "none" }}
+                onChange={handleImportCSV}
+              />
+              <button
+                className="btn btn-primary me-2 fw-semibold"
+                onClick={() => document.getElementById("import-csv").click()}
+              >
+                Import CSV
+              </button>
+
+              {/* ✅ Tombol Download Template CSV */}
+              <button
+                className="btn btn-outline-secondary fw-semibold"
+                onClick={handleDownloadTemplate}
+              >
+                Download Template CSV
+              </button>
+            </div>
           </div>
 
           {/* Search bar full width */}
@@ -251,6 +391,13 @@ const DataTamu = () => {
           handleSubmit={handleTambahTamu}
           isEdit={isEdit}
           dataEdit={dataEdit}
+        />
+
+        <ModalImportTamu
+          show={showCsvModal}
+          handleClose={() => setShowCsvModal(false)}
+          csvPreview={csvPreview}
+          handleImportCSV={handleConfirmImport}
         />
       </div>
 
