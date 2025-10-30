@@ -8,6 +8,8 @@
     "client": "cd frontend && npm run dev -- --host"
   },
   "dependencies": {
+    "framer-motion": "^12.23.24",
+    "papaparse": "^5.5.3",
     "react-icons": "^5.5.0"
   }
 }

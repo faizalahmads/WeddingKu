@@ -401,3 +401,24 @@
   font-size: 15px;
   color: #3d3d3d;
 }
+
+/* Modal */
+.modal-content {
+  background: #fffafc;
+  box-shadow: 0 4px 25px rgba(255, 182, 193, 0.4);
+}
+
+.modal-title {
+  color: #e75480 !important;
+}
+
+.btn-primary {
+  background-color: #e75480;
+  border-color: #e75480;
+  transition: 0.3s ease;
+}
+.btn-primary:hover {
+  background-color: #c7456f;
+  box-shadow: 0 0 10px rgba(255, 182, 193, 0.6);
+}
+
