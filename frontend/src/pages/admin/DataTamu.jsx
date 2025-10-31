@@ -1,4 +1,6 @@
 import React, { useState, useEffect } from "react";
+import * as XLSX from "xlsx";
+import ExcelJS from "exceljs";
 import { Link, useNavigate } from "react-router-dom";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "../../assets/css/App.css";
@@ -17,12 +19,17 @@ const DataTamu = () => {
   const [isEdit, setIsEdit] = useState(false);
   const [dataEdit, setDataEdit] = useState(null);
   const [tamu, setTamu] = useState([]);
+  
   const [search, setSearch] = useState("");
+    useEffect(() => {
+    setCurrentPage(1);
+  }, [search]);
+
   const [currentPage, setCurrentPage] = useState(1);
   const [isLoading, setIsLoading] = useState(true);
   const [showModal, setShowModal] = useState(false);
-  const [csvPreview, setCsvPreview] = useState([]);
-  const [showCsvModal, setShowCsvModal] = useState(false);
+  const [xlsxPreview, setXlsxPreview] = useState([]);
+  const [showXlsxModal, setShowXlsxModal] = useState(false);
   const adminId = localStorage.getItem("admin_id");
   const tamuPerPage = 10;
 
@@ -124,64 +131,48 @@ const DataTamu = () => {
       });
   };
 
-  const handleImportCSV = (e) => {
+  const handleImportXLSX = async (e) => {
     const file = e.target.files[0];
-    if (!file) return;
+    if (!file) return Swal.fire("Batal", "Import dibatalkan.", "info");
 
-    Papa.parse(file, {
-      header: true,
-      skipEmptyLines: true,
-      complete: (results) => {
-        // ✅ Pastikan ada data
-        if (!results.data || results.data.length === 0) {
-          Swal.fire({
-            icon: "warning",
-            title: "File Kosong",
-            text: "File CSV tidak memiliki data untuk diimpor.",
-          });
-          return;
-        }
+    const validTypes = [
+      "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+      "application/vnd.ms-excel",
+    ];
+    if (!validTypes.includes(file.type)) {
+      Swal.fire("Error!", "Format file harus XLSX atau XLS.", "error");
+      return;
+    }
 
-        const validColumns = ["name", "category", "type"];
-        const headers = Object.keys(results.data[0] || {});
-        const missingCols = validColumns.filter((col) => !headers.includes(col));
-
-        // ✅ Validasi kolom
-        if (missingCols.length > 0) {
-          Swal.fire({
-            icon: "error",
-            title: "Format CSV Salah",
-            text: `Kolom berikut tidak ditemukan: ${missingCols.join(", ")}`,
-          });
-          return;
-        }
-
-        // ✅ Filter baris kosong
-        const cleanData = results.data.filter(
-          (r) => r.name && r.category && r.type
-        );
-
-        if (cleanData.length === 0) {
-          Swal.fire({
-            icon: "warning",
-            title: "Data Tidak Valid",
-            text: "Tidak ada baris valid dalam file CSV.",
-          });
-          return;
-        }
-
-        // ✅ Tampilkan preview data ke modal
-        setCsvPreview(cleanData);
-        setShowCsvModal(true);
-      },
-      error: (error) => {
-        Swal.fire({
-          icon: "error",
-          title: "Gagal Parsing CSV",
-          text: `Terjadi kesalahan saat membaca file: ${error.message}`,
-        });
-      },
+    Swal.fire({
+      title: "Membaca file...",
+      text: "Harap tunggu sebentar.",
+      allowOutsideClick: false,
+      didOpen: () => Swal.showLoading(),
     });
+
+    try {
+      const data = await file.arrayBuffer();
+      const workbook = XLSX.read(data);
+      const sheetName = workbook.SheetNames[0];
+      const worksheet = workbook.Sheets[sheetName];
+      const jsonData = XLSX.utils.sheet_to_json(worksheet);
+
+      Swal.close();
+
+      if (jsonData.length === 0) {
+        Swal.fire("Kosong!", "Tidak ada data di dalam file.", "warning");
+        return;
+      }
+
+      // ✅ Simpan hasil ke state untuk preview
+      setXlsxPreview(jsonData);
+      setShowXlsxModal(true);
+    } catch (err) {
+      Swal.close();
+      Swal.fire("Error!", "Gagal membaca file XLSX.", "error");
+      console.error(err);
+    }
   };
 
   const handleConfirmImport = async () => {
@@ -189,13 +180,13 @@ const DataTamu = () => {
     const adminId = localStorage.getItem("admin_id");
 
     try {
-      const response = await fetch("http://localhost:5000/api/guests/import", {
+      const response = await fetch("http://localhost:5000/api/guests/import-xlsx", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ admin_id: adminId, guests: csvPreview }),
+        body: JSON.stringify({ admin_id: adminId, guests: xlsxPreview }),
       });
 
-      if (!response.ok) throw new Error("Gagal mengimpor CSV");
+      if (!response.ok) throw new Error("Gagal mengimpor XLSX");
 
       Swal.fire({
         icon: "success",
@@ -209,32 +200,48 @@ const DataTamu = () => {
       const res = await fetch(`http://localhost:5000/api/guests/${adminId}`);
       const data = await res.json();
       setTamu(data);
-      setShowCsvModal(false);
+      setShowXlsxModal(false);
     } catch (error) {
       Swal.fire("Error!", "Terjadi kesalahan saat mengimpor data.", "error");
       console.error(error);
     }
   };
 
-  const handleDownloadTemplate = () => {
-    // ✅ Isi contoh template CSV
-    const csvContent =
-      "name,category,type\n" +
-      "Budi Santoso,Keluarga CPP,CPP\n" +
-      "Siti Aminah,Teman CPW,CPW\n" +
-      "Andi Saputra,Rekan Kerja,CPP\n";
+  const handleDownloadTemplate = async () => {
+    const workbook = new ExcelJS.Workbook();
+    const worksheet = workbook.addWorksheet("Tamu");
 
-    // Buat file blob dan trigger download
-    const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8;" });
-    const url = URL.createObjectURL(blob);
+    worksheet.addRow(["name", "category", "type"]);
+
+    const categoryOptions = ["VIP", "Reguler"];
+    const typeOptions = ["CPP", "CPW"];
+
+    for (let i = 2; i <= 100; i++) {
+      worksheet.getCell(`B${i}`).dataValidation = {
+        type: "list",
+        allowBlank: true,
+        formulae: [`"${categoryOptions.join(",")}"`],
+        showErrorMessage: true,
+        errorTitle: "Kategori tidak valid",
+        error: "Pilih dari daftar yang tersedia",
+      };
+      worksheet.getCell(`C${i}`).dataValidation = {
+        type: "list",
+        allowBlank: true,
+        formulae: [`"${typeOptions.join(",")}"`],
+      };
+    }
+
+    const buffer = await workbook.xlsx.writeBuffer();
+    const blob = new Blob([buffer], {
+      type:
+        "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+    });
     const link = document.createElement("a");
-    link.href = url;
-    link.setAttribute("download", "template_tamu.csv");
-    document.body.appendChild(link);
+    link.href = URL.createObjectURL(blob);
+    link.download = "template_tamu.xlsx";
     link.click();
-    document.body.removeChild(link);
   };
-
 
   if (!adminId) {
     Swal.fire({
@@ -271,28 +278,28 @@ const DataTamu = () => {
               Tambah Tamu
             </button>
 
-            {/* ✅ Tombol Import CSV */}
+            {/* ✅ Tombol Import XLSX */}
             <div>
               <input
                 type="file"
-                accept=".csv"
-                id="import-csv"
+                accept=".xlsx,.xls"
+                id="import-xlsx"
                 style={{ display: "none" }}
-                onChange={handleImportCSV}
+                onChange={handleImportXLSX}
               />
               <button
                 className="btn btn-primary me-2 fw-semibold"
-                onClick={() => document.getElementById("import-csv").click()}
+                onClick={() => document.getElementById("import-xlsx").click()}
               >
-                Import CSV
+                Import XLSX
               </button>
 
-              {/* ✅ Tombol Download Template CSV */}
+              {/* ✅ Tombol Download Template XLSX */}
               <button
                 className="btn btn-outline-secondary fw-semibold"
                 onClick={handleDownloadTemplate}
               >
-                Download Template CSV
+                Download Template XLSX
               </button>
             </div>
           </div>
@@ -394,10 +401,10 @@ const DataTamu = () => {
         />
 
         <ModalImportTamu
-          show={showCsvModal}
-          handleClose={() => setShowCsvModal(false)}
-          csvPreview={csvPreview}
-          handleImportCSV={handleConfirmImport}
+          show={showXlsxModal}
+          handleClose={() => setShowXlsxModal(false)}
+          xlsxPreview={xlsxPreview}
+          handleImportXLSX={handleConfirmImport}
         />
       </div>
 

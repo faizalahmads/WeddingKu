@@ -8,8 +8,12 @@
     "client": "cd frontend && npm run dev -- --host"
   },
   "dependencies": {
+    "exceljs": "^4.4.0",
+    "file-saver": "^2.0.5",
     "framer-motion": "^12.23.24",
+    "multer": "^2.0.2",
     "papaparse": "^5.5.3",
-    "react-icons": "^5.5.0"
+    "react-icons": "^5.5.0",
+    "xlsx": "^0.18.5"
   }
 }

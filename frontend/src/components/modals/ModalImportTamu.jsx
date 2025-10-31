@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 
-const ModalImportTamu = ({ show, handleClose, csvPreview, handleImportCSV }) => {
+const ModalImportTamu = ({ show, handleClose, xlsxPreview, handleImportXLSX }) => {
   const [petals, setPetals] = useState([]);
 
   // 🌸 Buat kelopak acak setiap kali modal dibuka
@@ -85,7 +85,7 @@ const ModalImportTamu = ({ show, handleClose, csvPreview, handleImportCSV }) => 
               <div className="modal-content border-0 shadow-lg rounded-4">
                 <div className="modal-header border-0">
                   <h5 className="modal-title fw-semibold text-primary">
-                    💐 Preview Data CSV
+                    💐 Preview Data Tamu
                   </h5>
                   <button
                     type="button"
@@ -95,7 +95,7 @@ const ModalImportTamu = ({ show, handleClose, csvPreview, handleImportCSV }) => 
                 </div>
 
                 <div className="modal-body position-relative">
-                  {csvPreview.length > 0 ? (
+                  {xlsxPreview.length > 0 ? (
                     <div className="table-responsive">
                       <table className="table table-bordered table-sm text-center align-middle">
                         <thead className="table-light">
@@ -107,7 +107,7 @@ const ModalImportTamu = ({ show, handleClose, csvPreview, handleImportCSV }) => 
                           </tr>
                         </thead>
                         <tbody>
-                          {csvPreview.slice(0, 10).map((row, index) => (
+                          {xlsxPreview.slice(0, 10).map((row, index) => (
                             <tr key={index}>
                               <td>{index + 1}</td>
                               <td>{row.name}</td>
@@ -117,9 +117,9 @@ const ModalImportTamu = ({ show, handleClose, csvPreview, handleImportCSV }) => 
                           ))}
                         </tbody>
                       </table>
-                      {csvPreview.length > 10 && (
+                      {xlsxPreview.length > 10 && (
                         <p className="text-muted small text-center">
-                          Menampilkan 10 data pertama dari {csvPreview.length} data.
+                          Menampilkan 10 data pertama dari {xlsxPreview.length} data.
                         </p>
                       )}
                     </div>
@@ -139,7 +139,7 @@ const ModalImportTamu = ({ show, handleClose, csvPreview, handleImportCSV }) => 
                   </button>
                   <button
                     className="btn btn-primary rounded-pill px-4"
-                    onClick={handleImportCSV}
+                    onClick={handleImportXLSX}
                   >
                     Konfirmasi Import
                   </button>

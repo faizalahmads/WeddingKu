@@ -44,7 +44,7 @@ const Navbar = () => {
   return (
     <header className={`shadow-sm ${getNavbarClass()}`}>
       {/* Logo */}
-      <Link to="/" className="navbar-logo"> <img src={Logo} alt="Wedding Ku" className="img-fluid" />
+      <Link to="/admin/dashboard" className="navbar-logo"> <img src={Logo} alt="Wedding Ku" className="img-fluid" />
       </Link>
       <nav className={`navbar border-bottom py-3 ${getNavbarClass()}`} ref={navRef}>
         

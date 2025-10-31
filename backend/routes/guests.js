@@ -3,7 +3,12 @@ const router = express.Router();
 const db = require("../db");
 const crypto = require("crypto");
 const QRCode = require("qrcode");
+const xlsx = require("xlsx");
+const fs = require ("fs");
+
+
 const multer = require("multer");
+const upload = multer({ dest: "uploads/" });
 
 // ========================
 // Helper: Generate kode unik
@@ -56,18 +61,15 @@ router.delete("/guests/:id", async (req, res) => {
   }
 });
 
-// ========================
-// POST: Import tamu dari CSV (tanpa loop berat, retry aman)
-// ========================
-router.post("/guests/import", async (req, res) => {
+router.post("/guests/import-xlsx", async (req, res) => {
   const { admin_id, guests } = req.body;
 
-  if (!admin_id || !Array.isArray(guests)) {
-    return res.status(400).json({ message: "Data tidak valid" });
+  if (!admin_id || !Array.isArray(guests) || guests.length === 0) {
+    return res.status(400).json({ message: "Admin ID dan data tamu wajib diisi" });
   }
 
   try {
-    // 🔹 Ambil invitation_id dari users
+    // ambil invitation_id dari user
     const [userResult] = await db.query(
       "SELECT invitation_id FROM users WHERE id = ?",
       [admin_id]
@@ -79,65 +81,40 @@ router.post("/guests/import", async (req, res) => {
 
     const invitation_id = userResult[0].invitation_id;
 
-    // 🔹 Generate kode unik cepat
-    const codesArray = guests.map(() => generateUniqueCode());
+    // validasi & bersihkan data
+    const VALID_CATEGORY = ["VIP", "Reguler"];
+    const VALID_TYPE = ["CPP", "CPW"];
 
-    // 🔹 Siapkan data untuk insert
-    const values = guests.map((g, i) => [
+    const cleanGuests = guests.map((g) => {
+      const category = g.category?.trim() || "Reguler";
+      const type = g.type?.trim().toUpperCase() || "CPP";
+
+      return {
+        name: g.name?.trim(),
+        category: VALID_CATEGORY.includes(category) ? category : "Reguler",
+        type: VALID_TYPE.includes(type) ? type : "CPP",
+      };
+    });
+
+    // siapkan data untuk insert
+    const values = cleanGuests.map((g) => [
       g.name,
       g.category,
       g.type,
-      codesArray[i],
+      generateUniqueCode(),
       admin_id,
       invitation_id,
     ]);
 
-    // 🔹 Insert sekaligus
     await db.query(
-      `
-      INSERT INTO guests (name, category, type, code, admin_id, invitation_id)
-      VALUES ?
-      `,
+      `INSERT INTO guests (name, category, type, code, admin_id, invitation_id) VALUES ?`,
       [values]
     );
 
-    res.status(201).json({
-      message: "Import berhasil ✅ semua kode unik otomatis dibuat",
-    });
-  } catch (error) {
-    console.error("Gagal import CSV:", error);
-
-    // 🔁 Jika ada kode duplikat, coba ulang sekali dengan kode baru
-    if (error.code === "ER_DUP_ENTRY") {
-      try {
-        console.warn("⚠️ Kode duplikat terdeteksi, regenerasi otomatis...");
-
-        const newValues = req.body.guests.map((g) => [
-          g.name,
-          g.category,
-          g.type,
-          generateUniqueCode(),
-          req.body.admin_id,
-          (userResult && userResult[0]?.invitation_id) || null,
-        ]);
-
-        await db.query(
-          `INSERT INTO guests (name, category, type, code, admin_id, invitation_id) VALUES ?`,
-          [newValues]
-        );
-
-        return res.status(201).json({
-          message: "Import berhasil setelah regenerasi kode duplikat 🔄",
-        });
-      } catch (retryErr) {
-        console.error("Gagal regenerasi:", retryErr);
-        return res
-          .status(500)
-          .json({ message: "Gagal setelah regenerasi kode duplikat" });
-      }
-    }
-
-    res.status(500).json({ message: "Gagal menyimpan data CSV" });
+    res.status(201).json({ message: "Import XLSX berhasil ✅" });
+  } catch (err) {
+    console.error("Gagal import XLSX:", err);
+    res.status(500).json({ message: "Terjadi kesalahan saat import XLSX" });
   }
 });
 
@@ -152,7 +129,6 @@ router.post("/guests", async (req, res) => {
   }
 
   try {
-    // 🔹 Ambil invitation_id
     const [userResult] = await db.query(
       "SELECT invitation_id FROM users WHERE id = ?",
       [admin_id]
@@ -165,7 +141,6 @@ router.post("/guests", async (req, res) => {
     const invitation_id = userResult[0].invitation_id;
     let code = generateUniqueCode();
 
-    // 🔹 Simpan ke DB (dengan retry 1x jika duplikat)
     try {
       const [result] = await db.query(
         `
@@ -230,6 +205,48 @@ router.get("/admin/:id", async (req, res) => {
   } catch (err) {
     console.error("Database error:", err);
     res.status(500).json({ message: "Terjadi kesalahan server" });
+  }
+});
+
+// GET: Summary tamu berdasarkan adminId
+router.get("/guests/summary/:adminId", async (req, res) => {
+  const { adminId } = req.params;
+
+  const query = `
+    SELECT type, category, COUNT(*) AS count
+    FROM guests
+    WHERE admin_id = ?
+    GROUP BY type, category
+  `;
+
+   try {
+    const [results] = await db.query(query, [adminId]);
+
+    const summary = {
+      CPP: 0,
+      CPW: 0,
+      TamuTambahan: 0,
+      VIP: 0,
+      Reguler: 0,
+      total: 0,
+    };
+
+    results.forEach((row) => {
+      if (row.type === "CPP") summary.CPP += row.count;
+      if (row.type === "CPW") summary.CPW += row.count;
+      if (row.type === "Tamu Tambahan") summary.TamuTambahan += row.count;
+
+      if (row.category === "VIP") summary.VIP += row.count;
+      if (row.category === "Reguler") summary.Reguler += row.count;
+
+      summary.total += row.count;
+    });
+
+    res.json(summary);
+
+     } catch (err) {
+    console.error("Database error:", err);
+    res.status(500).json({ error: "Database query error" });
   }
 });
 
