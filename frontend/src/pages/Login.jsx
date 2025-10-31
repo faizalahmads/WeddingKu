@@ -29,13 +29,14 @@ const Login = () => {
       const res = await axios.post("http://localhost:5000/auth/login", formData);
       const { token, user } = res.data;
 
-      // ✅ Simpan token & role ke localStorage (hapus yang ganda)
+      const now = new Date().getTime(); // waktu login sekarang
+
       localStorage.setItem("token", token);
       localStorage.setItem("role", user.role);
       localStorage.setItem("isAuthenticated", "true");
       localStorage.setItem("admin_id", user.id);
+      localStorage.setItem("loginTime", now); // ⏰ simpan waktu login
 
-      // ✅ Arahkan ke halaman sesuai role
       if (user.role === "super_admin") {
         navigate("/dashboard/super");
       } else {

@@ -50,10 +50,11 @@ router.post("/login", async (req, res) => {
     if (!valid)
       return res.status(401).json({ message: "Password salah" });
 
+    // ✅ JWT berlaku 3 jam
     const token = jwt.sign(
       { id: user.id, email: user.email, role: user.role },
       "secretKey123",
-      { expiresIn: "2h" }
+      { expiresIn: "3h" }
     );
 
     res.json({
