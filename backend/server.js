@@ -4,7 +4,7 @@ const cors = require("cors");
 const app = express();
 
 app.use(cors({
-  origin: ["http://localhost:5173", "http://localhost:5173"],
+  origin: ["http://localhost:5173"],
   credentials: true,
 }));
 
@@ -23,6 +23,26 @@ app.use("/auth", authRoutes);
 app.use("/api", guestRoutes);
 app.use("/api", undanganRoutes);
 app.use("/themes", themesRoute);
+
+app.get("/api/data", (req, res, next) => {
+  try {
+    // Simulasi error
+    throw new Error("Data tidak ditemukan");
+  } catch (err) {
+    next(err);
+  }
+});
+
+app.use((err, req, res, next) => {
+  console.error("🔥 Error:", err.message);
+  
+  res.status(500).json({
+    status: "error",
+    message: err.message || "Terjadi kesalahan pada server",
+  });
+});
+
+app.use(errorHandler);
 
 app.get("/admin/secret", verifyToken, authorizeRoles("super_admin"), (req, res) => {
   res.json({ message: "Hanya Super Admin yang bisa lihat ini!" });
