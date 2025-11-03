@@ -147,7 +147,7 @@ router.get("/undangan/:name/:code", async (req, res) => {
 });
 
 // ========================
-// GET: Undangan berdasarkan kode tamu
+// GET: Undangan berdasarkan kode tamu (untuk contoh)
 // ========================
 router.get("/invite/:code", async (req, res) => {
   const { code } = req.params;
@@ -206,15 +206,6 @@ router.get("/undangan/:id", async (req, res) => {
     console.error("Database error:", err);
     res.status(500).json({ error: "Gagal mengambil data undangan" });
   }
-});
-
-// 📥 GET /api/undangan/:code → Ambil undangan berdasarkan code
-router.get("/:code", (req, res) => {
-  getUndanganByCode(req.params.code, (err, result) => {
-    if (err) return res.status(500).json({ error: err.message });
-    if (!result) return res.status(404).json({ message: "Undangan tidak ditemukan" });
-    res.json(result);
-  });
 });
 
 module.exports = router;
