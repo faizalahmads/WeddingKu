@@ -1,5 +1,6 @@
 const express = require("express");
 const cors = require("cors");
+const errorHandler = require("./middleware/errorHandler");
 
 const app = express();
 
@@ -31,15 +32,6 @@ app.get("/api/data", (req, res, next) => {
   } catch (err) {
     next(err);
   }
-});
-
-app.use((err, req, res, next) => {
-  console.error("🔥 Error:", err.message);
-  
-  res.status(500).json({
-    status: "error",
-    message: err.message || "Terjadi kesalahan pada server",
-  });
 });
 
 app.use(errorHandler);

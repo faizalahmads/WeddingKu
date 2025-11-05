@@ -18,6 +18,7 @@ import ManageInvite from "./pages/admin/ManageInvite.jsx";
 import UndanganManagement from "./pages/admin/UndanganManagement.jsx";
 import EditInvite from "./pages/admin/EditInvite.jsx";
 import PreviewTema from "./pages/admin/PreviewTema.jsx";
+import Tema2 from "./pages/admin/Tema2.jsx";
 
 import ErrorBoundary from "./components/ErrorBoundary.jsx";
 import ToastWrapper from "./components/ToastContainer.jsx";
@@ -86,8 +87,8 @@ function AppContent() {
           <Route path="/admin/manage-invite" element={<ManageInvite />} />
           <Route path="/admin/undangan-management" element={<UndanganManagement />} />
           <Route path="/admin/edit-invite/:id" element={<EditInvite />} />
-          <Route path="/undangan/:slug" element={<Undangan />} />
-          <Route path="/:slug" element={<Undangan />} />
+          <Route path="/undangan/:slug" element={<Tema2 />} />
+          <Route path="/:slug" element={<Tema2 />} />
           <Route path="/preview/:id" element={<PreviewTema />} />
           <Route path="/preview-undangan/:id" element={<PreviewTema />} />
           <Route path="/invite/:code" element={<InviteWrapper />} />
