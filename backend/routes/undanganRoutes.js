@@ -1,7 +1,6 @@
 const express = require("express");
 const multer = require("multer");
 const router = express.Router();
-const { createUndangan, getUndanganByCode } = require("../controllers/undanganController");
 const upload = multer({ dest: "uploads/" });
 const { verifyToken } = require("../middleware/auth");
 const db = require("../db");
@@ -109,7 +108,16 @@ router.get("/undangan/:name/:code", async (req, res) => {
       i.id AS invitation_id,
       i.couple_name,
       i.groom_name,
+      i.groom_parent,
+      i.groom_sosmed,
+      i.groom_bank,
+      i.groom_norek,
       i.bride_name,
+      i.bride_parent,
+      i.bride_sosmed,
+      i.bride_bank,
+      i.bride_norek,
+      i.akad_date,
       i.wedding_date,
       i.location,
       i.maps_link,

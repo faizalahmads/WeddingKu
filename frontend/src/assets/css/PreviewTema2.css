@@ -735,3 +735,53 @@
   margin-top: 10px;
 }
 
+.music-icon {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  background: rgba(255, 255, 255, 0.85);
+  color: #6b3e26;
+  font-size: 22px;
+  border-radius: 50%;
+  padding: 14px;
+  cursor: pointer;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.25);
+  transition: transform 0.3s ease, background 0.3s ease;
+  z-index: 9999;
+}
+
+.music-icon:hover {
+  background: #f5e3d3;
+  transform: scale(1.1);
+}
+
+.music-icon.playing {
+  animation: spin 3s linear infinite;
+  background: #fdf3e3;
+  color: #d49b67;
+}
+
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.whatsapp-float-container {
+  position: fixed;
+  bottom: 100px;
+  right: 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: end;
+  gap: 6px;
+  z-index: 9999;
+}
+
+.wa-share-icon:hover {
+  transform: scale(1.1);
+}
+
