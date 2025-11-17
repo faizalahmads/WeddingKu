@@ -191,7 +191,7 @@ router.post("/guests", async (req, res) => {
 // ========================
 // GET: Undangan berdasarkan adminId
 // ========================
-router.get("/admin/:id", async (req, res) => {
+router.get("/undangan/admin/:id", async (req, res) => {
   const { id } = req.params;
 
   try {

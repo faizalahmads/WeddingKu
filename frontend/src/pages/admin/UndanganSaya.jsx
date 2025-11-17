@@ -7,13 +7,13 @@ import Footer from "../../components/Footer";
 const UndanganSaya = () => {
   const navigate = useNavigate();
   const [loading, setLoading] = useState(true);
-  const [hasInvitation, setHasInvitation] = useState(false);
+  const [invitation, setInvitation] = useState(null);
   const [themes, setThemes] = useState([]);
 
   const adminId = localStorage.getItem("admin_id");
 
   useEffect(() => {
-    const fetchData = async () => {
+    const fetch = async () => {
       if (!adminId) {
         alert("Anda belum login sebagai admin!");
         navigate("/login");
@@ -21,44 +21,60 @@ const UndanganSaya = () => {
       }
 
       try {
-        // Cek apakah admin sudah punya undangan
-        const res = await axios.get(`http://localhost:5000/api/admin/${adminId}`);
-        if (res.data && res.data.id) {
-          setHasInvitation(true);
-        } else {
-          setHasInvitation(false);
-        }
+        const res = await axios.get(`http://localhost:5000/api/invitations/admin/${adminId}`);
+        setInvitation(res.data);
       } catch (err) {
-        if (err.response && err.response.status === 404) {
-          setHasInvitation(false);
-        } else {
-          console.error("Gagal memeriksa undangan admin:", err);
-          alert("Terjadi kesalahan server. Silakan coba lagi.");
+        // kalau 404 berarti belum ada undangan -> biarkan null
+        if (err.response && err.response.status !== 404) {
+          console.error(err);
+          alert("Gagal memeriksa undangan admin.");
         }
       }
 
       try {
-        // Ambil daftar tema dari endpoint API
         const themesRes = await axios.get("http://localhost:5000/themes");
-        setThemes(themesRes.data);
+        setThemes(themesRes.data || []);
       } catch (err) {
-        console.error("Gagal memuat daftar tema:", err);
-        alert("Gagal memuat daftar tema dari server!");
+        console.error("Gagal memuat tema:", err);
+        setThemes([]);
       }
 
       setLoading(false);
     };
 
-    fetchData();
+    fetch();
   }, [adminId, navigate]);
 
-  const handleSelectTheme = (id) => {
-    localStorage.setItem("selectedTheme", id);
-    navigate("/admin/manage-invite");
+  const handleSelectTheme = async (themeId) => {
+    if (!adminId) {
+      alert("Admin belum login.");
+      navigate("/login");
+      return;
+    }
+
+    const ok = window.confirm("Apakah Anda yakin memilih tema ini? Tema tidak dapat diubah setelah dipilih.");
+    if (!ok) return;
+
+    try {
+      const res = await axios.post("http://localhost:5000/api/invitations", {
+        admin_id: adminId,
+        theme_id: themeId,
+      });
+
+      if (res.data && res.data.success) {
+        const invId = res.data.invitation_id;
+        navigate(`/admin/manage-invite/:invitationId`);
+      } else {
+        alert("Gagal membuat undangan.");
+      }
+    } catch (err) {
+      console.error(err);
+      alert("Gagal membuat undangan.");
+    }
   };
 
-  const handleEditInvitation = (invitationId) => {
-    navigate(`/admin/edit-invite/${invitationId}`);
+  const handleEditInvitation = (invId) => {
+    navigate(`/admin/manage-invite/${invId}`);
   };
 
   if (loading) {
@@ -74,15 +90,11 @@ const UndanganSaya = () => {
   return (
     <div className="d-flex flex-column min-vh-100 bg-latar">
       <Navbar />
-
       <div className="container my-5 text-center">
-        {hasInvitation ? (
+        {invitation ? (
           <div>
-            <h2 className="mb-4">Undangan Anda Sudah Dibuat</h2>
-            <button
-              className="btn btn-success"
-              onClick={() => handleEditInvitation(adminId)}
-            >
+            <h2 className="mb-4">Anda memiliki undangan</h2>
+            <button className="btn btn-success" onClick={() => handleEditInvitation(invitation.id)}>
               Lanjut ke Edit Undangan
             </button>
           </div>
@@ -97,25 +109,15 @@ const UndanganSaya = () => {
                       src={theme.preview_image}
                       alt={theme.name}
                       className="card-img-top"
-                      style={{
-                        height: "250px",
-                        objectFit: "cover",
-                        width: "100%",
-                      }}
+                      style={{ height: "250px", objectFit: "cover", width: "100%" }}
                     />
                     <div className="card-body">
                       <h4>{theme.name}</h4>
                       <p>{theme.description}</p>
-                      <button
-                        className="btn btn-info me-2"
-                        onClick={() => navigate(`/preview/${theme.id}`)}
-                      >
+                      <button className="btn btn-info me-2" onClick={() => navigate(`/preview/${theme.id}`)}>
                         Preview Fullscreen
                       </button>
-                      <button
-                        className="btn btn-primary"
-                        onClick={() => handleSelectTheme(theme.id)}
-                      >
+                      <button className="btn btn-primary" onClick={() => handleSelectTheme(theme.id)}>
                         Pilih Tema Ini
                       </button>
                     </div>
@@ -126,7 +128,6 @@ const UndanganSaya = () => {
           </>
         )}
       </div>
-
       <Footer />
     </div>
   );

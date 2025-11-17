@@ -1,18 +1,100 @@
 const express = require("express");
 const multer = require("multer");
 const router = express.Router();
-const upload = multer({ dest: "uploads/" });
+const upload = require("../middleware/upload");
 const { verifyToken } = require("../middleware/auth");
 const db = require("../db");
 
 // ========================
+// POST: Pilih Tema Undangan
+// ========================
+router.post("/invitations", async (req, res) => {
+  const { admin_id, theme_id } = req.body;
+  if (!admin_id || !theme_id) return res.status(400).json({ success: false, message: "Missing data" });
+
+  try {
+    const code = Math.random().toString(36).substring(2, 8).toUpperCase();
+    const unique_code = Date.now().toString(36).toUpperCase();
+
+    const [result] = await db.query(
+      `INSERT INTO invitations (admin_id, theme_id, code, unique_code, current_step) VALUES (?,?,?,?,?)`,
+      [admin_id, theme_id, code, unique_code, "draft", 1]
+    );
+
+    return res.json({ success: true, invitation_id: result.insertId });
+  } catch (err) {
+    console.error(err);
+    return res.status(500).json({ success: false, message: "Server error" });
+  }
+});
+
+// ========================
+// GET: invitation by admin
+// ========================
+router.get("/invitations/admin/:adminId", async (req, res) => {
+  const adminId = req.params.adminId;
+  try {
+    const [rows] = await db.query(`SELECT * FROM invitations WHERE admin_id = ? ORDER BY created_at DESC LIMIT 1`, [adminId]);
+    if (rows.length === 0) return res.status(404).json({ message: "Not found" });
+    return res.json(rows[0]);
+  } catch (err) {
+    console.error(err);
+    return res.status(500).json({ message: "Server error" });
+  }
+});
+
+// ========================
+// PUT: Update current step
+// ========================
+router.put("/invitations/:id/step", async (req, res) => {
+  const id = req.params.id;
+  const { current_step } = req.body;
+  try {
+    await db.query(`UPDATE invitations SET current_step = ? WHERE id = ?`, [current_step, id]);
+    return res.json({ success: true });
+  } catch (err) {
+    console.error(err);
+    return res.status(500).json({ success: false });
+  }
+});
+
+// ========================
+// PUT: Update form data
+// ========================
+router.put("/invitations/:id/form", async (req, res) => {
+  const id = req.params.id;
+  const { form_data, status, current_step } = req.body;
+
+  try {
+    await db.query(
+      `UPDATE invitations SET form_data = ?, status = COALESCE(?, status), current_step = COALESCE(?, current_step) WHERE id = ?`,
+      [JSON.stringify(form_data || {}), status || null, current_step || null, id]
+    );
+    return res.json({ success: true });
+  } catch (err) {
+    console.error(err);
+    return res.status(500).json({ success: false });
+  }
+});
+
+// ========================
 // POST: Tambah undangan
 // ========================
-router.post("/undangan", verifyToken, upload.array("images[]", 10), async (req, res) => {
-  const admin_id = req.user.id; // 🔹 diambil dari token JWT
+router.post("/undangan", verifyToken, upload.fields([
+  { name: "groom_img", maxCount: 1 },
+  { name: "bride_img", maxCount: 1 },
+  { name: "images[]", maxCount: 10 },
+])
+
+, async (req, res) => {
+  const admin_id = req.user.id;
   const {
     groom_name,
+    groom_img,
+    groom_sosmed,
     bride_name,
+    bride_img,
+    bride_sosmed,
     wedding_date,
     location,
     maps_link,
@@ -28,15 +110,19 @@ router.post("/undangan", verifyToken, upload.array("images[]", 10), async (req, 
 
   const sqlInsert = `
     INSERT INTO invitations 
-    (groom_name, bride_name, wedding_date, location, maps_link, theme_id, gallery_images, code, unique_code, admin_id)
-    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+    (groom_name, groom_img, groom_sosmed, bride_name, bride_img, bride_sosmed, wedding_date, location, maps_link, theme_id, gallery_images, code, unique_code, admin_id)
+    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
   `;
 
   try {
     // 🔹 1. Simpan undangan baru
     const [result] = await db.query(sqlInsert, [
       groom_name,
+      groom_img,
+      groom_sosmed,
       bride_name,
+      bride_img,
+      bride_sosmed,
       wedding_date,
       location,
       maps_link,
@@ -71,13 +157,30 @@ router.post("/undangan", verifyToken, upload.array("images[]", 10), async (req, 
 // ========================
 // PUT: Update undangan
 // ========================
-router.put("/undangan/:id", upload.array("images[]", 10), async (req, res) => {
+router.put("/undangan/:id", upload.fields([
+    { name: "groom_img", maxCount: 1 },
+    { name: "bride_img", maxCount: 1 },
+    { name: "images[]", maxCount: 10 },
+  ]), 
+  
+  async (req, res) => {
   const { id } = req.params;
-  const { groom_name, bride_name, wedding_date, location, maps_link, theme_id } = req.body;
+  const { groom_name, groom_parent, groom_sosmed, bride_name, bride_parent, bride_sosmed, wedding_date, location, maps_link, theme_id, current_step } = req.body;
+
+  const newGroomImgPath = req.files && req.files.groom_img ? `/uploads/${req.files.groom_img[0].filename}` : null;
+  const newBrideImgPath = req.files && req.files.bride_img ? `/uploads/${req.files.bride_img[0].filename}` : null;
 
   const updateFields = {
-    groom_name, bride_name, wedding_date, location, maps_link, theme_id
+    groom_name, groom_parent, groom_sosmed, bride_name, bride_parent, bride_sosmed, wedding_date, location, maps_link, theme_id, current_step
   };
+  
+  // Hanya tambahkan field gambar ke updateFields jika ada file baru
+  if (newGroomImgPath) {
+    updateFields.groom_img = newGroomImgPath;
+  }
+  if (newBrideImgPath) {
+    updateFields.bride_img = newBrideImgPath;
+  }
 
   try {
     const [result] = await db.query("UPDATE invitations SET ? WHERE id = ?", [updateFields, id]);
@@ -108,11 +211,13 @@ router.get("/undangan/:name/:code", async (req, res) => {
       i.id AS invitation_id,
       i.couple_name,
       i.groom_name,
+      i.groom_img,
       i.groom_parent,
       i.groom_sosmed,
       i.groom_bank,
       i.groom_norek,
       i.bride_name,
+      i.bride_img,
       i.bride_parent,
       i.bride_sosmed,
       i.bride_bank,

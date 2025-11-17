@@ -26,7 +26,7 @@ const Navbar = () => {
     navigate("/login");
   };
 
-  const isActive = (path) => location.pathname === path;
+  const isActive = (...paths) => paths.some(path => location.pathname.startsWith(path));
 
   const getNavbarClass = () => {
     switch (role) {
@@ -76,7 +76,7 @@ const Navbar = () => {
                 <Link to="/admin/dashboard" className={`nav-item ${isActive("/admin/dashboard") ? "active" : ""}`}>
                   <div className="nav-text">Dashboard</div>
                 </Link>
-                <Link to="/admin/undangan-saya" className={`nav-item ${isActive("/admin/undangan-saya") ? "active" : ""}`}>
+                <Link to="/admin/undangan-saya" className={`nav-item ${isActive("/admin/undangan-saya", "/admin/manage-invite") ? "active" : ""}`}>
                   <div className="nav-text">Undangan Saya</div>
                 </Link>
                 <Link to="/admin/data-tamu" className={`nav-item ${isActive("/admin/data-tamu") ? "active" : ""}`}>

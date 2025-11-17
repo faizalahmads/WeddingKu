@@ -10,6 +10,7 @@
   "dependencies": {
     "@lottiefiles/dotlottie-react": "^0.17.6",
     "exceljs": "^4.4.0",
+    "express-fileupload": "^1.5.2",
     "file-saver": "^2.0.5",
     "framer-motion": "^12.23.24",
     "lottie-react": "^2.4.1",
