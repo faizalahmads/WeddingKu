@@ -84,7 +84,7 @@ function AppContent() {
           <Route path="/admin/dashboard" element={<Dashboard />} />
           <Route path="/admin/data-tamu" element={<DataTamu />} />
           <Route path="/admin/undangan-saya" element={<UndanganSaya />} />
-          <Route path="/admin/manage-invite" element={<ManageInvite />} />
+          <Route path="/admin/manage-invite/:invitationId" element={<ManageInvite />} />
           <Route path="/admin/undangan-management" element={<UndanganManagement />} />
           <Route path="/admin/edit-invite/:id" element={<EditInvite />} />
           <Route path="/undangan/:slug" element={<Tema2 />} />

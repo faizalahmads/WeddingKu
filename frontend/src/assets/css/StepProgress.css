@@ -1,0 +1,139 @@
+.step-container {
+  display: flex;
+  justify-content: space-between;
+  position: relative;
+  max-width: 900px;
+  margin: 40px auto;
+  padding: 0 10px;
+}
+
+.step-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  position: relative;
+  flex: 1;
+  text-align: center;
+}
+
+.step-item.active {
+  animation: fadeZoom 0.6s ease;
+}
+
+@keyframes fadeZoom {
+  0% {
+    opacity: 0;
+    transform: scale(0.85);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+/* lingkaran */
+.step-circle {
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  border: 2px solid #d3d3d3;
+  background-color: #fff;
+  position: relative;
+  z-index: 2;
+  transition: all 0.4s ease;
+}
+
+/* aktif */
+.step-item.active .step-circle {
+  border-color: #ff4081;
+  box-shadow: 0 0 8px rgba(255, 64, 129, 0.4);
+}
+
+/* selesai */
+.step-item.completed .step-circle {
+  background-color: #ff4081;
+  border-color: #ff4081;
+}
+
+/* ceklis ketika step selesai */
+.step-item.completed .step-circle::after {
+  content: "✔";
+  position: absolute;
+  color: white;
+  font-size: 12px;
+  font-weight: bold;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.step-item.completed + .step-item .step-line::after {
+  width: 100%;
+  background-color: #ff4081;
+}
+
+/* label */
+.step-label {
+  font-size: 14px;
+  font-family: "Poppins", sans-serif;
+  margin-top: 8px;
+  color: #aaa;
+  font-weight: 500;
+  transition: color 0.4s ease;
+}
+
+/* label aktif */
+.step-item.active .step-label {
+  color: #000;
+  font-weight: 600;
+}
+
+/* label selesai */
+.step-item.completed .step-label {
+  color: #000;
+}
+
+/* garis antar step */
+.step-line {
+  position: absolute;
+  height: 3px;
+  background-color: #d3d3d3;
+  top: 11px;
+  left: 50%;
+  width: 100%;
+  z-index: 1;
+  overflow: hidden;
+  border-radius: 2px;
+}
+
+/* progress bar animasi */
+.step-line::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 0%;
+  background-color: #ff4081;
+  transition: width 0.8s ease-in-out;
+}
+
+/* ketika step sudah dilewati, bar terisi penuh */
+.step-line.filled::after {
+  width: 100%;
+}
+
+.step-item:last-child .step-line {
+  display: none;
+}
+
+/* responsive */
+@media (max-width: 768px) {
+  .step-label {
+    font-size: 12px;
+  }
+  .step-circle {
+    width: 18px;
+    height: 18px;
+  }
+}

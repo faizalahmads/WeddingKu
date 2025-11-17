@@ -24,6 +24,7 @@ app.use("/auth", authRoutes);
 app.use("/api", guestRoutes);
 app.use("/api", undanganRoutes);
 app.use("/themes", themesRoute);
+app.use("/uploads", express.static("uploads"));
 
 app.get("/api/data", (req, res, next) => {
   try {
