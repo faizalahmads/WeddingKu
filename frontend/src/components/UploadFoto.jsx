@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "../assets/css/UploadFoto.css";
 
-const UploadFoto = ({ name, label = "Upload Foto", size = 130, onChange, defaultImage }) => {
+const UploadFoto = ({ name, label = "Upload Foto", width = 130, height = 130, onChange, defaultImage }) => {
   const [preview, setPreview] = useState(null);
 
   // Load gambar database hanya SEKALI
@@ -29,12 +29,12 @@ const UploadFoto = ({ name, label = "Upload Foto", size = 130, onChange, default
 
   return (
     <div className="d-flex flex-column align-items-start gap-2 upload-foto-wrapper">
-      <span className="sub-judul fw-bold ">{label}</span>
+      <label className="sub-judul fw-bold">{label}</label>
 
       <label
         htmlFor={name}
         className="upload-box d-flex justify-content-center align-items-center position-relative"
-        style={{ width: size, height: size }}
+        style={{ width: width, height: height }}
       >
         {preview ? (
           <>
