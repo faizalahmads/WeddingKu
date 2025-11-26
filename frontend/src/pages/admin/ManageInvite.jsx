@@ -8,6 +8,8 @@ import Footer from "../../components/Footer";
 import StepProgress from "../../components/StepProgress";
 import ToggleSwitch from "../../components/ToggleSwitch";
 import UploadFoto from "../../components/UploadFoto";
+import UploadFile from "../../components/UploadFile";
+import bankList from "../../assets/data/bankList";
 
 const ManageInvite = () => {
   const navigate = useNavigate();
@@ -19,6 +21,19 @@ const ManageInvite = () => {
 
   const [showGroomParent, setShowGroomParent] = useState(true);
   const [showBrideParent, setShowBrideParent] = useState(true);
+  const [isSameDate, setIsSameDate] = useState(true);
+  const [showExtraEvent, setShowExtraEvent] = useState(false);
+  const [isCustom, setIsCustom] = useState(true);
+  const [showBank, setShowBank] = useState(true);
+  const [useStory, setUseStory] = useState(true);
+  const [stories, setStories] = useState([
+    { title: "", description: "", image: null }
+  ]);
+  const [showLogo, setUseLogo] = useState(true);
+  const [showCoverMobile, setUseCoverMobile] = useState(true);
+  const [showCoverDesktop, setUseCoverDesktop] = useState(true);
+
+
 
   const [preview, setPreview] = useState({
     groom_img: null,
@@ -34,6 +49,50 @@ const ManageInvite = () => {
     setShowBrideParent(value);
   };
 
+  const handleToggleDate = (value) => {
+    setIsSameDate(value);
+  };
+
+  const handleToggleExtraEvent = (value) => {
+    setShowExtraEvent(value);
+  };
+
+  const handleToggleBank = (value) => {
+    setShowBank(value);
+  };
+
+  const handleToggleFile = (value) => {
+    setIsCustom(value); 
+  };
+
+  const handleToggleStory = (value) => {
+    setUseStory(value);
+  };
+
+  const addStoryCard = () => {
+    setStories([
+      ...stories,
+      { title: "", description: "", image: null }
+    ]);
+  };
+
+  const removeStoryCard = (index) => {
+    const updated = stories.filter((_, i) => i !== index);
+    setStories(updated);
+  };
+
+  const handleToggleLogo = (value) => {
+    setUseLogo(value);
+  };
+
+  const handleToggleCoverMobile = (value) => {
+    setUseCoverMobile(value);
+  };
+
+  const handleToggleCoverDesktop = (value) => {
+    setUseCoverDesktop(value);
+  };
+
   const handleFileChange = (file, field) => {
     setForm(prev => ({ ...prev, [field]: file }));
 
@@ -44,7 +103,7 @@ const ManageInvite = () => {
   };
 
   const [form, setForm] = useState({
-    title: "Undangan Pernikahan",
+    couple_name: "",
     bride_name: "",
     groom_name: "",
     wedding_date: "",
@@ -74,15 +133,15 @@ const ManageInvite = () => {
         const inv = res.data;
         setInvitation(inv);
 
-        if (inv.current_step >= 1 && inv.current_step <= 3) {
-          setStep(inv.current_step);
-        }
-        else {
-          setStep(1);
+        if (inv.current_step >= 1 && inv.current_step < 5) {
+          setStep(inv.current_step + 1);
+        } else {
+          setStep(5);
         }
 
+
         setForm({
-          title: inv.title ?? "Undangan Pernikahan",
+          couple_name: inv.couple_name ?? "",
           bride_name: inv.bride_name ?? "",
           groom_name: inv.groom_name ?? "",
           wedding_date: inv.wedding_date ?? "",
@@ -110,21 +169,6 @@ const ManageInvite = () => {
     load();
   }, [invitationId, adminId]);
 
-  const handleToggle = (value) => {
-    console.log("toggle:", value);
-  };
-
-  const isComplete = () => {
-    return (
-      form.groom_name &&
-      form.bride_name &&
-      form.wedding_date &&
-      form.location &&
-      form.groom_img &&
-      form.bride_img
-    );
-  };
-
   const saveDraft = useCallback(async () => {
     if (!invitationId) return;
 
@@ -143,13 +187,13 @@ const ManageInvite = () => {
   const nextStep = async () => {
     const newStep = Math.min(step + 1, 5);
     setStep(newStep);
-    await saveDraft({ current_step: newStep });
+    await saveDraft();
   };
 
   const prevStep = async () => {
     const newStep = Math.max(step - 1, 1);
     setStep(newStep);
-    await saveDraft({ current_step: newStep });
+    await saveDraft();
   };
 
   const handleChange = (e) => {
@@ -159,6 +203,7 @@ const ManageInvite = () => {
 
   const handleCreateInvitation = async () => {
     const formData = new FormData();
+    formData.append("couple_name", form.couple_name);
     formData.append("groom_name", form.groom_name);
     formData.append("groom_img", form.groom_img);
     formData.append("groom_parent", form.groom_parent);
@@ -210,11 +255,6 @@ const ManageInvite = () => {
     });
 
     formData.append("current_step", step);
-      
-      // Tambahkan logic untuk menangani pengiriman string/null untuk gambar
-      // Ini penting jika backend Anda perlu tahu bahwa gambar lama harus dihapus/diganti
-      // Namun, jika backend Anda hanya memproses file, logika di atas sudah cukup 
-      // untuk file baru. Untuk string/null, biarkan backend memproses body biasa.
 
       await axios.put(
         `http://localhost:5000/api/undangan/${invitationId}`,
@@ -240,7 +280,7 @@ const ManageInvite = () => {
 
     await saveDraft();
 
-    if (step < 3) {
+    if (step < 5) {
       setStep(step + 1);
     }
   };
@@ -267,22 +307,33 @@ const ManageInvite = () => {
       <div className="container py-5">
         <h2 className="mb-4 text-center">Manajemen Undangan</h2>
         <form onSubmit={handleSubmit} className="border-manage shadow p-4 bg-white">
-          <button type="button" className="btn btn-secondary" onClick={prevStep}>Kembali</button>
+          <div className="d-flex justify-content-between mb-3">
+            {step > 1 ? (
+              <button 
+                type="button" 
+                className="btn btn-secondary"
+                onClick={prevStep}
+              >
+                Back
+              </button>
+            ) : (
+              <div></div>
+            )}
+
+            {step < 5 && (
+              <button 
+                type="button" 
+                className="btn btn-primary"
+                onClick={nextStep}
+              >
+                Next
+              </button>
+            )}
+          </div>
+
           <StepProgress currentStep={step} />
           {step === 1 && (
             <>
-              <div className="mb-3">
-                <label className="sub-judul fw-bold mb-2 required">Deskripsi</label>
-                <textarea
-                  type="text"
-                  name="location"
-                  value={form.location}
-                  onChange={handleChange}
-                  className="form-control"
-                  required
-                />
-              </div>
-
               <div className="row">
                 <div className="col-md-6 mb-3">
                   <label className="sub-judul fw-bold mb-2 required">Nama Pengantin Pria</label>
@@ -312,7 +363,8 @@ const ManageInvite = () => {
                   <UploadFoto
                     name="groom_img"
                     label="Foto Pengantin Pria"
-                    size={130}
+                    width={130}
+                    height={130}
                     defaultImage={
                       form?.groom_img ? `http://localhost:5000${form.groom_img}` : null}
                     onChange={(file) => handleFileChange(file, "groom_img")}
@@ -323,7 +375,8 @@ const ManageInvite = () => {
                   <UploadFoto
                     name="bride_img"
                     label="Foto Pengantin Wanita"
-                    size={130}
+                    width={130}
+                    height={130}
                     defaultImage={
                       form?.bride_img ? `http://localhost:5000${form.bride_img}` : null
                     }
@@ -351,7 +404,7 @@ const ManageInvite = () => {
                   />
                 </div>
 
-                {showGroomParent && (
+                {showGroomParent ? (
                   <div className="col-md-6 mb-3">
                     <textarea
                       name="groom_parent"
@@ -360,9 +413,13 @@ const ManageInvite = () => {
                       className="form-control"
                     />
                   </div>
+                ) : (
+                  <div className="col-md-6 mb-3">
+                    <p className="text-muted fst-italic">Tidak menggunakan Nama Orang Tua</p>
+                  </div>
                 )}
 
-                {showBrideParent && (
+                {showBrideParent ? (
                   <div className="col-md-6 mb-3">
                     <textarea
                       name="bride_parent"
@@ -370,6 +427,10 @@ const ManageInvite = () => {
                       onChange={handleChange}
                       className="form-control"
                     />
+                  </div>
+                ) : (
+                  <div className="col-md-6 mb-3">
+                    <p className="text-muted fst-italic">Tidak menggunakan Nama Orang Tua</p>
                   </div>
                 )}
 
@@ -395,26 +456,624 @@ const ManageInvite = () => {
                   />
                 </div>
               </div>
-              <button type="submit" className="btn-simpan">Simpan & Lanjut</button>
+              <button type="submit" className="btn-simpan">Simpan</button>
             </>
           )}
 
           {step === 2 && (
             <div>
-              <h5>Step 2: Detail Acara</h5>
               <div className="mb-3">
-                <label className="fw-bold">Tanggal Pernikahan</label>
-                <input type="date" name="wedding_date" value={form.wedding_date} onChange={handleChange} className="form-control" />
+                <label className="sub-judul fw-bold mb-2 required">Deskripsi</label>
+                <textarea
+                  type="text"
+                  name="deskripsi_kasih"
+                  value={form.deskripsi_kasih}
+                  onChange={handleChange}
+                  className="form-control"
+                  required
+                />
               </div>
-              <button type="submit" className="btn-simpan">Simpan & Lanjut</button>
+
+              <div className="mb-3">
+                <label className="sub-judul fw-bold mb-2 required">Lokasi</label>
+                <input
+                  type="text"
+                  name="location"
+                  value={form.location}
+                  onChange={handleChange}
+                  className="form-control"
+                  required
+                />
+              </div>
+
+              <div className="mb-3">
+                <label className="sub-judul fw-bold mb-2 required">maps</label>
+                <input
+                  type="text"
+                  name="maps_link"
+                  value={form.maps_link}
+                  onChange={handleChange}
+                  className="form-control"
+                  required
+                />
+              </div>
+
+              <div className="col-md-6 d-flex justify-content-start mb-2">
+                <ToggleSwitch
+                  label="Tanggal Akad dan Resepsi Sama"
+                  optionLeft="Tidak"
+                  optionRight="Ya"
+                  defaultValue={true}
+                  onChange={handleToggleDate}
+                />
+              </div>
+
+              {isSameDate && (
+                <div className="mb-3">
+                  <label className="sub-judul fw-bold mb-2 required">Tanggal</label>
+                  <input
+                    type="date"
+                    name="wedding_date"
+                    value={form.wedding_date}
+                    onChange={handleChange}
+                    className="form-control"
+                    required
+                  />
+                </div>
+              )}
+
+              {!isSameDate && (
+                <div className="row">
+                  <div className="col-md-6 mb-3">
+                    <label className="sub-judul fw-bold mb-2 required">Tanggal Akad</label>
+                    <input
+                      type="date"
+                      name="akad_date"
+                      value={form.akad_date}
+                      onChange={handleChange}
+                      className="form-control"
+                      required
+                    />
+                  </div>
+
+                  <div className="col-md-6 mb-3">
+                    <label className="sub-judul fw-bold mb-2 required">Tanggal Resepsi</label>
+                    <input
+                      type="date"
+                      name="resepsi_date"
+                      value={form.resepsi_date}
+                      onChange={handleChange}
+                      className="form-control"
+                      required
+                    />
+                  </div>
+                </div>
+              )}
+              
+              <div className="row">
+                <div className="col-md-6">
+                  <label className="sub-judul fw-bold mb-2 required">Jam Akad</label>
+                  <div className="row">
+                    <div className="col-md-6 mb-3">
+                      <input
+                        type="time"
+                        name="akad_start"
+                        value={form.akad_start}
+                        onChange={handleChange}
+                        className="form-control"
+                        placeholder="Mulai"
+                        required
+                      />
+                    </div>
+
+                    <div className="col-md-6 mb-3">
+                      <input
+                        type="time"
+                        name="akad_end"
+                        value={form.akad_end}
+                        onChange={handleChange}
+                        className="form-control"
+                        placeholder="Akhir"
+                        required
+                      />
+                    </div>
+                  </div>
+                </div>
+
+                <div className="col-md-6">
+                  <label className="sub-judul fw-bold mb-2 required">Jam Resepsi</label>
+                  <div className="row">
+                    <div className="col-md-6 mb-3">
+                      <input
+                        type="time"
+                        name="resepsi_start"
+                        value={form.resepsi_start}
+                        onChange={handleChange}
+                        className="form-control"
+                        placeholder="Mulai"
+                        required
+                      />
+                    </div>
+
+                    <div className="col-md-6 mb-3">
+                      <input
+                        type="time"
+                        name="resepsi_end"
+                        value={form.resepsi_end}
+                        onChange={handleChange}
+                        className="form-control"
+                        placeholder="Akhir"
+                        required
+                      />
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div className="col-md-6 d-flex justify-content-start mb-2">
+                <ToggleSwitch
+                  label="Tambah Acara Lainnya"
+                  optionLeft="OFF"
+                  optionRight="ON"
+                  defaultValue={false}
+                  onChange={handleToggleExtraEvent}
+                />
+              </div>
+
+              {showExtraEvent && (
+              <>
+                <div className="mb-3">
+                  <label className="sub-judul fw-bold mb-2">Lokasi</label>
+                  <input
+                    type="text"
+                    name="location"
+                    value={form.location}
+                    onChange={handleChange}
+                    className="form-control"
+                  />
+                </div>
+
+                <div className="mb-3">
+                  <label className="sub-judul fw-bold mb-2">Maps</label>
+                  <input
+                    type="text"
+                    name="maps_link"
+                    value={form.maps_link}
+                    onChange={handleChange}
+                    className="form-control"
+                  />
+                </div>
+
+                <div className="col-md-6 d-flex justify-content-start mb-2">
+                  <ToggleSwitch
+                    label="Tanggal Akad dan Resepsi Sama"
+                    optionLeft="Tidak"
+                    optionRight="Ya"
+                    defaultValue={true}
+                    onChange={handleToggleDate}
+                  />
+                </div>
+
+                {isSameDate && (
+                  <div className="mb-3">
+                    <label className="sub-judul fw-bold mb-2">Tanggal</label>
+                      <input
+                        type="date"
+                        name="wedding_date"
+                        value={form.wedding_date}
+                        onChange={handleChange}
+                        className="form-control"
+                      />
+                    </div>
+                  )}
+
+                  {!isSameDate && (
+                    <div className="row">
+                      <div className="col-md-6 mb-3">
+                        <label className="sub-judul fw-bold mb-2 ">Tanggal Akad</label>
+                        <input
+                          type="date"
+                          name="akad_date"
+                          value={form.akad_date}
+                          onChange={handleChange}
+                          className="form-control"
+                          
+                        />
+                      </div>
+
+                      <div className="col-md-6 mb-3">
+                        <label className="sub-judul fw-bold mb-2 ">Tanggal Resepsi</label>
+                        <input
+                          type="date"
+                          name="resepsi_date"
+                          value={form.resepsi_date}
+                          onChange={handleChange}
+                          className="form-control"
+                        />
+                      </div>
+                    </div>
+                  )}
+
+                  <div className="row">
+                    <div className="col-md-6">
+                      <label className="sub-judul fw-bold mb-2">Jam Akad</label>
+                      <div className="row">
+                        <div className="col-md-6 mb-3">
+                          <input
+                            type="time"
+                            name="akad_start"
+                            value={form.akad_start}
+                            onChange={handleChange}
+                            className="form-control"
+                          />
+                        </div>
+
+                        <div className="col-md-6 mb-3">
+                          <input
+                            type="time"
+                            name="akad_end"
+                            value={form.akad_end}
+                            onChange={handleChange}
+                            className="form-control"
+                          />
+                        </div>
+                      </div>
+                    </div>
+
+                    <div className="col-md-6">
+                      <label className="sub-judul fw-bold mb-2">Jam Resepsi</label>
+                      <div className="row">
+                        <div className="col-md-6 mb-3">
+                          <input
+                            type="time"
+                            name="resepsi_start"
+                            value={form.resepsi_start}
+                            onChange={handleChange}
+                            className="form-control"
+                          />
+                        </div>
+
+                        <div className="col-md-6 mb-3">
+                          <input
+                            type="time"
+                            name="resepsi_end"
+                            value={form.resepsi_end}
+                            onChange={handleChange}
+                            className="form-control"
+                          />
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </>
+              )}
+
+              <button type="submit" className="btn-simpan">Simpan</button>
             </div>
           )}
 
           {step === 3 && (
             <div>
-              <h5>Step 3: Preview & Selesaikan</h5>
-              <p>Preview tema: {form.theme_id}</p>
-              <button type="submit" className="btn-simpan">Selesaikan Undangan</button>
+              <div className="col-md-6 d-flex justify-content-start mb-2">
+                <ToggleSwitch
+                  label="Lagu"
+                  optionLeft="Template"
+                  optionRight="Custom"
+                  defaultValue={true}
+                  onChange={handleToggleFile}
+                  switchWidth={120}
+                  handleWidth={60}
+                />
+              </div>
+              {isCustom && (
+                <UploadFile
+                  onFileSelect={(file) => {
+                    console.log("File dipilih:", file);
+                  }}
+                />
+              )}
+
+              <div className="mb-3">
+                <label className="sub-judul fw-bold mb-2 required">Deskripsi</label>
+                <textarea
+                  type="text"
+                  name="closing_deskripsi"
+                  value={form.closing_deskripsi}
+                  onChange={handleChange}
+                  className="form-control"
+                  required
+                />
+              </div>
+
+              <div className="mb-3">
+                <label className="sub-judul fw-bold required">Galeri Foto</label>
+                <label className="w-100 text-center text-muted small mb-2 d-block">
+                  Silahkan upload beberapa gambar disini Max 5 Mb (Jpg, jpeg, png)
+                </label>
+                <UploadFile
+                  label="Silahkan Drag & Drop Lagu atau Browse File untuk di upload"
+                  width="100%"
+                  height="70px"
+                  onFileSelect={(file) => {
+                    console.log("File dipilih:", file);
+                  }}
+                />
+              </div>
+
+              <div className="col-md-6 d-flex justify-content-start mt-4 mb-2">
+                <ToggleSwitch
+                  label="Bank"
+                  optionLeft="OFF"
+                  optionRight="ON"
+                  defaultValue={true}
+                  onChange={handleToggleBank}
+                />
+              </div>
+              {showBank && (
+                <div className="row">
+                  <div className="col-md-6 mb-2">
+                    <label className="judul fw-bold required">Pria</label>
+                  </div>
+                  <div className="col-md-6 mb-2">
+                    <label className="judul fw-bold required">Wanita</label>
+                  </div>
+
+                  <div className="col-md-6 mb-3">
+                    <label className="sub-judul fw-bold mb-2">Nama Bank</label>
+                    <select
+                      name="groom_bank"
+                      value={form.groom_bank}
+                      onChange={handleChange}
+                      className="form-select"
+                    >
+                      <option value="">-- Pilih Bank --</option>
+                      {bankList.map((bank, index) => (
+                        <option key={index} value={bank}>
+                          {bank}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
+                  <div className="col-md-6 mb-3">
+                    <label className="sub-judul fw-bold mb-2">Nama Bank</label>
+                    <select
+                      name="bride_bank"
+                      value={form.bride_bank}
+                      onChange={handleChange}
+                      className="form-select"
+                    >
+                      <option value="">-- Pilih Bank --</option>
+                      {bankList.map((bank, index) => (
+                        <option key={index} value={bank}>
+                          {bank}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
+
+                  <div className="col-md-6 mb-3">
+                    <label className="sub-judul fw-bold mb-2">No Rekening</label>
+                    <input
+                      type="text"
+                      name="groom_norek"
+                      value={form.groom_norek}
+                      onChange={(e) => {
+                        const onlyNums = e.target.value.replace(/[^0-9]/g, "");
+                        handleChange({
+                          target: {
+                            name: "groom_norek",
+                            value: onlyNums
+                          }
+                        });
+                      }}
+                      className="form-control"
+                    />
+
+                  </div>
+                  <div className="col-md-6 mb-3">
+                    <label className="sub-judul fw-bold mb-2">No Rekening</label>
+                    <input
+                      type="text"
+                      name="bride_norek"
+                      value={form.bride_norek}
+                      onChange={(e) => {
+                        const onlyNums = e.target.value.replace(/[^0-9]/g, "");
+                        handleChange({
+                          target: {
+                            name: "bride_norek",
+                            value: onlyNums
+                          }
+                        });
+                      }}
+                      className="form-control"
+                    />
+
+                  </div>
+                </div>
+              )}
+
+              <button type="submit" className="btn-simpan">Simpan</button>
+            </div>
+          )}
+         
+          {step === 4 && (
+            <div>
+              <div className="col-md-6 d-flex justify-content-start mt-4 mb-2">
+                <ToggleSwitch
+                  label="Cerita Cinta"
+                  optionLeft="OFF"
+                  optionRight="ON"
+                  defaultValue={true}
+                  onChange={handleToggleStory}
+                />
+              </div>
+
+              {!useStory && (
+                <p className="text-muted fst-italic mb-4">
+                  Tidak Menggunakan Cerita Cinta
+                </p>
+              )}
+
+              {useStory && (
+                <>
+                  {stories.map((story, index) => (
+                    <div className="story-card mb-4 position-relative" key={index}>
+
+                      {stories.length > 1 && (
+                        <button
+                          className="btn-remove-story"
+                          onClick={() => removeStoryCard(index)}
+                        >
+                          ✕
+                        </button>
+                      )}
+
+                      <UploadFoto
+                        name={`story_img_${index}`}
+                        label={null}
+                        width={200}
+                        height={200}
+                        defaultImage={story.image}
+                        onChange={(file) => console.log("upload...", file)}
+                      />
+
+                      <div className="story-form">
+                        <label className="sub-judul fw-bold required">Judul</label>
+                        <input
+                          type="text"
+                          className="input"
+                          placeholder="Pertemuan Pertama"
+                          value={story.title}
+                          onChange={(e) => {
+                            const updated = [...stories];
+                            updated[index].title = e.target.value;
+                            setStories(updated);
+                          }}
+                        />
+
+                        <label className="sub-judul fw-bold required">Deskripsi</label>
+                        <textarea
+                          className="textarea"
+                          value={story.description}
+                          onChange={(e) => {
+                            const updated = [...stories];
+                            updated[index].description = e.target.value;
+                            setStories(updated);
+                          }}
+                        />
+
+                        <button type="button" className="btn-save">Simpan</button>
+                      </div>
+                    </div>
+                  ))}
+
+                  <div className="btn-wrapper mb-3">
+                    <button type="button" className="btn-addStory" onClick={addStoryCard}>
+                      + Add Story
+                    </button>
+                  </div>
+                </>
+              )}
+
+              <button type="submit" className="btn-simpan">Simpan</button>
+            </div>
+          )}
+
+          {step === 5 && (
+            <div>
+              <div className="col-md-4 mb-3">
+                <label className="sub-judul fw-bold mb-2 required">Nama Couple</label>
+                <input
+                  type="text"
+                  name="couple_name"
+                  value={form.couple_name}
+                  onChange={handleChange}
+                  className="form-control"
+                  required
+                />
+              </div>
+              <div className="d-flex justify-content-start mt-4 mb-2">
+                <ToggleSwitch
+                  label="Logo"
+                  optionLeft="OFF"
+                  optionRight="ON"
+                  defaultValue={true}
+                  onChange={handleToggleLogo}
+                />
+              </div>
+              {!showLogo && (
+                <p className="text-muted fst-italic mb-4">
+                  Tidak Menggunakan Logo Cover
+                </p>
+              )}
+
+              {showLogo && (
+                <div className="mb-3">
+                  <UploadFoto
+                    name="logo_img"
+                    label= {null}
+                    width={120}
+                    height={120}
+                    defaultImage={
+                      form?.bride_img ? `http://localhost:5000${form.bride_img}` : null
+                    }
+                    onChange={(file) => handleFileChange(file, "bride_img")}
+                  />
+                </div>
+              )}
+
+              <div className="mb-3">
+                <label className="Judul fw-bold mb-1">Foto Cover Mobile</label>
+                <div className="d-flex justify-content-start mb-2">
+                  <ToggleSwitch
+                    label="Gunakan Foto Gallery"
+                    labelClass="sub-judul"
+                    optionLeft="OFF"
+                    optionRight="ON"
+                    defaultValue={true}
+                    onChange={handleToggleCoverMobile}
+                  />
+                </div>
+                {showCoverMobile && (
+                  <UploadFoto
+                    name="logo_img"
+                    label= {null}
+                    width={130}
+                    height={160}
+                    defaultImage={
+                      form?.bride_img ? `http://localhost:5000${form.bride_img}` : null
+                    }
+                    onChange={(file) => handleFileChange(file, "bride_img")}
+                  />
+                )}
+              </div>
+
+              <div className="mb-3">
+                <label className="Judul fw-bold mb-1">Foto Cover Desktop</label>
+                <div className="d-flex justify-content-start mb-2">
+                  <ToggleSwitch
+                    label="Gunakan Foto Gallery"
+                    labelClass="sub-judul"
+                    optionLeft="OFF"
+                    optionRight="ON"
+                    defaultValue={true}
+                    onChange={handleToggleCoverDesktop}
+                  />
+                </div>
+                {showCoverDesktop && (
+                  <UploadFoto
+                    name="logo_img"
+                    label= {null}
+                    width={160}
+                    height={130}
+                    defaultImage={
+                      form?.bride_img ? `http://localhost:5000${form.bride_img}` : null
+                    }
+                    onChange={(file) => handleFileChange(file, "bride_img")}
+                  />
+                )}
+              </div>
+              <button type="submit" className="btn-simpan">Simpan</button>
             </div>
           )}
         </form>

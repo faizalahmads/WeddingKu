@@ -1,0 +1,27 @@
+const bankList = [
+  "Bank BCA",
+  "Bank Mandiri",
+  "Bank BNI",
+  "Bank BRI",
+  "Bank BTN",
+  "Bank CIMB Niaga",
+  "Bank Danamon",
+  "Bank Permata",
+  "Bank Panin",
+  "Bank Mega",
+  "Bank OCBC NISP",
+  "Bank Sinarmas",
+  "Bank BJB",
+  "Bank Jatim",
+  "Bank Jateng",
+  "Bank Nagari",
+  "Bank DKI",
+  "Bank Papua",
+  "Bank Kaltimtara",
+  "Bank Sulselbar",
+  "Bank NTB Syariah",
+  "Bank Muamalat",
+  "Bank Syariah Indonesia (BSI)"
+];
+
+export default bankList;

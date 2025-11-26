@@ -44,6 +44,12 @@
   background-color: #7b5c00;
 }
 
+.judul {
+  font-family: poppins !important;
+  font-size: 15px !important;
+  color: #000000 !important;
+}
+
 .judul-toggle {
   font-family: "Poppins";
   font-size: 12px;

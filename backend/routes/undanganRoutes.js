@@ -89,6 +89,7 @@ router.post("/undangan", verifyToken, upload.fields([
 , async (req, res) => {
   const admin_id = req.user.id;
   const {
+    couple_name,
     groom_name,
     groom_img,
     groom_sosmed,
@@ -110,13 +111,14 @@ router.post("/undangan", verifyToken, upload.fields([
 
   const sqlInsert = `
     INSERT INTO invitations 
-    (groom_name, groom_img, groom_sosmed, bride_name, bride_img, bride_sosmed, wedding_date, location, maps_link, theme_id, gallery_images, code, unique_code, admin_id)
-    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+    (couple_name, groom_name, groom_img, groom_sosmed, bride_name, bride_img, bride_sosmed, wedding_date, location, maps_link, theme_id, gallery_images, code, unique_code, admin_id)
+    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
   `;
 
   try {
     // 🔹 1. Simpan undangan baru
     const [result] = await db.query(sqlInsert, [
+      couple_name,
       groom_name,
       groom_img,
       groom_sosmed,
@@ -135,11 +137,9 @@ router.post("/undangan", verifyToken, upload.fields([
 
     const invitationId = result.insertId;
 
-    // 🔹 2. Update kolom invitation_id di tabel users
     const sqlUpdate = "UPDATE users SET invitation_id = ? WHERE id = ?";
     await db.query(sqlUpdate, [invitationId, admin_id]);
 
-    // 🔹 3. Kirim respon
     res.status(201).json({
       message: "✅ Undangan berhasil dibuat dan dikaitkan dengan admin",
       id: invitationId,
@@ -165,16 +165,15 @@ router.put("/undangan/:id", upload.fields([
   
   async (req, res) => {
   const { id } = req.params;
-  const { groom_name, groom_parent, groom_sosmed, bride_name, bride_parent, bride_sosmed, wedding_date, location, maps_link, theme_id, current_step } = req.body;
+  const { couple_name, groom_name, groom_parent, groom_sosmed, bride_name, bride_parent, bride_sosmed, wedding_date, location, maps_link, theme_id, current_step } = req.body;
 
   const newGroomImgPath = req.files && req.files.groom_img ? `/uploads/${req.files.groom_img[0].filename}` : null;
   const newBrideImgPath = req.files && req.files.bride_img ? `/uploads/${req.files.bride_img[0].filename}` : null;
 
   const updateFields = {
-    groom_name, groom_parent, groom_sosmed, bride_name, bride_parent, bride_sosmed, wedding_date, location, maps_link, theme_id, current_step
+    couple_name, groom_name, groom_parent, groom_sosmed, bride_name, bride_parent, bride_sosmed, wedding_date, location, maps_link, theme_id, current_step
   };
   
-  // Hanya tambahkan field gambar ke updateFields jika ada file baru
   if (newGroomImgPath) {
     updateFields.groom_img = newGroomImgPath;
   }
