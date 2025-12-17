@@ -19,9 +19,16 @@ const ManageInvite = () => {
   const [loading, setLoading] = useState(true);
   const [invitation, setInvitation] = useState(null);
 
+  const [mainEvents, setMainEvents] = useState([
+      { type: 'Akad', title: '', date: '', start_time: '', end_time: '', location: '', maps_link: '' },
+      { type: 'Resepsi', title: '', date: '', start_time: '', end_time: '', location: '', maps_link: '' }
+  ]);
+  const [extraEvents, setExtraEvents] = useState([]);
+
   const [showGroomParent, setShowGroomParent] = useState(true);
   const [showBrideParent, setShowBrideParent] = useState(true);
   const [isSameDate, setIsSameDate] = useState(true);
+  const [isSameDateAdd, setIsSameDateAdd] = useState(true);
   const [showExtraEvent, setShowExtraEvent] = useState(false);
   const [isCustom, setIsCustom] = useState(true);
   const [showBank, setShowBank] = useState(true);
@@ -32,6 +39,7 @@ const ManageInvite = () => {
   const [showLogo, setUseLogo] = useState(true);
   const [showCoverMobile, setUseCoverMobile] = useState(true);
   const [showCoverDesktop, setUseCoverDesktop] = useState(true);
+  const [completedStep, setCompletedStep] = useState(1);
 
 
 
@@ -51,6 +59,10 @@ const ManageInvite = () => {
 
   const handleToggleDate = (value) => {
     setIsSameDate(value);
+  };
+
+  const handleToggleDateAdd = (value) => {
+    setIsSameDateAdd(value);
   };
 
   const handleToggleExtraEvent = (value) => {
@@ -106,9 +118,6 @@ const ManageInvite = () => {
     couple_name: "",
     bride_name: "",
     groom_name: "",
-    wedding_date: "",
-    location: "",
-    maps_link: "",
     description: "",
     theme_id: null,
     groom_img: null,
@@ -133,6 +142,52 @@ const ManageInvite = () => {
         const inv = res.data;
         setInvitation(inv);
 
+        if (inv.events && inv.events.length > 0) {
+          const loadedMainEvents = [];
+          const loadedExtraEvents = [];
+          let hasExtra = false;
+
+          inv.events.forEach(e => {
+            const eventData = {
+                id: e.id,                       // <-- WAJIB supaya ID tidak berubah
+                type: e.type,
+                title: e.title || '',
+                date: e.date || '',
+                start_time: e.start_time || '',
+                end_time: e.end_time || '',
+                location: e.location || '',
+                maps_link: e.maps_link || ''
+            };
+
+            if (e.type === 'Akad' || e.type === 'Resepsi') {
+                loadedMainEvents.push(eventData);
+            } else {
+                loadedExtraEvents.push(eventData);
+                hasExtra = true;
+            }
+        });
+
+          // Set Main Events (Pastikan Akadem dan Resepsi urut)
+          if (loadedMainEvents.length > 0) {
+              setMainEvents(loadedMainEvents);
+          }
+
+          // Set Extra Events
+          setExtraEvents(loadedExtraEvents);
+          setShowExtraEvent(hasExtra);
+
+          // Tentukan isSameDate berdasarkan data yang dimuat
+          const akad = loadedMainEvents.find(e => e.type === 'Akad');
+          const resepsi = loadedMainEvents.find(e => e.type === 'Resepsi');
+          if (akad && resepsi && akad.date !== resepsi.date) {
+              setIsSameDate(false);
+          } else {
+              setIsSameDate(true);
+          }
+      }
+
+        setCompletedStep(inv.current_step);
+
         if (inv.current_step >= 1 && inv.current_step < 5) {
           setStep(inv.current_step + 1);
         } else {
@@ -144,7 +199,10 @@ const ManageInvite = () => {
           couple_name: inv.couple_name ?? "",
           bride_name: inv.bride_name ?? "",
           groom_name: inv.groom_name ?? "",
-          wedding_date: inv.wedding_date ?? "",
+          akad_date: inv.akad_date ? inv.akad_date.slice(0, 10) : "",
+          resepsi_date: inv.resepsi_date ? inv.resepsi_date.slice(0, 10) : "",
+          wedding_date: inv.wedding_date ? inv.wedding_date.slice(0, 10) : "",
+          deskripsi_kasih: inv.deskripsi_kasih ?? "",
           location: inv.location ?? "",
           maps_link: inv.maps_link ?? "",
           description: inv.description ?? "",
@@ -210,7 +268,10 @@ const ManageInvite = () => {
     formData.append("bride_name", form.bride_name);
     formData.append("bride_img", form.bride_img);
     formData.append("bride_parent", form.bride_parent);
+    formData.append("akad_date", form.akad_date);
+    formData.append("resepsi_date", form.resepsi_date);
     formData.append("wedding_date", form.wedding_date);
+    formData.append("deskripsi_kasih", form.deskripsi_kasih);
     formData.append("location", form.location);
     formData.append("maps_link", form.maps_link);
     formData.append("theme_id", form.theme_id);
@@ -240,19 +301,22 @@ const ManageInvite = () => {
     try {
       const formData = new FormData();
 
-      Object.entries(form).forEach(([key, val]) => {
-          // Cek apakah ini field gambar
-        if (key === "groom_img" || key === "bride_img") {
-            // HANYA kirim ke backend jika itu adalah File (gambar baru)
-        if (val instanceof File) {
-          formData.append(key, val);
-        }
-              // JANGAN kirim jika val adalah string (gambar lama) atau null
-        } else {
-              // Field normal tetap dikirim
-        formData.append(key, val);
+      const allEvents = [...mainEvents];
+      if (showExtraEvent) {
+            allEvents.push(...extraEvents);
       }
-    });
+
+      formData.append("events", JSON.stringify(allEvents));
+
+      Object.entries(form).forEach(([key, val]) => {
+            if (key === "groom_img" || key === "bride_img") {
+                if (val instanceof File) {
+                    formData.append(key, val);
+                }
+            } else {
+                formData.append(key, val);
+            }
+        });
 
     formData.append("current_step", step);
 
@@ -267,6 +331,35 @@ const ManageInvite = () => {
       console.error(err);
       alert("Gagal update undangan");
     }
+  };
+
+  const handleEventChange = (index, field, value, isExtra = false) => {
+      const setState = isExtra ? setExtraEvents : setMainEvents;
+      setState(prevEvents => prevEvents.map((event, i) => {
+          if (i === index) {
+              return { ...event, [field]: value };
+          }
+          return event;
+      }));
+  };
+
+  const addExtraEvent = () => {
+      setExtraEvents(prevEvents => [
+          ...prevEvents,
+          {
+              type: 'Tambahan',
+              title: '',
+              date: '',
+              start_time: '',
+              end_time: '',
+              location: '',
+              maps_link: '',
+          },
+      ]);
+  };
+
+  const removeExtraEvent = (indexToRemove) => {
+      setExtraEvents(prevEvents => prevEvents.filter((_, i) => i !== indexToRemove));
   };
 
   const handleSubmit = async (e) => {
@@ -331,7 +424,7 @@ const ManageInvite = () => {
             )}
           </div>
 
-          <StepProgress currentStep={step} />
+          <StepProgress activeStep={step} completedStep={completedStep} />
           {step === 1 && (
             <>
               <div className="row">
@@ -557,9 +650,9 @@ const ManageInvite = () => {
                     <div className="col-md-6 mb-3">
                       <input
                         type="time"
-                        name="akad_start"
-                        value={form.akad_start}
-                        onChange={handleChange}
+                        name="start_time"
+                        value={mainEvents[0].start_time}
+                        onChange={(e) => handleEventChange(0, 'start_time', e.target.value)}
                         className="form-control"
                         placeholder="Mulai"
                         required
@@ -569,9 +662,9 @@ const ManageInvite = () => {
                     <div className="col-md-6 mb-3">
                       <input
                         type="time"
-                        name="akad_end"
-                        value={form.akad_end}
-                        onChange={handleChange}
+                        name="end_time"
+                        value={mainEvents[0].end_time}
+                        onChange={(e) => handleEventChange(0, 'end_time', e.target.value)}
                         className="form-control"
                         placeholder="Akhir"
                         required
@@ -586,9 +679,9 @@ const ManageInvite = () => {
                     <div className="col-md-6 mb-3">
                       <input
                         type="time"
-                        name="resepsi_start"
-                        value={form.resepsi_start}
-                        onChange={handleChange}
+                        name="start_time"
+                        value={mainEvents[1].start_time}
+                        onChange={(e) => handleEventChange(1, 'start_time', e.target.value)}
                         className="form-control"
                         placeholder="Mulai"
                         required
@@ -598,9 +691,9 @@ const ManageInvite = () => {
                     <div className="col-md-6 mb-3">
                       <input
                         type="time"
-                        name="resepsi_end"
-                        value={form.resepsi_end}
-                        onChange={handleChange}
+                        name="end_time"
+                        value={mainEvents[1].end_time} 
+                        onChange={(e) => handleEventChange(1, 'end_time', e.target.value)}
                         className="form-control"
                         placeholder="Akhir"
                         required
@@ -610,7 +703,8 @@ const ManageInvite = () => {
                 </div>
               </div>
 
-              <div className="col-md-6 d-flex justify-content-start mb-2">
+              {/* Sementara Hold untuk Opsi Add Acara lainnya */}
+              {/* <div className="col-md-6 d-flex justify-content-start mb-2">
                 <ToggleSwitch
                   label="Tambah Acara Lainnya"
                   optionLeft="OFF"
@@ -623,7 +717,7 @@ const ManageInvite = () => {
               {showExtraEvent && (
               <>
                 <div className="mb-3">
-                  <label className="sub-judul fw-bold mb-2">Lokasi</label>
+                  <label className="sub-judul fw-bold mb-2">Lokasi Tambahan</label>
                   <input
                     type="text"
                     name="location"
@@ -634,7 +728,7 @@ const ManageInvite = () => {
                 </div>
 
                 <div className="mb-3">
-                  <label className="sub-judul fw-bold mb-2">Maps</label>
+                  <label className="sub-judul fw-bold mb-2">Maps Tambahan</label>
                   <input
                     type="text"
                     name="maps_link"
@@ -650,53 +744,41 @@ const ManageInvite = () => {
                     optionLeft="Tidak"
                     optionRight="Ya"
                     defaultValue={true}
-                    onChange={handleToggleDate}
+                    onChange={handleToggleDateAdd}
                   />
                 </div>
 
-                {isSameDate && (
-                  <div className="mb-3">
-                    <label className="sub-judul fw-bold mb-2">Tanggal</label>
-                      <input
-                        type="date"
-                        name="wedding_date"
-                        value={form.wedding_date}
-                        onChange={handleChange}
-                        className="form-control"
-                      />
+                {isSameDateAdd ? (
+                    <div className="mb-3">
+                        <label className="sub-judul fw-bold mb-2 required">Tanggal</label>
+                        <input
+                            type="date"
+                            value={mainEvents[0].date} 
+                            onChange={(e) => {
+                                const newDate = e.target.value;
+                                handleEventChange(0, 'date', newDate);
+                                handleEventChange(1, 'date', newDate); 
+                            }}
+                            className="form-control"
+                            required
+                        />
                     </div>
-                  )}
-
-                  {!isSameDate && (
+                ) : (
                     <div className="row">
-                      <div className="col-md-6 mb-3">
-                        <label className="sub-judul fw-bold mb-2 ">Tanggal Akad</label>
-                        <input
-                          type="date"
-                          name="akad_date"
-                          value={form.akad_date}
-                          onChange={handleChange}
-                          className="form-control"
-                          
-                        />
-                      </div>
-
-                      <div className="col-md-6 mb-3">
-                        <label className="sub-judul fw-bold mb-2 ">Tanggal Resepsi</label>
-                        <input
-                          type="date"
-                          name="resepsi_date"
-                          value={form.resepsi_date}
-                          onChange={handleChange}
-                          className="form-control"
-                        />
-                      </div>
+                        <div className="col-md-6 mb-3">
+                            <label className="sub-judul fw-bold mb-2 required">Tanggal Akad Tambahan</label>
+                            <input type="date" value={mainEvents[0].date} onChange={(e) => handleEventChange(0, 'date', e.target.value)} className="form-control" required />
+                        </div>
+                        <div className="col-md-6 mb-3">
+                            <label className="sub-judul fw-bold mb-2 required">Tanggal Resepsi Tambahan</label>
+                            <input type="date" value={mainEvents[1].date} onChange={(e) => handleEventChange(1, 'date', e.target.value)} className="form-control" required />
+                        </div>
                     </div>
-                  )}
+                )}
 
                   <div className="row">
                     <div className="col-md-6">
-                      <label className="sub-judul fw-bold mb-2">Jam Akad</label>
+                      <label className="sub-judul fw-bold mb-2">Jam Akad Tambahan</label>
                       <div className="row">
                         <div className="col-md-6 mb-3">
                           <input
@@ -721,7 +803,7 @@ const ManageInvite = () => {
                     </div>
 
                     <div className="col-md-6">
-                      <label className="sub-judul fw-bold mb-2">Jam Resepsi</label>
+                      <label className="sub-judul fw-bold mb-2">Jam Resepsi Tambahan</label>
                       <div className="row">
                         <div className="col-md-6 mb-3">
                           <input
@@ -737,7 +819,7 @@ const ManageInvite = () => {
                           <input
                             type="time"
                             name="resepsi_end"
-                            value={form.resepsi_end}
+                            value={form.resepsi_end} //Blm dibuat di DB
                             onChange={handleChange}
                             className="form-control"
                           />
@@ -746,7 +828,7 @@ const ManageInvite = () => {
                     </div>
                   </div>
                 </>
-              )}
+              )} */}
 
               <button type="submit" className="btn-simpan">Simpan</button>
             </div>
@@ -756,7 +838,7 @@ const ManageInvite = () => {
             <div>
               <div className="col-md-6 d-flex justify-content-start mb-2">
                 <ToggleSwitch
-                  label="Lagu"
+                  label="Lagu" //Blm dibuat di DB untuk musik
                   optionLeft="Template"
                   optionRight="Custom"
                   defaultValue={true}
@@ -777,7 +859,7 @@ const ManageInvite = () => {
                 <label className="sub-judul fw-bold mb-2 required">Deskripsi</label>
                 <textarea
                   type="text"
-                  name="closing_deskripsi"
+                  name="closing_deskripsi" // Blm dibuat di BE
                   value={form.closing_deskripsi}
                   onChange={handleChange}
                   className="form-control"
@@ -786,7 +868,7 @@ const ManageInvite = () => {
               </div>
 
               <div className="mb-3">
-                <label className="sub-judul fw-bold required">Galeri Foto</label>
+                <label className="sub-judul fw-bold required">Galeri Foto</label> 
                 <label className="w-100 text-center text-muted small mb-2 d-block">
                   Silahkan upload beberapa gambar disini Max 5 Mb (Jpg, jpeg, png)
                 </label>
@@ -795,7 +877,7 @@ const ManageInvite = () => {
                   width="100%"
                   height="70px"
                   onFileSelect={(file) => {
-                    console.log("File dipilih:", file);
+                    console.log("File dipilih:", file); //Blm dibuat di DB
                   }}
                 />
               </div>
@@ -822,7 +904,7 @@ const ManageInvite = () => {
                     <label className="sub-judul fw-bold mb-2">Nama Bank</label>
                     <select
                       name="groom_bank"
-                      value={form.groom_bank}
+                      value={form.groom_bank} //Blm dibuat di BE
                       onChange={handleChange}
                       className="form-select"
                     >
@@ -838,7 +920,7 @@ const ManageInvite = () => {
                     <label className="sub-judul fw-bold mb-2">Nama Bank</label>
                     <select
                       name="bride_bank"
-                      value={form.bride_bank}
+                      value={form.bride_bank} //Blm dibuat di BE
                       onChange={handleChange}
                       className="form-select"
                     >
@@ -1010,7 +1092,7 @@ const ManageInvite = () => {
               {showLogo && (
                 <div className="mb-3">
                   <UploadFoto
-                    name="logo_img"
+                    name="logo_img" //Blm dibuat di DB
                     label= {null}
                     width={120}
                     height={120}
