@@ -83,7 +83,6 @@ router.put("/invitations/:id/form", async (req, res) => {
 router.post("/undangan", verifyToken, upload.fields([
   { name: "groom_img", maxCount: 1 },
   { name: "bride_img", maxCount: 1 },
-  { name: "images[]", maxCount: 10 },
 ])
 
 , async (req, res) => {
@@ -103,7 +102,7 @@ router.post("/undangan", verifyToken, upload.fields([
     theme_id
   } = req.body;
 
-  const gallery_images = req.files
+  const invitation_images = req.files
     ? JSON.stringify(req.files.map((file) => `/uploads/${file.filename}`))
     : "[]";
 
@@ -162,7 +161,6 @@ router.post("/undangan", verifyToken, upload.fields([
 router.put("/undangan/:id", upload.fields([
     { name: "groom_img", maxCount: 1 },
     { name: "bride_img", maxCount: 1 },
-    { name: "images[]", maxCount: 10 },
 
   ]),
 
@@ -261,6 +259,62 @@ router.get("/undangan/:name/:code", async (req, res) => {
     console.error("Database error:", err);
     res.status(500).json({ error: "Database error" });
   }
+});
+
+// ========================
+// Post: Gallery
+// ========================
+router.post(
+  "/undangan/:id/gallery",
+  verifyToken,
+  upload.array("images", 10),
+  async (req, res) => {
+    const { id } = req.params;
+
+    if (!req.files || req.files.length === 0) {
+      return res.status(400).json({ message: "No images uploaded" });
+    }
+
+    const values = req.files.map((file, index) => [
+      id,
+      `/uploads/${file.filename}`,
+      "gallery",
+      index
+    ]);
+
+    const sql = `
+      INSERT INTO invitation_images
+      (invitation_id, image_path, type, sort_order)
+      VALUES ?
+    `;
+
+    await db.query(sql, [values]);
+
+    res.json({ message: "Gallery uploaded" });
+  }
+);
+
+// ========================
+// GET: Preview Gallery
+// ========================
+router.get("/invite/:id/gallery", async (req, res) => { // Alternatif get menjadi /:id/gallery atau /invite/:id/gallery
+  const { id } = req.params;
+
+  const [rows] = await db.query(
+    `
+    SELECT id, image_path, sort_order
+    FROM invitation_images
+    WHERE invitation_id = ?
+    ORDER BY sort_order ASC
+    `,
+    [id]
+  );
+
+  res.status(200).json({
+    success: true,
+    total: rows.length,
+    data: rows
+  });
 });
 
 // ========================

@@ -31,6 +31,9 @@ const ManageInvite = () => {
   const [isSameDateAdd, setIsSameDateAdd] = useState(true);
   const [showExtraEvent, setShowExtraEvent] = useState(false);
   const [isCustom, setIsCustom] = useState(true);
+  const [images, setImages] = useState([]);
+  const [imagePreviews, setImagePreviews] = useState([]);
+  const [galleryFromDB, setGalleryFromDB] = useState([]);
   const [showBank, setShowBank] = useState(true);
   const [useStory, setUseStory] = useState(true);
   const [stories, setStories] = useState([
@@ -125,7 +128,6 @@ const ManageInvite = () => {
   });
 
   const [step, setStep] = useState(1);
-  const [images, setImages] = useState([]);
 
   const adminId = localStorage.getItem("admin_id");
 
@@ -227,6 +229,17 @@ const ManageInvite = () => {
     load();
   }, [invitationId, adminId]);
 
+  useEffect(() => {
+    if (!invitationId) return;
+
+    axios
+      .get(`http://localhost:5000/api/invite/${invitationId}/gallery`)
+      .then(res => {
+        setGalleryFromDB(res.data.data); // ⬅️ PENTING
+      })
+      .catch(err => console.error(err));
+  }, [invitationId]);
+
   const saveDraft = useCallback(async () => {
     if (!invitationId) return;
 
@@ -241,6 +254,32 @@ const ManageInvite = () => {
       console.error("Gagal menyimpan draft:", err);
     }
   }, [invitationId, form, step, showGroomParent, showBrideParent]);
+
+  const uploadGallery = async (invitationId) => {
+    if (!images.length) return;
+
+    const fd = new FormData();
+    images.forEach(img => fd.append("images", img));
+
+    await axios.post(
+      `http://localhost:5000/api/undangan/${invitationId}/gallery`,
+      fd,
+      { headers: { "Content-Type": "multipart/form-data" } }
+    );
+  };
+
+  const handleGalleryChange = (e) => {
+    const files = Array.from(e.target.files);
+
+    setImages(files);
+
+    const previews = files.map(file => ({
+      file,
+      url: URL.createObjectURL(file)
+    }));
+
+    setImagePreviews(previews);
+  };
 
   const nextStep = async () => {
     const newStep = Math.min(step + 1, 5);
@@ -276,10 +315,14 @@ const ManageInvite = () => {
     formData.append("maps_link", form.maps_link);
     formData.append("theme_id", form.theme_id);
 
-    // upload images[]
-    images.forEach((img) => {
-      formData.append("images[]", img);
+    images.forEach(img => {
+      formData.append("images", img);
     });
+
+    const res = await axios.post("/api/undangan", formData);
+    const invitationId = res.data.id;
+
+    await uploadGallery(invitationId);
 
     try {
       const res = await axios.post("http://localhost:5000/api/undangan", formData, {
@@ -872,6 +915,42 @@ const ManageInvite = () => {
                 <label className="w-100 text-center text-muted small mb-2 d-block">
                   Silahkan upload beberapa gambar disini Max 5 Mb (Jpg, jpeg, png)
                 </label>
+                <input
+                  type="file"
+                  multiple
+                  accept="image/*"
+                  onChange={handleGalleryChange}
+                />
+                <div className="gallery-preview">
+                  {imagePreviews.map((img, index) => (
+                    <div key={index} className="preview-item">
+                      <img src={img.url} alt={`preview-${index}`} />
+                      <button
+                        type="button"
+                        className="remove-btn"
+                        onClick={() => {
+                          const newImages = imagePreviews.filter((_, i) => i !== index);
+                          setImagePreviews(newImages);
+                          setImages(newImages.map(i => i.file));
+                        }}
+                      >
+                        ✕
+                      </button>
+                    </div>
+                  ))}
+                </div>
+                <h6 className="mt-4">Gallery Tersimpan</h6>
+                <div className="gallery-preview">
+                  {galleryFromDB.map(img => (
+                    <div key={img.id} className="preview-item">
+                      <img
+                        src={`http://localhost:5000${img.image_path}`}
+                        alt="gallery"
+                      />
+                    </div>
+                  ))}
+                </div>
+
                 <UploadFile
                   label="Silahkan Drag & Drop Lagu atau Browse File untuk di upload"
                   width="100%"
