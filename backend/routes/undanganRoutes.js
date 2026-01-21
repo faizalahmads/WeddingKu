@@ -83,7 +83,6 @@ router.put("/invitations/:id/form", async (req, res) => {
 router.post("/undangan", verifyToken, upload.fields([
   { name: "groom_img", maxCount: 1 },
   { name: "bride_img", maxCount: 1 },
-  { name: "images[]", maxCount: 10 },
 ])
 
 , async (req, res) => {
@@ -97,12 +96,13 @@ router.post("/undangan", verifyToken, upload.fields([
     bride_img,
     bride_sosmed,
     wedding_date,
+    deskripsi_kasih,
     location,
     maps_link,
     theme_id
   } = req.body;
 
-  const gallery_images = req.files
+  const invitation_images = req.files
     ? JSON.stringify(req.files.map((file) => `/uploads/${file.filename}`))
     : "[]";
 
@@ -111,8 +111,8 @@ router.post("/undangan", verifyToken, upload.fields([
 
   const sqlInsert = `
     INSERT INTO invitations 
-    (couple_name, groom_name, groom_img, groom_sosmed, bride_name, bride_img, bride_sosmed, wedding_date, location, maps_link, theme_id, gallery_images, code, unique_code, admin_id)
-    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+    (couple_name, groom_name, groom_img, groom_sosmed, bride_name, bride_img, bride_sosmed, akad_date, resepsi_date, wedding_date, deskripsi_kasih, location, maps_link, theme_id, gallery_images, code, unique_code, admin_id)
+    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
   `;
 
   try {
@@ -126,6 +126,7 @@ router.post("/undangan", verifyToken, upload.fields([
       bride_img,
       bride_sosmed,
       wedding_date,
+      deskripsi_kasih,
       location,
       maps_link,
       theme_id,
@@ -160,20 +161,20 @@ router.post("/undangan", verifyToken, upload.fields([
 router.put("/undangan/:id", upload.fields([
     { name: "groom_img", maxCount: 1 },
     { name: "bride_img", maxCount: 1 },
-    { name: "images[]", maxCount: 10 },
-  ]), 
-  
+
+  ]),
+
   async (req, res) => {
   const { id } = req.params;
-  const { couple_name, groom_name, groom_parent, groom_sosmed, bride_name, bride_parent, bride_sosmed, wedding_date, location, maps_link, theme_id, current_step } = req.body;
+  const { couple_name, groom_name, groom_parent, groom_sosmed, bride_name, bride_parent, bride_sosmed, akad_date, resepsi_date, wedding_date, deskripsi_kasih, location, maps_link, theme_id, current_step } = req.body;
 
   const newGroomImgPath = req.files && req.files.groom_img ? `/uploads/${req.files.groom_img[0].filename}` : null;
   const newBrideImgPath = req.files && req.files.bride_img ? `/uploads/${req.files.bride_img[0].filename}` : null;
 
   const updateFields = {
-    couple_name, groom_name, groom_parent, groom_sosmed, bride_name, bride_parent, bride_sosmed, wedding_date, location, maps_link, theme_id, current_step
+    couple_name, groom_name, groom_parent, groom_sosmed, bride_name, bride_parent, bride_sosmed, akad_date, resepsi_date, wedding_date, deskripsi_kasih, location, maps_link, theme_id, current_step
   };
-  
+
   if (newGroomImgPath) {
     updateFields.groom_img = newGroomImgPath;
   }
@@ -222,7 +223,9 @@ router.get("/undangan/:name/:code", async (req, res) => {
       i.bride_bank,
       i.bride_norek,
       i.akad_date,
+      i.resepsi_date,
       i.wedding_date,
+      i.deskripsi_kasih,
       i.location,
       i.maps_link,
       i.gallery_images,
@@ -256,6 +259,62 @@ router.get("/undangan/:name/:code", async (req, res) => {
     console.error("Database error:", err);
     res.status(500).json({ error: "Database error" });
   }
+});
+
+// ========================
+// Post: Gallery
+// ========================
+router.post(
+  "/undangan/:id/gallery",
+  verifyToken,
+  upload.array("images", 10),
+  async (req, res) => {
+    const { id } = req.params;
+
+    if (!req.files || req.files.length === 0) {
+      return res.status(400).json({ message: "No images uploaded" });
+    }
+
+    const values = req.files.map((file, index) => [
+      id,
+      `/uploads/${file.filename}`,
+      "gallery",
+      index
+    ]);
+
+    const sql = `
+      INSERT INTO invitation_images
+      (invitation_id, image_path, type, sort_order)
+      VALUES ?
+    `;
+
+    await db.query(sql, [values]);
+
+    res.json({ message: "Gallery uploaded" });
+  }
+);
+
+// ========================
+// GET: Preview Gallery
+// ========================
+router.get("/invite/:id/gallery", async (req, res) => { // Alternatif get menjadi /:id/gallery atau /invite/:id/gallery
+  const { id } = req.params;
+
+  const [rows] = await db.query(
+    `
+    SELECT id, image_path, sort_order
+    FROM invitation_images
+    WHERE invitation_id = ?
+    ORDER BY sort_order ASC
+    `,
+    [id]
+  );
+
+  res.status(200).json({
+    success: true,
+    total: rows.length,
+    data: rows
+  });
 });
 
 // ========================
@@ -296,28 +355,32 @@ router.get("/invitations/:id", async (req, res) => {
 // GET: Undangan berdasarkan ID
 // ========================
 router.get("/undangan/:id", async (req, res) => {
-  const { id } = req.params;
-  const sql = "SELECT * FROM invitations WHERE id = ?";
-
-  try {
-    const [results] = await db.query(sql, [id]);
-
-    if (results.length === 0) {
-      return res.status(404).json({ message: "Undangan tidak ditemukan berdasarkan ID" });
-    }
-
-    const data = results[0];
+    const { id } = req.params;
+    
     try {
-      data.gallery_images = data.gallery_images ? JSON.parse(data.gallery_images) : [];
-    } catch {
-      data.gallery_images = [];
-    }
+        // 1. Ambil data Undangan
+        const [invitationResults] = await db.query("SELECT * FROM invitations WHERE id = ?", [id]);
+        if (invitationResults.length === 0) {
+            return res.status(404).json({ message: "Undangan tidak ditemukan berdasarkan ID" });
+        }
+        const data = invitationResults[0];
 
-    res.json(data);
-  } catch (err) {
-    console.error("Database error:", err);
-    res.status(500).json({ error: "Gagal mengambil data undangan" });
-  }
+        // 2. Ambil data Events terkait
+        const [eventResults] = await db.query("SELECT * FROM events WHERE invitation_id = ? ORDER BY date, start_time", [id]);
+        data.events = eventResults; // <--- Tambahkan array events ke objek data
+
+        // 3. Parsing gallery_images (seperti kode Anda sebelumnya)
+        try {
+            data.gallery_images = data.gallery_images ? JSON.parse(data.gallery_images) : [];
+        } catch {
+            data.gallery_images = [];
+        }
+
+        res.json(data);
+    } catch (err) {
+        console.error("Database error:", err);
+        res.status(500).json({ error: "Gagal mengambil data undangan" });
+    }
 });
 
 module.exports = router;

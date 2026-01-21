@@ -48,8 +48,8 @@ module.exports = {
       bride_norek: Sequelize.STRING(100),
 
       akad_date: Sequelize.DATEONLY,
+      resepsi_date: Sequelize.DATEONLY,
       wedding_date: Sequelize.DATEONLY,
-      addition_date: Sequelize.DATEONLY,
 
       location: Sequelize.STRING(255),
       addition_location: Sequelize.STRING(255),
