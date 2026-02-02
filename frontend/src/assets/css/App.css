@@ -429,11 +429,6 @@
 }
 
 /* Error */
-body {
-  background-color: #fff8f9;
-  font-family: "Poppins", sans-serif;
-}
-
 button {
   transition: all 0.2s ease-in-out;
 }
