@@ -1,8 +1,8 @@
 import React, { useState, useEffect, useCallback } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
-import { useParams, useSearchParams  } from "react-router-dom";
-import "../../assets/css/ManageInvite.css"
+import { useParams, useSearchParams } from "react-router-dom";
+import "../../assets/css/ManageInvite.css";
 import Navbar from "../../components/Navbar";
 import Footer from "../../components/Footer";
 import StepProgress from "../../components/StepProgress";
@@ -20,37 +20,60 @@ const ManageInvite = () => {
   const [invitation, setInvitation] = useState(null);
 
   const [mainEvents, setMainEvents] = useState([
-      { type: 'Akad', title: '', date: '', start_time: '', end_time: '', location: '', maps_link: '' },
-      { type: 'Resepsi', title: '', date: '', start_time: '', end_time: '', location: '', maps_link: '' }
+    {
+      type: "Akad",
+      title: "",
+      date: "",
+      start_time: "",
+      end_time: "",
+      location: "",
+      maps_link: "",
+    },
+    {
+      type: "Resepsi",
+      title: "",
+      date: "",
+      start_time: "",
+      end_time: "",
+      location: "",
+      maps_link: "",
+    },
   ]);
   const [extraEvents, setExtraEvents] = useState([]);
 
-  const [showGroomParent, setShowGroomParent] = useState(true);
-  const [showBrideParent, setShowBrideParent] = useState(true);
+  const [stories, setStories] = useState([
+    { title: "", description: "", image: null },
+  ]);
+
+  const [toggles, setToggles] = useState({
+    show_groom_parent: true,
+    show_bride_parent: true,
+    same_date: true,
+    same_date_add: true,
+    show_extra_event: false,
+    custom_music: true,
+    show_bank: true,
+    use_story: true,
+    show_logo: true,
+    cover_mobile: true,
+    cover_desktop: true,
+  });
+
+  const setToggle = (key) => (value) => {
+    setToggles((prev) => ({ ...prev, [key]: value }));
+  };
+
   const [isSameDate, setIsSameDate] = useState(true);
-  const [isSameDateAdd, setIsSameDateAdd] = useState(true);
   const [showExtraEvent, setShowExtraEvent] = useState(false);
-  const [isCustom, setIsCustom] = useState(true);
   const [images, setImages] = useState([]);
   const [imagePreviews, setImagePreviews] = useState([]);
   const [galleryFromDB, setGalleryFromDB] = useState([]);
-  const [showBank, setShowBank] = useState(true);
-  const [useStory, setUseStory] = useState(true);
-  const [stories, setStories] = useState([
-    { title: "", description: "", image: null }
-  ]);
-  const [showLogo, setUseLogo] = useState(true);
-  const [showCoverMobile, setUseCoverMobile] = useState(true);
-  const [showCoverDesktop, setUseCoverDesktop] = useState(true);
   const [completedStep, setCompletedStep] = useState(1);
-
-
 
   const [preview, setPreview] = useState({
     groom_img: null,
-    bride_img: null
+    bride_img: null,
   });
-
 
   const handleToggleGroom = (value) => {
     setShowGroomParent(value);
@@ -77,27 +100,91 @@ const ManageInvite = () => {
   };
 
   const handleToggleFile = (value) => {
-    setIsCustom(value); 
+    setIsCustom(value);
   };
 
-  const handleToggleStory = (value) => {
-    setUseStory(value);
+  const handleUploadFile = (files) => {
+    const selectedFiles = Array.isArray(files) ? files : [files];
+
+    const newPreviews = selectedFiles.map((file) => ({
+      file,
+      url: URL.createObjectURL(file),
+    }));
+
+    setImagePreviews((prev) => [...prev, ...newPreviews]);
+    setImages((prev) => [...prev, ...selectedFiles]);
   };
 
   const addStoryCard = () => {
-    setStories([
-      ...stories,
-      { title: "", description: "", image: null }
+    setStories((prev) => [
+      ...prev,
+      {
+        tempId: crypto.randomUUID(),
+        title: "",
+        description: "",
+        image: null,
+      },
     ]);
   };
 
-  const removeStoryCard = (index) => {
-    const updated = stories.filter((_, i) => i !== index);
-    setStories(updated);
+  const removeStoryCard = async (index) => {
+    const story = stories[index];
+
+    if (!window.confirm("Hapus cerita ini?")) return;
+
+    try {
+      if (story.id) {
+        await axios.delete(
+          `http://localhost:5000/api/undangan/stories/${story.id}`,
+          {
+            headers: {
+              Authorization: `Bearer ${localStorage.getItem("token")}`,
+            },
+          },
+        );
+      }
+
+      setStories((prev) => prev.filter((_, i) => i !== index));
+    } catch (err) {
+      console.error("Gagal hapus story:", err);
+      alert("Gagal menghapus story");
+    }
   };
 
-  const handleToggleLogo = (value) => {
-    setUseLogo(value);
+  const handleSaveStoryOnly = async () => {
+    if (!toggles.use_story) return;
+
+    const fd = new FormData();
+
+    fd.append(
+      "stories",
+      JSON.stringify(
+        stories.map(({ title, description }) => ({
+          title,
+          description,
+        })),
+      ),
+    );
+
+    stories.forEach((s, index) => {
+      if (s.image instanceof File) {
+        // 🔥 KUNCI UTAMA
+        fd.append(`story_images[${index}]`, s.image);
+      }
+    });
+
+    await axios.put(
+      `http://localhost:5000/api/undangan/${invitationId}/stories`,
+      fd,
+      {
+        headers: {
+          "Content-Type": "multipart/form-data",
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
+      },
+    );
+
+    alert("Cerita berhasil disimpan");
   };
 
   const handleToggleCoverMobile = (value) => {
@@ -109,11 +196,11 @@ const ManageInvite = () => {
   };
 
   const handleFileChange = (file, field) => {
-    setForm(prev => ({ ...prev, [field]: file }));
+    setForm((prev) => ({ ...prev, [field]: file }));
 
-    setPreview(prev => ({
+    setPreview((prev) => ({
       ...prev,
-      [field]: file ? URL.createObjectURL(file) : null
+      [field]: file ? URL.createObjectURL(file) : null,
     }));
   };
 
@@ -125,6 +212,9 @@ const ManageInvite = () => {
     theme_id: null,
     groom_img: null,
     bride_img: null,
+    logo_img: null,
+    cover_mobile_img: null,
+    cover_desktop_img: null,
   });
 
   const [step, setStep] = useState(1);
@@ -140,38 +230,67 @@ const ManageInvite = () => {
       }
 
       try {
-        const res = await axios.get(`http://localhost:5000/api/invitations/${invitationId}`);
+        const res = await axios.get(
+          `http://localhost:5000/api/undangan/${invitationId}`,
+        );
         const inv = res.data;
         setInvitation(inv);
+
+        if (inv.stories?.length) {
+          setStories(
+            inv.stories.map((s) => ({
+              id: s.id,
+              title: s.title,
+              description: s.description,
+              image: s.image_path
+                ? `http://localhost:5000${s.image_path}`
+                : null,
+            })),
+          );
+        }
+
+        setToggles({
+          show_groom_parent: inv.show_groom_parent === 1,
+          show_bride_parent: inv.show_bride_parent === 1,
+          same_date: inv.same_date === 1,
+          same_date_add: inv.same_date_add === 1,
+          show_extra_event: inv.show_extra_event === 1,
+          custom_music: inv.custom_music === 1,
+          show_bank: inv.show_bank === 1,
+          use_story: inv.use_story === 1,
+          show_logo: inv.show_logo === 1,
+          cover_mobile: inv.cover_mobile === 1,
+          cover_desktop: inv.cover_desktop === 1,
+        });
 
         if (inv.events && inv.events.length > 0) {
           const loadedMainEvents = [];
           const loadedExtraEvents = [];
           let hasExtra = false;
 
-          inv.events.forEach(e => {
+          inv.events.forEach((e) => {
             const eventData = {
-                id: e.id,                       // <-- WAJIB supaya ID tidak berubah
-                type: e.type,
-                title: e.title || '',
-                date: e.date || '',
-                start_time: e.start_time || '',
-                end_time: e.end_time || '',
-                location: e.location || '',
-                maps_link: e.maps_link || ''
+              id: e.id, // <-- WAJIB supaya ID tidak berubah
+              type: e.type,
+              title: e.title || "",
+              date: e.date || "",
+              start_time: e.start_time || "",
+              end_time: e.end_time || "",
+              location: e.location || "",
+              maps_link: e.maps_link || "",
             };
 
-            if (e.type === 'Akad' || e.type === 'Resepsi') {
-                loadedMainEvents.push(eventData);
+            if (e.type === "Akad" || e.type === "Resepsi") {
+              loadedMainEvents.push(eventData);
             } else {
-                loadedExtraEvents.push(eventData);
-                hasExtra = true;
+              loadedExtraEvents.push(eventData);
+              hasExtra = true;
             }
-        });
+          });
 
           // Set Main Events (Pastikan Akadem dan Resepsi urut)
           if (loadedMainEvents.length > 0) {
-              setMainEvents(loadedMainEvents);
+            setMainEvents(loadedMainEvents);
           }
 
           // Set Extra Events
@@ -179,23 +298,24 @@ const ManageInvite = () => {
           setShowExtraEvent(hasExtra);
 
           // Tentukan isSameDate berdasarkan data yang dimuat
-          const akad = loadedMainEvents.find(e => e.type === 'Akad');
-          const resepsi = loadedMainEvents.find(e => e.type === 'Resepsi');
+          const akad = loadedMainEvents.find((e) => e.type === "Akad");
+          const resepsi = loadedMainEvents.find((e) => e.type === "Resepsi");
           if (akad && resepsi && akad.date !== resepsi.date) {
-              setIsSameDate(false);
+            setIsSameDate(false);
           } else {
-              setIsSameDate(true);
+            setIsSameDate(true);
           }
-      }
+        }
 
         setCompletedStep(inv.current_step);
 
-        if (inv.current_step >= 1 && inv.current_step < 5) {
-          setStep(inv.current_step + 1);
-        } else {
-          setStep(5);
-        }
+        const safeStep =
+          inv.current_step && inv.current_step >= 1 && inv.current_step <= 5
+            ? inv.current_step
+            : 1;
 
+        setStep(safeStep);
+        setCompletedStep(safeStep);
 
         setForm({
           couple_name: inv.couple_name ?? "",
@@ -216,6 +336,9 @@ const ManageInvite = () => {
           bride_sosmed: inv.bride_sosmed ?? "",
           groom_img: inv.groom_img ?? "",
           bride_img: inv.bride_img ?? "",
+          logo_img: inv.logo_img ?? "",
+          cover_mobile_img: inv.cover_mobile_img ?? "",
+          cover_desktop_img: inv.cover_desktop_img ?? "",
         });
 
         setLoading(false);
@@ -234,38 +357,58 @@ const ManageInvite = () => {
 
     axios
       .get(`http://localhost:5000/api/invite/${invitationId}/gallery`)
-      .then(res => {
-        setGalleryFromDB(res.data.data); // ⬅️ PENTING
+      .then((res) => {
+        setGalleryFromDB(res.data.data);
       })
-      .catch(err => console.error(err));
+      .catch((err) => console.error(err));
   }, [invitationId]);
 
-  const saveDraft = useCallback(async () => {
-    if (!invitationId) return;
-
-    try {
-      await axios.put(`http://localhost:5000/api/invitations/${invitationId}`, {
-        ...form,
-        showGroomParent,
-        showBrideParent,
-        current_step: step,
-      });
-    } catch (err) {
-      console.error("Gagal menyimpan draft:", err);
+  useEffect(() => {
+    if (!toggles.use_story) {
+      setStories([{ title: "", description: "", image: null }]);
     }
-  }, [invitationId, form, step, showGroomParent, showBrideParent]);
+  }, [toggles.use_story]);
 
-  const uploadGallery = async (invitationId) => {
+  const uploadGallery = async () => {
     if (!images.length) return;
 
     const fd = new FormData();
-    images.forEach(img => fd.append("images", img));
+    images.forEach((file) => fd.append("images", file));
 
     await axios.post(
       `http://localhost:5000/api/undangan/${invitationId}/gallery`,
       fd,
-      { headers: { "Content-Type": "multipart/form-data" } }
+      {
+        headers: {
+          "Content-Type": "multipart/form-data",
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
+      },
     );
+
+    setImages([]);
+    setImagePreviews([]);
+  };
+
+  const handleDeleteGallery = async (imageId) => {
+    if (!window.confirm("Hapus foto ini?")) return;
+
+    try {
+      await axios.delete(
+        `http://localhost:5000/api/undangan/gallery/${imageId}`,
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+        },
+      );
+
+      // 🔥 Update state tanpa reload
+      setGalleryFromDB((prev) => prev.filter((img) => img.id !== imageId));
+    } catch (err) {
+      console.error("Gagal hapus gallery:", err);
+      alert("Gagal menghapus foto");
+    }
   };
 
   const handleGalleryChange = (e) => {
@@ -273,29 +416,20 @@ const ManageInvite = () => {
 
     setImages(files);
 
-    const previews = files.map(file => ({
+    const previews = files.map((file) => ({
       file,
-      url: URL.createObjectURL(file)
+      url: URL.createObjectURL(file),
     }));
 
     setImagePreviews(previews);
   };
 
-  const nextStep = async () => {
-    const newStep = Math.min(step + 1, 5);
-    setStep(newStep);
-    await saveDraft();
-  };
-
-  const prevStep = async () => {
-    const newStep = Math.max(step - 1, 1);
-    setStep(newStep);
-    await saveDraft();
-  };
+  const nextStep = () => setStep((s) => Math.min(s + 1, 5));
+  const prevStep = () => setStep((s) => Math.max(s - 1, 1));
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setForm(prev => ({ ...prev, [name]: value }));
+    setForm((prev) => ({ ...prev, [name]: value }));
   };
 
   const handleCreateInvitation = async () => {
@@ -306,6 +440,7 @@ const ManageInvite = () => {
     formData.append("groom_parent", form.groom_parent);
     formData.append("bride_name", form.bride_name);
     formData.append("bride_img", form.bride_img);
+    formData.append("cover_mobile_img", form.cover_mobile_img);
     formData.append("bride_parent", form.bride_parent);
     formData.append("akad_date", form.akad_date);
     formData.append("resepsi_date", form.resepsi_date);
@@ -315,119 +450,120 @@ const ManageInvite = () => {
     formData.append("maps_link", form.maps_link);
     formData.append("theme_id", form.theme_id);
 
-    images.forEach(img => {
+    images.forEach((img) => {
       formData.append("images", img);
     });
 
-    const res = await axios.post("/api/undangan", formData);
-    const invitationId = res.data.id;
-
-    await uploadGallery(invitationId);
-
     try {
-      const res = await axios.post("http://localhost:5000/api/undangan", formData, {
-        headers: {
-          "Content-Type": "multipart/form-data",
-          Authorization: `Bearer ${localStorage.getItem("token")}`
-        }
-      });
+      const res = await axios.post(
+        "http://localhost:5000/api/undangan",
+        formData,
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+        },
+      );
 
-      alert("Undangan berhasil dibuat!");
-      navigate(`/admin/manage/${res.data.id}`);
+      const invitationId = res.data.id;
+
+      await uploadGallery(invitationId);
+
+      navigate(`/admin/manage/${invitationId}`);
     } catch (err) {
       console.error(err);
       alert("Gagal membuat undangan");
     }
   };
 
-  const handleUpdateInvitation = async () => {
-    try {
-      const formData = new FormData();
+  const updateInvitation = async (nextStep) => {
+    const formData = new FormData();
 
-      const allEvents = [...mainEvents];
-      if (showExtraEvent) {
-            allEvents.push(...extraEvents);
+    const fileFields = [
+      "groom_img",
+      "bride_img",
+      "logo_img",
+      "cover_mobile_img",
+      "cover_desktop_img",
+    ];
+
+    Object.entries(form).forEach(([key, val]) => {
+      if (fileFields.includes(key) && val instanceof File) {
+        formData.append(key, val);
+      } else {
+        formData.append(key, val ?? "");
       }
+    });
 
-      formData.append("events", JSON.stringify(allEvents));
+    Object.entries(toggles).forEach(([key, val]) => {
+      formData.append(key, val ? 1 : 0);
+    });
 
-      Object.entries(form).forEach(([key, val]) => {
-            if (key === "groom_img" || key === "bride_img") {
-                if (val instanceof File) {
-                    formData.append(key, val);
-                }
-            } else {
-                formData.append(key, val);
-            }
-        });
+    formData.append("current_step", nextStep ?? step);
 
-    formData.append("current_step", step);
-
-      await axios.put(
-        `http://localhost:5000/api/undangan/${invitationId}`,
-        formData,
-        { headers: { "Content-Type": "multipart/form-data" } }
-      );
-
-       alert("Undangan berhasil diupdate");
-    } catch (err) {
-      console.error(err);
-      alert("Gagal update undangan");
-    }
+    await axios.put(
+      `http://localhost:5000/api/undangan/${invitationId}`,
+      formData,
+      {
+        headers: {
+          "Content-Type": "multipart/form-data",
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
+      },
+    );
   };
 
   const handleEventChange = (index, field, value, isExtra = false) => {
-      const setState = isExtra ? setExtraEvents : setMainEvents;
-      setState(prevEvents => prevEvents.map((event, i) => {
-          if (i === index) {
-              return { ...event, [field]: value };
-          }
-          return event;
-      }));
+    const setState = isExtra ? setExtraEvents : setMainEvents;
+    setState((prevEvents) =>
+      prevEvents.map((event, i) => {
+        if (i === index) {
+          return { ...event, [field]: value };
+        }
+        return event;
+      }),
+    );
   };
 
   const addExtraEvent = () => {
-      setExtraEvents(prevEvents => [
-          ...prevEvents,
-          {
-              type: 'Tambahan',
-              title: '',
-              date: '',
-              start_time: '',
-              end_time: '',
-              location: '',
-              maps_link: '',
-          },
-      ]);
+    setExtraEvents((prevEvents) => [
+      ...prevEvents,
+      {
+        type: "Tambahan",
+        title: "",
+        date: "",
+        start_time: "",
+        end_time: "",
+        location: "",
+        maps_link: "",
+      },
+    ]);
   };
 
   const removeExtraEvent = (indexToRemove) => {
-      setExtraEvents(prevEvents => prevEvents.filter((_, i) => i !== indexToRemove));
+    setExtraEvents((prevEvents) =>
+      prevEvents.filter((_, i) => i !== indexToRemove),
+    );
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    if (!invitationId) {
-      await handleCreateInvitation();
-    } else {
-      await handleUpdateInvitation();
-    }
+    try {
+      const next = Math.min(step + 1, 5);
 
-    await saveDraft();
+      await updateInvitation(next);
+      await uploadGallery();
 
-    if (step < 5) {
-      setStep(step + 1);
+      setStep(next);
+      setCompletedStep(next);
+
+      alert("Data berhasil disimpan");
+    } catch (err) {
+      alert("Gagal menyimpan data");
     }
   };
-
-  useEffect(() => {
-    const handler = async (e) => {
-      await saveDraft();
-    };
-    window.addEventListener("beforeunload", handler);
-    return () => window.removeEventListener("beforeunload", handler);
-  }, [saveDraft]);
 
   if (loading) {
     return (
@@ -442,11 +578,14 @@ const ManageInvite = () => {
       <Navbar />
       <div className="container py-5">
         <h2 className="mb-4 text-center">Manajemen Undangan</h2>
-        <form onSubmit={handleSubmit} className="border-manage shadow p-4 bg-white">
+        <form
+          onSubmit={handleSubmit}
+          className="border-manage shadow p-4 bg-white"
+        >
           <div className="d-flex justify-content-between mb-3">
             {step > 1 ? (
-              <button 
-                type="button" 
+              <button
+                type="button"
                 className="btn btn-secondary"
                 onClick={prevStep}
               >
@@ -457,8 +596,8 @@ const ManageInvite = () => {
             )}
 
             {step < 5 && (
-              <button 
-                type="button" 
+              <button
+                type="button"
                 className="btn btn-primary"
                 onClick={nextStep}
               >
@@ -472,7 +611,9 @@ const ManageInvite = () => {
             <>
               <div className="row">
                 <div className="col-md-6 mb-3">
-                  <label className="sub-judul fw-bold mb-2 required">Nama Pengantin Pria</label>
+                  <label className="sub-judul fw-bold mb-2 required">
+                    Nama Pengantin Pria
+                  </label>
                   <input
                     type="text"
                     name="groom_name"
@@ -484,7 +625,9 @@ const ManageInvite = () => {
                 </div>
 
                 <div className="col-md-6 mb-3">
-                  <label className="sub-judul fw-bold mb-2 required">Nama Pengantin Wanita</label>
+                  <label className="sub-judul fw-bold mb-2 required">
+                    Nama Pengantin Wanita
+                  </label>
                   <input
                     type="text"
                     name="bride_name"
@@ -502,7 +645,10 @@ const ManageInvite = () => {
                     width={130}
                     height={130}
                     defaultImage={
-                      form?.groom_img ? `http://localhost:5000${form.groom_img}` : null}
+                      form?.groom_img
+                        ? `http://localhost:5000${form.groom_img}`
+                        : null
+                    }
                     onChange={(file) => handleFileChange(file, "groom_img")}
                   />
                 </div>
@@ -514,33 +660,31 @@ const ManageInvite = () => {
                     width={130}
                     height={130}
                     defaultImage={
-                      form?.bride_img ? `http://localhost:5000${form.bride_img}` : null
+                      form?.bride_img
+                        ? `http://localhost:5000${form.bride_img}`
+                        : null
                     }
                     onChange={(file) => handleFileChange(file, "bride_img")}
                   />
                 </div>
-                
+
                 <div className="col-md-6 d-flex justify-content-start mb-2">
                   <ToggleSwitch
                     label="Nama Orang Tua Pria"
-                    optionLeft="OFF"
-                    optionRight="ON"
-                    defaultValue={true}
-                    onChange={handleToggleGroom}
+                    value={toggles.show_groom_parent}
+                    onChange={setToggle("show_groom_parent")}
                   />
                 </div>
 
                 <div className="col-md-6 d-flex justify-content-start mb-2">
                   <ToggleSwitch
                     label="Nama Orang Tua Wanita"
-                    optionLeft="OFF"
-                    optionRight="ON"
-                    defaultValue={true}
-                    onChange={handleToggleBride}
+                    value={toggles.show_bride_parent}
+                    onChange={setToggle("show_bride_parent")}
                   />
                 </div>
 
-                {showGroomParent ? (
+                {toggles.show_groom_parent ? (
                   <div className="col-md-6 mb-3">
                     <textarea
                       name="groom_parent"
@@ -551,11 +695,13 @@ const ManageInvite = () => {
                   </div>
                 ) : (
                   <div className="col-md-6 mb-3">
-                    <p className="text-muted fst-italic">Tidak menggunakan Nama Orang Tua</p>
+                    <p className="text-muted fst-italic">
+                      Tidak menggunakan Nama Orang Tua
+                    </p>
                   </div>
                 )}
 
-                {showBrideParent ? (
+                {toggles.show_bride_parent ? (
                   <div className="col-md-6 mb-3">
                     <textarea
                       name="bride_parent"
@@ -566,7 +712,9 @@ const ManageInvite = () => {
                   </div>
                 ) : (
                   <div className="col-md-6 mb-3">
-                    <p className="text-muted fst-italic">Tidak menggunakan Nama Orang Tua</p>
+                    <p className="text-muted fst-italic">
+                      Tidak menggunakan Nama Orang Tua
+                    </p>
                   </div>
                 )}
 
@@ -580,7 +728,7 @@ const ManageInvite = () => {
                     className="form-control"
                   />
                 </div>
-                
+
                 <div className="col-md-6 mb-3">
                   <label className="sub-judul fw-bold mb-2">Instagram</label>
                   <input
@@ -592,14 +740,18 @@ const ManageInvite = () => {
                   />
                 </div>
               </div>
-              <button type="submit" className="btn-simpan">Simpan</button>
+              <button type="submit" className="btn-simpan">
+                Simpan
+              </button>
             </>
           )}
 
           {step === 2 && (
             <div>
               <div className="mb-3">
-                <label className="sub-judul fw-bold mb-2 required">Deskripsi</label>
+                <label className="sub-judul fw-bold mb-2 required">
+                  Deskripsi
+                </label>
                 <textarea
                   type="text"
                   name="deskripsi_kasih"
@@ -611,7 +763,9 @@ const ManageInvite = () => {
               </div>
 
               <div className="mb-3">
-                <label className="sub-judul fw-bold mb-2 required">Lokasi</label>
+                <label className="sub-judul fw-bold mb-2 required">
+                  Lokasi
+                </label>
                 <input
                   type="text"
                   name="location"
@@ -637,16 +791,16 @@ const ManageInvite = () => {
               <div className="col-md-6 d-flex justify-content-start mb-2">
                 <ToggleSwitch
                   label="Tanggal Akad dan Resepsi Sama"
-                  optionLeft="Tidak"
-                  optionRight="Ya"
-                  defaultValue={true}
-                  onChange={handleToggleDate}
+                  value={toggles.same_date}
+                  onChange={setToggle("same_date")}
                 />
               </div>
 
-              {isSameDate && (
+              {toggles.same_date && (
                 <div className="mb-3">
-                  <label className="sub-judul fw-bold mb-2 required">Tanggal</label>
+                  <label className="sub-judul fw-bold mb-2 required">
+                    Tanggal
+                  </label>
                   <input
                     type="date"
                     name="wedding_date"
@@ -658,10 +812,12 @@ const ManageInvite = () => {
                 </div>
               )}
 
-              {!isSameDate && (
+              {!toggles.same_date && (
                 <div className="row">
                   <div className="col-md-6 mb-3">
-                    <label className="sub-judul fw-bold mb-2 required">Tanggal Akad</label>
+                    <label className="sub-judul fw-bold mb-2 required">
+                      Tanggal Akad
+                    </label>
                     <input
                       type="date"
                       name="akad_date"
@@ -673,7 +829,9 @@ const ManageInvite = () => {
                   </div>
 
                   <div className="col-md-6 mb-3">
-                    <label className="sub-judul fw-bold mb-2 required">Tanggal Resepsi</label>
+                    <label className="sub-judul fw-bold mb-2 required">
+                      Tanggal Resepsi
+                    </label>
                     <input
                       type="date"
                       name="resepsi_date"
@@ -685,17 +843,21 @@ const ManageInvite = () => {
                   </div>
                 </div>
               )}
-              
+
               <div className="row">
                 <div className="col-md-6">
-                  <label className="sub-judul fw-bold mb-2 required">Jam Akad</label>
+                  <label className="sub-judul fw-bold mb-2 required">
+                    Jam Akad
+                  </label>
                   <div className="row">
                     <div className="col-md-6 mb-3">
                       <input
                         type="time"
                         name="start_time"
                         value={mainEvents[0].start_time}
-                        onChange={(e) => handleEventChange(0, 'start_time', e.target.value)}
+                        onChange={(e) =>
+                          handleEventChange(0, "start_time", e.target.value)
+                        }
                         className="form-control"
                         placeholder="Mulai"
                         required
@@ -707,7 +869,9 @@ const ManageInvite = () => {
                         type="time"
                         name="end_time"
                         value={mainEvents[0].end_time}
-                        onChange={(e) => handleEventChange(0, 'end_time', e.target.value)}
+                        onChange={(e) =>
+                          handleEventChange(0, "end_time", e.target.value)
+                        }
                         className="form-control"
                         placeholder="Akhir"
                         required
@@ -717,14 +881,18 @@ const ManageInvite = () => {
                 </div>
 
                 <div className="col-md-6">
-                  <label className="sub-judul fw-bold mb-2 required">Jam Resepsi</label>
+                  <label className="sub-judul fw-bold mb-2 required">
+                    Jam Resepsi
+                  </label>
                   <div className="row">
                     <div className="col-md-6 mb-3">
                       <input
                         type="time"
                         name="start_time"
                         value={mainEvents[1].start_time}
-                        onChange={(e) => handleEventChange(1, 'start_time', e.target.value)}
+                        onChange={(e) =>
+                          handleEventChange(1, "start_time", e.target.value)
+                        }
                         className="form-control"
                         placeholder="Mulai"
                         required
@@ -735,8 +903,10 @@ const ManageInvite = () => {
                       <input
                         type="time"
                         name="end_time"
-                        value={mainEvents[1].end_time} 
-                        onChange={(e) => handleEventChange(1, 'end_time', e.target.value)}
+                        value={mainEvents[1].end_time}
+                        onChange={(e) =>
+                          handleEventChange(1, "end_time", e.target.value)
+                        }
                         className="form-control"
                         placeholder="Akhir"
                         required
@@ -873,7 +1043,9 @@ const ManageInvite = () => {
                 </>
               )} */}
 
-              <button type="submit" className="btn-simpan">Simpan</button>
+              <button type="submit" className="btn-simpan">
+                Simpan
+              </button>
             </div>
           )}
 
@@ -882,15 +1054,13 @@ const ManageInvite = () => {
               <div className="col-md-6 d-flex justify-content-start mb-2">
                 <ToggleSwitch
                   label="Lagu" //Blm dibuat di DB untuk musik
-                  optionLeft="Template"
-                  optionRight="Custom"
-                  defaultValue={true}
-                  onChange={handleToggleFile}
+                  value={toggles.custom_music}
+                  onChange={setToggle("custom_music")}
                   switchWidth={120}
                   handleWidth={60}
                 />
               </div>
-              {isCustom && (
+              {toggles.custom_music && (
                 <UploadFile
                   onFileSelect={(file) => {
                     console.log("File dipilih:", file);
@@ -899,7 +1069,9 @@ const ManageInvite = () => {
               )}
 
               <div className="mb-3">
-                <label className="sub-judul fw-bold mb-2 required">Deskripsi</label>
+                <label className="sub-judul fw-bold mb-2 required">
+                  Deskripsi
+                </label>
                 <textarea
                   type="text"
                   name="closing_deskripsi" // Blm dibuat di BE
@@ -911,66 +1083,85 @@ const ManageInvite = () => {
               </div>
 
               <div className="mb-3">
-                <label className="sub-judul fw-bold required">Galeri Foto</label> 
-                <label className="w-100 text-center text-muted small mb-2 d-block">
-                  Silahkan upload beberapa gambar disini Max 5 Mb (Jpg, jpeg, png)
+                <label className="sub-judul fw-bold required">
+                  Galeri Foto
                 </label>
-                <input
-                  type="file"
-                  multiple
-                  accept="image/*"
-                  onChange={handleGalleryChange}
-                />
-                <div className="gallery-preview">
-                  {imagePreviews.map((img, index) => (
-                    <div key={index} className="preview-item">
-                      <img src={img.url} alt={`preview-${index}`} />
-                      <button
-                        type="button"
-                        className="remove-btn"
-                        onClick={() => {
-                          const newImages = imagePreviews.filter((_, i) => i !== index);
-                          setImagePreviews(newImages);
-                          setImages(newImages.map(i => i.file));
-                        }}
-                      >
-                        ✕
-                      </button>
-                    </div>
-                  ))}
-                </div>
-                <h6 className="mt-4">Gallery Tersimpan</h6>
-                <div className="gallery-preview">
-                  {galleryFromDB.map(img => (
-                    <div key={img.id} className="preview-item">
-                      <img
-                        src={`http://localhost:5000${img.image_path}`}
-                        alt="gallery"
-                      />
-                    </div>
-                  ))}
-                </div>
+                <label className="w-100 text-center text-muted small mb-2 d-block">
+                  Silahkan upload beberapa gambar disini Max 5 Mb (Jpg, jpeg,
+                  png)
+                </label>
 
+                {/* Upload */}
                 <UploadFile
-                  label="Silahkan Drag & Drop Lagu atau Browse File untuk di upload"
+                  label="Silahkan Drag & Drop Foto atau Browse File"
                   width="100%"
                   height="70px"
-                  onFileSelect={(file) => {
-                    console.log("File dipilih:", file); //Blm dibuat di DB
-                  }}
+                  multiple
+                  accept="image/jpeg,image/png"
+                  onFileSelect={handleUploadFile}
                 />
+
+                {imagePreviews.length > 0 && (
+                  <>
+                    <h6 className="mt-4">Preview Upload</h6>
+                    <div className="gallery-preview">
+                      {imagePreviews.map((img, index) => (
+                        <div key={index} className="preview-item">
+                          <img src={img.url} alt={`preview-${index}`} />
+                          <button
+                            type="button"
+                            className="remove-btn"
+                            onClick={() => {
+                              const newPreview = imagePreviews.filter(
+                                (_, i) => i !== index,
+                              );
+                              const newImages = images.filter(
+                                (_, i) => i !== index,
+                              );
+                              setImagePreviews(newPreview);
+                              setImages(newImages);
+                            }}
+                          >
+                            ✕
+                          </button>
+                        </div>
+                      ))}
+                    </div>
+                  </>
+                )}
+
+                {galleryFromDB.length > 0 && (
+                  <>
+                    <h6 className="mt-4">Gallery Tersimpan</h6>
+                    <div className="gallery-preview">
+                      {galleryFromDB.map((img) => (
+                        <div key={img.id} className="preview-item">
+                          <img
+                            src={`http://localhost:5000${img.image_path}`}
+                            alt="gallery"
+                          />
+                          <button
+                            type="button"
+                            className="remove-btn"
+                            onClick={() => handleDeleteGallery(img.id)}
+                          >
+                            ✕
+                          </button>
+                        </div>
+                      ))}
+                    </div>
+                  </>
+                )}
               </div>
 
               <div className="col-md-6 d-flex justify-content-start mt-4 mb-2">
                 <ToggleSwitch
                   label="Bank"
-                  optionLeft="OFF"
-                  optionRight="ON"
-                  defaultValue={true}
-                  onChange={handleToggleBank}
+                  value={toggles.show_bank}
+                  onChange={setToggle("show_bank")}
                 />
               </div>
-              {showBank && (
+              {toggles.show_bank && (
                 <div className="row">
                   <div className="col-md-6 mb-2">
                     <label className="judul fw-bold required">Pria</label>
@@ -1013,7 +1204,9 @@ const ManageInvite = () => {
                   </div>
 
                   <div className="col-md-6 mb-3">
-                    <label className="sub-judul fw-bold mb-2">No Rekening</label>
+                    <label className="sub-judul fw-bold mb-2">
+                      No Rekening
+                    </label>
                     <input
                       type="text"
                       name="groom_norek"
@@ -1023,16 +1216,17 @@ const ManageInvite = () => {
                         handleChange({
                           target: {
                             name: "groom_norek",
-                            value: onlyNums
-                          }
+                            value: onlyNums,
+                          },
                         });
                       }}
                       className="form-control"
                     />
-
                   </div>
                   <div className="col-md-6 mb-3">
-                    <label className="sub-judul fw-bold mb-2">No Rekening</label>
+                    <label className="sub-judul fw-bold mb-2">
+                      No Rekening
+                    </label>
                     <input
                       type="text"
                       name="bride_norek"
@@ -1042,44 +1236,45 @@ const ManageInvite = () => {
                         handleChange({
                           target: {
                             name: "bride_norek",
-                            value: onlyNums
-                          }
+                            value: onlyNums,
+                          },
                         });
                       }}
                       className="form-control"
                     />
-
                   </div>
                 </div>
               )}
 
-              <button type="submit" className="btn-simpan">Simpan</button>
+              <button type="submit" className="btn-simpan">
+                Simpan
+              </button>
             </div>
           )}
-         
+
           {step === 4 && (
             <div>
               <div className="col-md-6 d-flex justify-content-start mt-4 mb-2">
                 <ToggleSwitch
                   label="Cerita Cinta"
-                  optionLeft="OFF"
-                  optionRight="ON"
-                  defaultValue={true}
-                  onChange={handleToggleStory}
+                  value={toggles.use_story}
+                  onChange={setToggle("use_story")}
                 />
               </div>
 
-              {!useStory && (
+              {!toggles.use_story && (
                 <p className="text-muted fst-italic mb-4">
                   Tidak Menggunakan Cerita Cinta
                 </p>
               )}
 
-              {useStory && (
+              {toggles.use_story && (
                 <>
                   {stories.map((story, index) => (
-                    <div className="story-card mb-4 position-relative" key={index}>
-
+                    <div
+                      className="story-card mb-4 position-relative"
+                      key={story.id || story.tempId}
+                    >
                       {stories.length > 1 && (
                         <button
                           className="btn-remove-story"
@@ -1095,11 +1290,17 @@ const ManageInvite = () => {
                         width={200}
                         height={200}
                         defaultImage={story.image}
-                        onChange={(file) => console.log("upload...", file)}
+                        onChange={(file) => {
+                          const updated = [...stories];
+                          updated[index].image = file;
+                          setStories(updated);
+                        }}
                       />
 
                       <div className="story-form">
-                        <label className="sub-judul fw-bold required">Judul</label>
+                        <label className="sub-judul fw-bold required">
+                          Judul
+                        </label>
                         <input
                           type="text"
                           className="input"
@@ -1112,7 +1313,9 @@ const ManageInvite = () => {
                           }}
                         />
 
-                        <label className="sub-judul fw-bold required">Deskripsi</label>
+                        <label className="sub-judul fw-bold required">
+                          Deskripsi
+                        </label>
                         <textarea
                           className="textarea"
                           value={story.description}
@@ -1123,27 +1326,41 @@ const ManageInvite = () => {
                           }}
                         />
 
-                        <button type="button" className="btn-save">Simpan</button>
+                        <button
+                          type="button"
+                          className="btn-save"
+                          onClick={handleSaveStoryOnly}
+                        >
+                          Simpan Story
+                        </button>
                       </div>
                     </div>
                   ))}
 
                   <div className="btn-wrapper mb-3">
-                    <button type="button" className="btn-addStory" onClick={addStoryCard}>
+                    <button
+                      type="button"
+                      className="btn-addStory"
+                      onClick={addStoryCard}
+                    >
                       + Add Story
                     </button>
                   </div>
                 </>
               )}
 
-              <button type="submit" className="btn-simpan">Simpan</button>
+              <button type="submit" className="btn-simpan">
+                Simpan
+              </button>
             </div>
           )}
 
           {step === 5 && (
             <div>
               <div className="col-md-4 mb-3">
-                <label className="sub-judul fw-bold mb-2 required">Nama Couple</label>
+                <label className="sub-judul fw-bold mb-2 required">
+                  Nama Couple
+                </label>
                 <input
                   type="text"
                   name="couple_name"
@@ -1156,29 +1373,29 @@ const ManageInvite = () => {
               <div className="d-flex justify-content-start mt-4 mb-2">
                 <ToggleSwitch
                   label="Logo"
-                  optionLeft="OFF"
-                  optionRight="ON"
-                  defaultValue={true}
-                  onChange={handleToggleLogo}
+                  value={toggles.show_logo}
+                  onChange={setToggle("show_logo")}
                 />
               </div>
-              {!showLogo && (
+              {!toggles.show_logo && (
                 <p className="text-muted fst-italic mb-4">
                   Tidak Menggunakan Logo Cover
                 </p>
               )}
 
-              {showLogo && (
+              {toggles.show_logo && (
                 <div className="mb-3">
                   <UploadFoto
-                    name="logo_img" //Blm dibuat di DB
-                    label= {null}
+                    name="logo_img"
+                    label={null}
                     width={120}
                     height={120}
                     defaultImage={
-                      form?.bride_img ? `http://localhost:5000${form.bride_img}` : null
+                      form?.logo_img
+                        ? `http://localhost:5000${form.logo_img}`
+                        : null
                     }
-                    onChange={(file) => handleFileChange(file, "bride_img")}
+                    onChange={(file) => handleFileChange(file, "logo_img")}
                   />
                 </div>
               )}
@@ -1189,22 +1406,24 @@ const ManageInvite = () => {
                   <ToggleSwitch
                     label="Gunakan Foto Gallery"
                     labelClass="sub-judul"
-                    optionLeft="OFF"
-                    optionRight="ON"
-                    defaultValue={true}
-                    onChange={handleToggleCoverMobile}
+                    value={toggles.cover_mobile}
+                    onChange={setToggle("cover_mobile")}
                   />
                 </div>
-                {showCoverMobile && (
+                {toggles.cover_mobile && (
                   <UploadFoto
-                    name="logo_img"
-                    label= {null}
+                    name="cover_mobile_img"
+                    label={null}
                     width={130}
                     height={160}
                     defaultImage={
-                      form?.bride_img ? `http://localhost:5000${form.bride_img}` : null
+                      form?.cover_mobile_img
+                        ? `http://localhost:5000${form.cover_mobile_img}`
+                        : null
                     }
-                    onChange={(file) => handleFileChange(file, "bride_img")}
+                    onChange={(file) =>
+                      handleFileChange(file, "cover_mobile_img")
+                    }
                   />
                 )}
               </div>
@@ -1215,26 +1434,30 @@ const ManageInvite = () => {
                   <ToggleSwitch
                     label="Gunakan Foto Gallery"
                     labelClass="sub-judul"
-                    optionLeft="OFF"
-                    optionRight="ON"
-                    defaultValue={true}
-                    onChange={handleToggleCoverDesktop}
+                    value={toggles.cover_desktop}
+                    onChange={setToggle("cover_desktop")}
                   />
                 </div>
-                {showCoverDesktop && (
+                {toggles.cover_desktop && (
                   <UploadFoto
-                    name="logo_img"
-                    label= {null}
+                    name="cover_desktop_img"
+                    label={null}
                     width={160}
                     height={130}
                     defaultImage={
-                      form?.bride_img ? `http://localhost:5000${form.bride_img}` : null
+                      form?.cover_desktop_img
+                        ? `http://localhost:5000${form.cover_desktop_img}`
+                        : null
                     }
-                    onChange={(file) => handleFileChange(file, "bride_img")}
+                    onChange={(file) =>
+                      handleFileChange(file, "cover_desktop_img")
+                    }
                   />
                 )}
               </div>
-              <button type="submit" className="btn-simpan">Simpan</button>
+              <button type="submit" className="btn-simpan">
+                Simpan
+              </button>
             </div>
           )}
         </form>
