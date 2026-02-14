@@ -1,5 +1,5 @@
 .border-manage {
-  outline: 5px solid #BAA14F;
+  outline: 5px solid #baa14f;
   border-radius: 20px;
   padding: 1.5rem;
   padding-bottom: 0 !important;
@@ -25,7 +25,7 @@
   background-color: #a98f3e;
 }
 
-.judul{
+.judul {
   font-family: poppins;
   font-size: 15px;
   color: #000000;
@@ -34,7 +34,7 @@
 .sub-judul {
   font-family: poppins;
   font-size: 15px;
-  color: #5D5D5D;
+  color: #5d5d5d;
 }
 
 .upload-container {
@@ -83,14 +83,14 @@
 
 .story-card {
   width: 100%;
-  background: #FAFAFA;
+  background: #fafafa;
   border-radius: 20px;
   padding: 20px;
   display: flex;
   gap: 40px;
   align-items: flex-start;
-  box-shadow: 0 3px 15px rgba(0,0,0,0.05);
-  box-shadow: 0px 4px 4px 2px #C78888;
+  box-shadow: 0 3px 15px rgba(0, 0, 0, 0.05);
+  box-shadow: 0px 4px 4px 2px #c78888;
 }
 
 .story-form {
@@ -112,8 +112,8 @@
 
 .story-card .btn-save {
   align-self: flex-end;
-  background: #BAA14F;
-  color: #FFFFFF;
+  background: #baa14f;
+  color: #ffffff;
   padding: 8px 22px;
   border-radius: 20px;
   border: none;
@@ -131,9 +131,9 @@
   text-align: right;
 }
 
-.btn-addStory{
-  background: #BAA14F;
-  color: #FFFFFF;
+.btn-addStory {
+  background: #baa14f;
+  color: #ffffff;
   padding: 8px 22px;
   border-radius: 5px;
   border: none;
@@ -188,7 +188,7 @@
   position: absolute;
   top: 6px;
   right: 6px;
-  background: rgba(0,0,0,.6);
+  background: rgba(0, 0, 0, 0.6);
   color: white;
   border: none;
   border-radius: 50%;
