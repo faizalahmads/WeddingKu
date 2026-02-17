@@ -21,11 +21,14 @@ const UndanganSaya = () => {
       }
 
       try {
-        const res = await axios.get(`http://localhost:5000/api/invitations/admin/${adminId}`);
+        const res = await axios.get(
+          `http://localhost:5000/api/invitations/admin/${adminId}`,
+        );
         setInvitation(res.data);
       } catch (err) {
-        // kalau 404 berarti belum ada undangan -> biarkan null
-        if (err.response && err.response.status !== 404) {
+        if (err.response?.status === 404) {
+          setInvitation(null); // pastikan null
+        } else {
           console.error(err);
           alert("Gagal memeriksa undangan admin.");
         }
@@ -63,7 +66,7 @@ const UndanganSaya = () => {
 
       if (res.data && res.data.success) {
         const invId = res.data.invitation_id;
-        navigate(`/admin/manage-invite/:invitationId`);
+        navigate(`/admin/manage-invite/${invId}`);
       } else {
         alert("Gagal membuat undangan.");
       }

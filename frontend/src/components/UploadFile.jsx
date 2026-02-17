@@ -38,8 +38,6 @@ const UploadFile = ({
         cursor: "pointer",
       }}
       onClick={() => inputRef.current.click()}
-
-      // ✅ WAJIB UNTUK DRAG & DROP
       onDragOver={(e) => {
         e.preventDefault();
         e.stopPropagation();
@@ -56,7 +54,10 @@ const UploadFile = ({
         hidden
         multiple={multiple}
         accept={accept}
-        onChange={(e) => handleFiles(e.target.files)}
+        onChange={(e) => {
+          handleFiles(e.target.files);
+          e.target.value = null;
+        }}
       />
 
       <span className="text-muted text-center">
