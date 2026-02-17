@@ -21,7 +21,10 @@ const bankList = [
   "Bank Sulselbar",
   "Bank NTB Syariah",
   "Bank Muamalat",
-  "Bank Syariah Indonesia (BSI)"
+  "Bank Syariah Indonesia (BSI)",
+  "Maybank",
+  "Jenius (BTPN)",
+  "Bank Jago"
 ];
 
 export default bankList;

@@ -10,6 +10,7 @@ import ToggleSwitch from "../../components/ToggleSwitch";
 import UploadFoto from "../../components/UploadFoto";
 import UploadFile from "../../components/UploadFile";
 import bankList from "../../assets/data/bankList";
+import Select from "react-select";
 
 const ManageInvite = () => {
   const navigate = useNavigate();
@@ -22,21 +23,13 @@ const ManageInvite = () => {
   const [mainEvents, setMainEvents] = useState([
     {
       type: "Akad",
-      title: "",
-      date: "",
       start_time: "",
       end_time: "",
-      location: "",
-      maps_link: "",
     },
     {
       type: "Resepsi",
-      title: "",
-      date: "",
       start_time: "",
       end_time: "",
-      location: "",
-      maps_link: "",
     },
   ]);
   const [extraEvents, setExtraEvents] = useState([]);
@@ -68,6 +61,7 @@ const ManageInvite = () => {
   const [images, setImages] = useState([]);
   const [imagePreviews, setImagePreviews] = useState([]);
   const [galleryFromDB, setGalleryFromDB] = useState([]);
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const [completedStep, setCompletedStep] = useState(1);
 
   const [preview, setPreview] = useState({
@@ -112,7 +106,16 @@ const ManageInvite = () => {
     }));
 
     setImagePreviews((prev) => [...prev, ...newPreviews]);
-    setImages((prev) => [...prev, ...selectedFiles]);
+    setImages((prev) => {
+      const combined = [...prev, ...selectedFiles];
+
+      const unique = combined.filter(
+        (file, index, self) =>
+          index === self.findIndex((f) => f.name === file.name),
+      );
+
+      return unique;
+    });
   };
 
   const addStoryCard = () => {
@@ -168,23 +171,40 @@ const ManageInvite = () => {
 
     stories.forEach((s, index) => {
       if (s.image instanceof File) {
-        // 🔥 KUNCI UTAMA
         fd.append(`story_images[${index}]`, s.image);
       }
     });
 
-    await axios.put(
-      `http://localhost:5000/api/undangan/${invitationId}/stories`,
-      fd,
-      {
-        headers: {
-          "Content-Type": "multipart/form-data",
-          Authorization: `Bearer ${localStorage.getItem("token")}`,
+    try {
+      await axios.put(
+        `http://localhost:5000/api/undangan/${invitationId}/stories`,
+        fd,
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
         },
-      },
-    );
+      );
 
-    alert("Cerita berhasil disimpan");
+      // 🔥 REFRESH DATA DARI SERVER
+      const refreshed = await axios.get(
+        `http://localhost:5000/api/undangan/${invitationId}`,
+      );
+
+      setStories(
+        refreshed.data.stories.map((s) => ({
+          id: s.id,
+          title: s.title,
+          description: s.description,
+          image: s.image_path ? `http://localhost:5000${s.image_path}` : null,
+        })),
+      );
+
+      alert("Cerita berhasil disimpan");
+    } catch (err) {
+      console.error(err);
+      alert("Gagal menyimpan cerita");
+    }
   };
 
   const handleToggleCoverMobile = (value) => {
@@ -263,41 +283,33 @@ const ManageInvite = () => {
           cover_desktop: inv.cover_desktop === 1,
         });
 
-        if (inv.events && inv.events.length > 0) {
+        if (inv.invitation_events && inv.invitation_events.length > 0) {
           const loadedMainEvents = [];
           const loadedExtraEvents = [];
           let hasExtra = false;
 
-          inv.events.forEach((e) => {
+          inv.invitation_events.forEach((e) => {
             const eventData = {
-              id: e.id, // <-- WAJIB supaya ID tidak berubah
+              id: e.id,
               type: e.type,
-              title: e.title || "",
-              date: e.date || "",
-              start_time: e.start_time || "",
-              end_time: e.end_time || "",
-              location: e.location || "",
-              maps_link: e.maps_link || "",
+              start_time: e.start_time?.slice(0, 5) || "",
+              end_time: e.end_time?.slice(0, 5) || "",
             };
 
             if (e.type === "Akad" || e.type === "Resepsi") {
               loadedMainEvents.push(eventData);
             } else {
               loadedExtraEvents.push(eventData);
-              hasExtra = true;
             }
           });
 
-          // Set Main Events (Pastikan Akadem dan Resepsi urut)
           if (loadedMainEvents.length > 0) {
             setMainEvents(loadedMainEvents);
           }
 
-          // Set Extra Events
           setExtraEvents(loadedExtraEvents);
           setShowExtraEvent(hasExtra);
 
-          // Tentukan isSameDate berdasarkan data yang dimuat
           const akad = loadedMainEvents.find((e) => e.type === "Akad");
           const resepsi = loadedMainEvents.find((e) => e.type === "Resepsi");
           if (akad && resepsi && akad.date !== resepsi.date) {
@@ -327,6 +339,7 @@ const ManageInvite = () => {
           deskripsi_kasih: inv.deskripsi_kasih ?? "",
           location: inv.location ?? "",
           maps_link: inv.maps_link ?? "",
+          closing_deskripsi: inv.closing_deskripsi ?? "",
           description: inv.description ?? "",
           theme_id: inv.theme_id ?? null,
 
@@ -334,6 +347,10 @@ const ManageInvite = () => {
           bride_parent: inv.bride_parent ?? "",
           groom_sosmed: inv.groom_sosmed ?? "",
           bride_sosmed: inv.bride_sosmed ?? "",
+          groom_bank: inv.groom_bank ?? "",
+          groom_norek: inv.groom_norek ?? "",
+          bride_bank: inv.bride_bank ?? "",
+          bride_norek: inv.bride_norek ?? "",
           groom_img: inv.groom_img ?? "",
           bride_img: inv.bride_img ?? "",
           logo_img: inv.logo_img ?? "",
@@ -380,7 +397,6 @@ const ManageInvite = () => {
       fd,
       {
         headers: {
-          "Content-Type": "multipart/form-data",
           Authorization: `Bearer ${localStorage.getItem("token")}`,
         },
       },
@@ -550,11 +566,29 @@ const ManageInvite = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
+     if (isSubmitting) return;
+     setIsSubmitting(true);
+
     try {
       const next = Math.min(step + 1, 5);
 
       await updateInvitation(next);
-      await uploadGallery();
+
+      await axios.put(
+        `http://localhost:5000/api/undangan/${invitationId}/events`,
+        {
+          events: [...mainEvents, ...extraEvents],
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+        },
+      );
+
+      if (step === 3) {
+        await uploadGallery();
+      }
 
       setStep(next);
       setCompletedStep(next);
@@ -916,133 +950,6 @@ const ManageInvite = () => {
                 </div>
               </div>
 
-              {/* Sementara Hold untuk Opsi Add Acara lainnya */}
-              {/* <div className="col-md-6 d-flex justify-content-start mb-2">
-                <ToggleSwitch
-                  label="Tambah Acara Lainnya"
-                  optionLeft="OFF"
-                  optionRight="ON"
-                  defaultValue={false}
-                  onChange={handleToggleExtraEvent}
-                />
-              </div>
-
-              {showExtraEvent && (
-              <>
-                <div className="mb-3">
-                  <label className="sub-judul fw-bold mb-2">Lokasi Tambahan</label>
-                  <input
-                    type="text"
-                    name="location"
-                    value={form.location}
-                    onChange={handleChange}
-                    className="form-control"
-                  />
-                </div>
-
-                <div className="mb-3">
-                  <label className="sub-judul fw-bold mb-2">Maps Tambahan</label>
-                  <input
-                    type="text"
-                    name="maps_link"
-                    value={form.maps_link}
-                    onChange={handleChange}
-                    className="form-control"
-                  />
-                </div>
-
-                <div className="col-md-6 d-flex justify-content-start mb-2">
-                  <ToggleSwitch
-                    label="Tanggal Akad dan Resepsi Sama"
-                    optionLeft="Tidak"
-                    optionRight="Ya"
-                    defaultValue={true}
-                    onChange={handleToggleDateAdd}
-                  />
-                </div>
-
-                {isSameDateAdd ? (
-                    <div className="mb-3">
-                        <label className="sub-judul fw-bold mb-2 required">Tanggal</label>
-                        <input
-                            type="date"
-                            value={mainEvents[0].date} 
-                            onChange={(e) => {
-                                const newDate = e.target.value;
-                                handleEventChange(0, 'date', newDate);
-                                handleEventChange(1, 'date', newDate); 
-                            }}
-                            className="form-control"
-                            required
-                        />
-                    </div>
-                ) : (
-                    <div className="row">
-                        <div className="col-md-6 mb-3">
-                            <label className="sub-judul fw-bold mb-2 required">Tanggal Akad Tambahan</label>
-                            <input type="date" value={mainEvents[0].date} onChange={(e) => handleEventChange(0, 'date', e.target.value)} className="form-control" required />
-                        </div>
-                        <div className="col-md-6 mb-3">
-                            <label className="sub-judul fw-bold mb-2 required">Tanggal Resepsi Tambahan</label>
-                            <input type="date" value={mainEvents[1].date} onChange={(e) => handleEventChange(1, 'date', e.target.value)} className="form-control" required />
-                        </div>
-                    </div>
-                )}
-
-                  <div className="row">
-                    <div className="col-md-6">
-                      <label className="sub-judul fw-bold mb-2">Jam Akad Tambahan</label>
-                      <div className="row">
-                        <div className="col-md-6 mb-3">
-                          <input
-                            type="time"
-                            name="akad_start"
-                            value={form.akad_start}
-                            onChange={handleChange}
-                            className="form-control"
-                          />
-                        </div>
-
-                        <div className="col-md-6 mb-3">
-                          <input
-                            type="time"
-                            name="akad_end"
-                            value={form.akad_end}
-                            onChange={handleChange}
-                            className="form-control"
-                          />
-                        </div>
-                      </div>
-                    </div>
-
-                    <div className="col-md-6">
-                      <label className="sub-judul fw-bold mb-2">Jam Resepsi Tambahan</label>
-                      <div className="row">
-                        <div className="col-md-6 mb-3">
-                          <input
-                            type="time"
-                            name="resepsi_start"
-                            value={form.resepsi_start}
-                            onChange={handleChange}
-                            className="form-control"
-                          />
-                        </div>
-
-                        <div className="col-md-6 mb-3">
-                          <input
-                            type="time"
-                            name="resepsi_end"
-                            value={form.resepsi_end} //Blm dibuat di DB
-                            onChange={handleChange}
-                            className="form-control"
-                          />
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </>
-              )} */}
-
               <button type="submit" className="btn-simpan">
                 Simpan
               </button>
@@ -1053,7 +960,7 @@ const ManageInvite = () => {
             <div>
               <div className="col-md-6 d-flex justify-content-start mb-2">
                 <ToggleSwitch
-                  label="Lagu" //Blm dibuat di DB untuk musik
+                  label="Lagu"
                   value={toggles.custom_music}
                   onChange={setToggle("custom_music")}
                   switchWidth={120}
@@ -1066,6 +973,12 @@ const ManageInvite = () => {
                     console.log("File dipilih:", file);
                   }}
                 />
+              )}
+
+              {!toggles.custom_music && (
+                <p className="text-muted fst-italic mb-4">
+                  Menggunakan Musik Default
+                </p>
               )}
 
               <div className="mb-3">
@@ -1087,7 +1000,7 @@ const ManageInvite = () => {
                   Galeri Foto
                 </label>
                 <label className="w-100 text-center text-muted small mb-2 d-block">
-                  Silahkan upload beberapa gambar disini Max 5 Mb (Jpg, jpeg,
+                  Silahkan upload beberapa gambar disini Max 5 Mb (jpg, jpeg,
                   png)
                 </label>
 
@@ -1172,35 +1085,45 @@ const ManageInvite = () => {
 
                   <div className="col-md-6 mb-3">
                     <label className="sub-judul fw-bold mb-2">Nama Bank</label>
-                    <select
-                      name="groom_bank"
-                      value={form.groom_bank} //Blm dibuat di BE
-                      onChange={handleChange}
-                      className="form-select"
-                    >
-                      <option value="">-- Pilih Bank --</option>
-                      {bankList.map((bank, index) => (
-                        <option key={index} value={bank}>
-                          {bank}
-                        </option>
-                      ))}
-                    </select>
+                    <Select
+                      options={bankList.map((bank) => ({
+                        value: bank,
+                        label: bank,
+                      }))}
+                      value={
+                        form.groom_bank
+                          ? { value: form.groom_bank, label: form.groom_bank }
+                          : null
+                      }
+                      onChange={(selected) =>
+                        setForm((prev) => ({
+                          ...prev,
+                          groom_bank: selected?.value || "",
+                        }))
+                      }
+                      placeholder="Pilih Bank"
+                    />
                   </div>
                   <div className="col-md-6 mb-3">
                     <label className="sub-judul fw-bold mb-2">Nama Bank</label>
-                    <select
-                      name="bride_bank"
-                      value={form.bride_bank} //Blm dibuat di BE
-                      onChange={handleChange}
-                      className="form-select"
-                    >
-                      <option value="">-- Pilih Bank --</option>
-                      {bankList.map((bank, index) => (
-                        <option key={index} value={bank}>
-                          {bank}
-                        </option>
-                      ))}
-                    </select>
+                    <Select
+                      options={bankList.map((bank) => ({
+                        value: bank,
+                        label: bank,
+                      }))}
+                      value={
+                        form.bride_bank
+                          ? { value: form.bride_bank, label: form.bride_bank }
+                          : null
+                      }
+                      onChange={(selected) =>
+                        setForm((prev) => ({
+                          ...prev,
+                          bride_bank: selected?.value || "",
+                        }))
+                      }
+                      placeholder="Pilih Bank"
+                    />
                   </div>
 
                   <div className="col-md-6 mb-3">
@@ -1325,14 +1248,6 @@ const ManageInvite = () => {
                             setStories(updated);
                           }}
                         />
-
-                        <button
-                          type="button"
-                          className="btn-save"
-                          onClick={handleSaveStoryOnly}
-                        >
-                          Simpan Story
-                        </button>
                       </div>
                     </div>
                   ))}
@@ -1340,10 +1255,20 @@ const ManageInvite = () => {
                   <div className="btn-wrapper mb-3">
                     <button
                       type="button"
-                      className="btn-addStory"
+                      className="btn-addStory me-3"
                       onClick={addStoryCard}
                     >
                       + Add Story
+                    </button>
+
+                    <button
+                      type="button"
+                      className="btn-addStory"
+                      onClick={handleSaveStoryOnly}
+                    >
+                      {stories.length === 1
+                        ? "Simpan Cerita"
+                        : "Simpan Semua Cerita"}
                     </button>
                   </div>
                 </>
