@@ -41,8 +41,7 @@ router.get("/invitations/admin/:adminId", async (req, res) => {
       `SELECT * FROM invitations WHERE admin_id = ? ORDER BY created_at DESC LIMIT 1`,
       [adminId],
     );
-    if (rows.length === 0)
-      return res.json(null);
+    if (rows.length === 0) return res.json(null);
     return res.json(rows[0]);
   } catch (err) {
     console.error(err);
@@ -226,31 +225,31 @@ router.put(
 
       // 📸 Groom
       if (req.files?.groom_img) {
-        newFiles.groom_img = `/uploads/${req.files.groom_img[0].filename}`;
+        newFiles.groom_img = `/uploads/invitations/${req.files.groom_img[0].filename}`;
         updateFields.groom_img = newFiles.groom_img;
       }
 
       // 📸 Bride
       if (req.files?.bride_img) {
-        newFiles.bride_img = `/uploads/${req.files.bride_img[0].filename}`;
+        newFiles.bride_img = `/uploads/invitations/${req.files.bride_img[0].filename}`;
         updateFields.bride_img = newFiles.bride_img;
       }
 
       // 📸 Logo
       if (req.files?.logo_img) {
-        newFiles.logo_img = `/uploads/${req.files.logo_img[0].filename}`;
+        newFiles.logo_img = `/uploads/invitations/${req.files.logo_img[0].filename}`;
         updateFields.logo_img = newFiles.logo_img;
       }
 
       // 📸 Cover Mobile
       if (req.files?.cover_mobile_img) {
-        newFiles.cover_mobile_img = `/uploads/${req.files.cover_mobile_img[0].filename}`;
+        newFiles.cover_mobile_img = `/uploads/invitations/${req.files.cover_mobile_img[0].filename}`;
         updateFields.cover_mobile_img = newFiles.cover_mobile_img;
       }
 
       // 📸 Cover Desktop
       if (req.files?.cover_desktop_img) {
-        newFiles.cover_desktop_img = `/uploads/${req.files.cover_desktop_img[0].filename}`;
+        newFiles.cover_desktop_img = `/uploads/invitations/${req.files.cover_desktop_img[0].filename}`;
         updateFields.cover_desktop_img = newFiles.cover_desktop_img;
       }
 
@@ -390,7 +389,7 @@ router.post(
 
       const values = req.files.map((file, index) => [
         id,
-        `/uploads/${file.filename}`,
+        `/uploads/gallery/${file.filename}`,
         "gallery",
         startOrder + index,
       ]);
@@ -418,7 +417,6 @@ router.post(
 // GET: Preview Gallery
 // ========================
 router.get("/invite/:id/gallery", async (req, res) => {
-  // Alternatif get menjadi /:id/gallery atau /invite/:id/gallery
   const { id } = req.params;
 
   const [rows] = await db.query(
@@ -482,7 +480,7 @@ router.put(
     Array.from({ length: 10 }, (_, i) => ({
       name: `story_images[${i}]`,
       maxCount: 1,
-    })),
+    }))
   ),
   async (req, res) => {
     const { id } = req.params;
@@ -495,43 +493,36 @@ router.put(
 
       await conn.beginTransaction();
 
+      // 🔥 Ambil story lama
       const [oldStories] = await conn.query(
         `
-        SELECT sort_order, image_path
+        SELECT id, sort_order, image_path
         FROM invitation_stories
         WHERE invitation_id = ?
         ORDER BY sort_order ASC
         `,
-        [id],
+        [id]
       );
 
+      // 🔥 Mapping gambar lama
       const oldImageMap = {};
       oldStories.forEach((s) => {
         oldImageMap[s.sort_order] = s.image_path;
       });
 
-      oldStories.forEach((story) => {
-        if (story.image_path) {
-          const fullPath = path.join(__dirname, "..", story.image_path);
-          if (fs.existsSync(fullPath)) {
-            fs.unlinkSync(fullPath);
-          }
-        }
-      });
-
-      await conn.query(
-        "DELETE FROM invitation_stories WHERE invitation_id = ?",
-        [id],
-      );
-
       const files = req.files || {};
 
+      // =========================
+      // LOOP UPDATE / INSERT
+      // =========================
       for (let i = 0; i < parsedStories.length; i++) {
         const imageFile = files[`story_images[${i}]`]?.[0];
 
-        let imagePath;
+        let imagePath = oldImageMap[i] || null;
 
+        // 🔥 Jika upload gambar baru
         if (imageFile) {
+          // Hapus hanya gambar lama index ini
           if (oldImageMap[i]) {
             const oldPath = path.join(__dirname, "..", oldImageMap[i]);
             if (fs.existsSync(oldPath)) {
@@ -539,27 +530,85 @@ router.put(
             }
           }
 
-          imagePath = `/uploads/${imageFile.filename}`;
-        } else {
-          imagePath = oldImageMap[i] || null;
+          imagePath = `/uploads/stories/${imageFile.filename}`;
         }
 
-        await conn.query(
-          `INSERT INTO invitation_stories
-          (invitation_id, title, description, image_path, sort_order)
-          VALUES (?, ?, ?, ?, ?)`,
-          [
-            id,
-            parsedStories[i].title,
-            parsedStories[i].description,
-            imagePath,
-            i,
-          ],
+        // Cek apakah sudah ada row di index ini
+        const [existing] = await conn.query(
+          `
+          SELECT id FROM invitation_stories
+          WHERE invitation_id = ? AND sort_order = ?
+          `,
+          [id, i]
         );
+
+        if (existing.length > 0) {
+          // UPDATE
+          await conn.query(
+            `
+            UPDATE invitation_stories
+            SET title = ?, description = ?, image_path = ?
+            WHERE invitation_id = ? AND sort_order = ?
+            `,
+            [
+              parsedStories[i].title,
+              parsedStories[i].description,
+              imagePath,
+              id,
+              i,
+            ]
+          );
+        } else {
+          // INSERT
+          await conn.query(
+            `
+            INSERT INTO invitation_stories
+            (invitation_id, title, description, image_path, sort_order)
+            VALUES (?, ?, ?, ?, ?)
+            `,
+            [
+              id,
+              parsedStories[i].title,
+              parsedStories[i].description,
+              imagePath,
+              i,
+            ]
+          );
+        }
       }
 
+      const [extraStories] = await conn.query(
+        `
+        SELECT sort_order, image_path
+        FROM invitation_stories
+        WHERE invitation_id = ? AND sort_order >= ?
+        `,
+        [id, parsedStories.length]
+      );
+
+      for (const story of extraStories) {
+        if (story.image_path) {
+          const fullPath = path.join(__dirname, "..", story.image_path);
+          if (fs.existsSync(fullPath)) {
+            fs.unlinkSync(fullPath);
+          }
+        }
+      }
+
+      await conn.query(
+        `
+        DELETE FROM invitation_stories
+        WHERE invitation_id = ? AND sort_order >= ?
+        `,
+        [id, parsedStories.length]
+      );
+
       await conn.commit();
-      res.json({ success: true, message: "Story berhasil disimpan" });
+
+      res.json({
+        success: true,
+        message: "Story berhasil disimpan",
+      });
     } catch (err) {
       await conn.rollback();
       console.error("❌ Gagal simpan story:", err);
@@ -567,8 +616,9 @@ router.put(
     } finally {
       conn.release();
     }
-  },
+  }
 );
+
 
 // ========================
 // GET: Cerita Cinta
@@ -639,7 +689,9 @@ router.put("/undangan/:id/events", verifyToken, async (req, res) => {
   try {
     await conn.beginTransaction();
 
-    await conn.query("DELETE FROM invitation_events WHERE invitation_id = ?", [id]);
+    await conn.query("DELETE FROM invitation_events WHERE invitation_id = ?", [
+      id,
+    ]);
 
     for (let i = 0; i < events.length; i++) {
       const e = events[i];
@@ -648,12 +700,7 @@ router.put("/undangan/:id/events", verifyToken, async (req, res) => {
         `INSERT INTO invitation_events 
         (invitation_id, type, start_time, end_time)
         VALUES (?, ?, ?, ?)`,
-        [
-          id,
-          e.type,
-          e.start_time || null,
-          e.end_time || null,
-        ],
+        [id, e.type, e.start_time || null, e.end_time || null],
       );
     }
 

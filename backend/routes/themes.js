@@ -7,7 +7,7 @@ const router = express.Router();
 router.get("/", async (req, res) => {
   try {
     const [rows] = await db.query(
-        "SELECT id, name, description, preview_url FROM themes"
+      "SELECT id, name, description, preview_url, thumbnail_url FROM themes",
     );
     res.json(rows);
   } catch (err) {
@@ -15,5 +15,6 @@ router.get("/", async (req, res) => {
     res.status(500).json({ message: "Gagal mengambil data tema" });
   }
 });
+
 
 module.exports = router;
