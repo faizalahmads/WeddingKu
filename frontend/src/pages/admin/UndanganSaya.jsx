@@ -1,8 +1,10 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import "../../assets/css/PilihTema.css";
 import axios from "axios";
 import Navbar from "../../components/Navbar";
 import Footer from "../../components/Footer";
+
 
 const UndanganSaya = () => {
   const navigate = useNavigate();
@@ -97,32 +99,47 @@ const UndanganSaya = () => {
         {invitation ? (
           <div>
             <h2 className="mb-4">Anda memiliki undangan</h2>
-            <button className="btn btn-success" onClick={() => handleEditInvitation(invitation.id)}>
+            <button
+              className="btn btn-success"
+              onClick={() => handleEditInvitation(invitation.id)}
+            >
               Lanjut ke Edit Undangan
             </button>
           </div>
         ) : (
           <>
             <h2 className="mb-4">Pilih Tema Undangan</h2>
-            <div className="row">
+            <div className="row g-4">
               {themes.map((theme) => (
-                <div className="col-md-6 mb-4" key={theme.id}>
-                  <div className="card shadow-sm p-3">
-                    <img
-                      src={theme.preview_image}
-                      alt={theme.name}
-                      className="card-img-top"
-                      style={{ height: "250px", objectFit: "cover", width: "100%" }}
-                    />
-                    <div className="card-body">
-                      <h4>{theme.name}</h4>
-                      <p>{theme.description}</p>
-                      <button className="btn btn-info me-2" onClick={() => navigate(`/preview/${theme.id}`)}>
-                        Preview Fullscreen
-                      </button>
-                      <button className="btn btn-primary" onClick={() => handleSelectTheme(theme.id)}>
-                        Pilih Tema Ini
-                      </button>
+                <div className="col-lg-3 col-md-6" key={theme.id}>
+                  <div className="saas-card">
+                    <div className="saas-image-wrapper">
+                      <img
+                        src={`http://localhost:5000${theme.thumbnail_url}`}
+                        alt={theme.name}
+                        className="saas-image"
+                      />
+
+                      <div className="saas-overlay">
+                        <button
+                          className="btn btn-light btn-sm me-2"
+                          onClick={() => navigate(`/preview/${theme.id}`)}
+                        >
+                          Preview
+                        </button>
+
+                        <button
+                          className="btn btn-primary btn-sm"
+                          onClick={() => handleSelectTheme(theme.id)}
+                        >
+                          Gunakan Tema
+                        </button>
+                      </div>
+                    </div>
+
+                    <div className="saas-content">
+                      <small className="text-muted">Wedding Template</small>
+                      <h5 className="mt-1">{theme.name}</h5>
                     </div>
                   </div>
                 </div>
