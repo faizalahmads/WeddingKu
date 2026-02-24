@@ -115,7 +115,7 @@ const UndanganSaya = () => {
                   <div className="saas-card">
                     <div className="saas-image-wrapper">
                       <img
-                        src={`http://localhost:5000${theme.thumbnail_url}`}
+                        src={`http://localhost:5000/uploads/themes/${theme.thumbnail_url}`}
                         alt={theme.name}
                         className="saas-image"
                       />

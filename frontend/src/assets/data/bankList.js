@@ -15,14 +15,10 @@ const bankList = [
   "Bank Jatim",
   "Bank Jateng",
   "Bank Nagari",
-  "Bank DKI",
+  "Bank Jakarta",
   "Bank Papua",
-  "Bank Kaltimtara",
-  "Bank Sulselbar",
-  "Bank NTB Syariah",
   "Bank Muamalat",
   "Bank Syariah Indonesia (BSI)",
-  "Maybank",
   "Jenius (BTPN)",
   "Bank Jago"
 ];

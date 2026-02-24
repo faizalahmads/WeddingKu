@@ -1,32 +1,42 @@
+/* =========================================
+   GLOBAL LAYOUT
+========================================= */
 .undangan-bg {
-    background-image: url("../images/bg-flower-pastel.png");
-    background-size: cover;
-    background-position: center;
-    background-attachment: fixed;
-    min-height: 100vh;
-    overflow-y: auto;
-    scroll-behavior: smooth;
+  background: url("../images/bg-flower-pastel.png") center/cover no-repeat fixed;
+  min-height: 100vh;
+  overflow-y: auto;
+  scroll-behavior: smooth;
 }
 
 /* Setiap halaman undangan */
 .section-card {
-    min-height: 100vh;
-    display: flex;
-    justify-content: center;
-    align-items: center;
+  min-height: 100dvh;
+  padding: 60px 20px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  opacity: 0;
+  transform: scale(0.97);
+  transition:
+    opacity 0.5s ease-out,
+    transform 0.5s ease-out;
+}
+.section-card.animate {
+  animation: fadeZoomIn 1.2s ease-in-out forwards;
 }
 
 .undangan-card {
-    width: 100%;
-    max-width: 720px;
-    padding: 40px;
-    background: rgba(255, 255, 255, 0.75);
-    border-radius: 16px;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
-    margin: auto;
+  width: 100%;
+  max-width: 720px;
+  padding: 40px;
+  background: rgba(255, 255, 255, 0.75);
+  border-radius: 20px;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.2);
 }
 
-/* Typography dan detail */
+/* =========================================
+   TYPOGRAPHY
+========================================= */
 .judul {
   font-family: "Playfair Display SC";
   font-size: 36px;
@@ -44,21 +54,6 @@
   margin-top: 20px;
 }
 
-.lokasi {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 10px;
-  margin-top: 20px;
-  font-family: "Poppins";
-  font-size: 20px;
-}
-
-.lokasi img {
-  width: 32px;
-  height: 32px;
-}
-
 .ucapan {
   margin-top: 30px;
   font-family: "Poppins";
@@ -71,26 +66,47 @@
   font-size: 24px;
 }
 
+/* =========================================
+   LOCATION
+========================================= */
+
+.lokasi {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: 20px;
+  font-family: "Poppins";
+  font-size: 20px;
+}
+
+.lokasi img {
+  width: 32px;
+  height: 32px;
+}
+
 .qr img {
   width: 150px;
   height: 150px;
   margin-top: 30px;
 }
 
-/* Halaman 2 */
+/* =========================================
+   COUPLE SECTION
+========================================= */
+
 .judul2 {
   font-family: "Great Vibes";
   font-size: 45px;
   margin-bottom: 20px;
-  color: #68561C;
+  color: #68561c;
 }
 
 .foto-couple img {
-  width: 330px;
-  max-height: 430px;
-  border-top-left-radius: 100px;
-  border-top-right-radius: 100px;
-  border: 10px solid #BAA14F;
+  width: 100%;
+  max-width: 330px;
+  height: 430px;
+  border-radius: 100px 100px 0 0;
+  border: 8px solid #baa14f;
   object-fit: cover;
 }
 
@@ -105,19 +121,20 @@
   font-size: 20apx;
 }
 
+/* =========================================
+   SOSMED
+========================================= */
+
 .sosmed-container {
-  width: auto;
-  max-height: 50px;
   display: inline-flex;
   align-items: center;
-  justify-content: center;
-  gap: 5px;
-  padding: 5px;
+  gap: 6px;
+  padding: 6px 14px;
   background: #98653b;
   border-radius: 50px;
   text-decoration: none;
-  transition: transform 0.2s ease, background 0.2s ease;
   margin-top: 15px;
+  transition: 0.3s;
 }
 
 .sosmed-container:hover {
@@ -126,81 +143,103 @@
 }
 
 .sosmed-icon {
-  width: 30px;
-  height: 30px;
+  width: 24px;
+  height: 24px;
 }
 
 .sosmed-username {
-  color: #fffafa;
-  font-family: "Platypi", serif;
-  font-size: 18px;
-  font-weight: 400;
-  line-height: 30px;
-  text-align: center;
-  word-wrap: break-word;
+  color: #fff;
+  font-family: "Platypi";
+  font-size: 16px;
 }
 
 /* ===== Animasi Fade + Zoom ===== */
 @keyframes fadeZoomIn {
-    0% {
-        opacity: 0;
-        transform: scale(0.95);
-    }
-
-    100% {
-        opacity: 1;
-        transform: scale(1);
-    }
-}
-
-/* Default: sembunyikan dulu */
-.section-card {
+  0% {
     opacity: 0;
-    transform: scale(0.97);
-    transition: opacity 0.5s ease-out, transform 0.5s ease-out;
-}
+    transform: scale(0.95);
+  }
 
-/* Ketika terlihat di layar */
-.section-card.animate {
-    animation: fadeZoomIn 1.2s ease-in-out forwards;
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
 }
 
 @media (max-width: 768px) {
-    .undangan-card {
-        width: 90%;
-        height: auto;
-        padding: 2rem 1rem;
-    }
+  .undangan-card {
+    width: 90%;
+    height: auto;
+    padding: 2rem 1rem;
+  }
 }
 
-/* Halaman 2 */
+/* =========================================
+   AKAD SECTION
+========================================= */
+
 .akad-section {
   display: flex;
   flex-direction: column;
   align-items: center;
   gap: 5px;
-  margin-bottom: 10px;
 }
 
 .akad-title {
   display: flex;
-  justify-content: center;
   align-items: center;
+  justify-content: center;
   gap: 20px;
 }
 
 .akad-line {
-  width: 89px;
-  height: 0;
-  border-top: 5px solid #68561C;
+  width: 80px;
+  border-top: 4px solid #68561c;
   border-radius: 20px;
 }
 
 .akad-heading {
   font-family: "Pacifico";
-  color: #68561C;
-  font-size: 50px;
+  font-size: 45px;
+  color: #68561c;
+}
+
+.akad-day {
+  font-family: "Platypi";
+  font-size: 70px;
+  color: #3d3d3d;
+}
+
+.akad-month,
+.akad-address {
+  font-family: "Platypi";
+  font-size: 18px;
+  color: #3d3d3d;
+  text-align: center;
+}
+
+.akad-text {
   margin: 0;
+  font-family: "Platypi";
+  font-size: 20px;
+  color: #3d3d3d;
+}
+
+.akad-detail p {
+  margin: 0;
+}
+
+.btn-map {
+  background: #634f62;
+  color: #fff;
+  border-radius: 30px;
+  padding: 10px 25px;
+  border: none;
+  transition: 0.3s;
+}
+
+.btn-map:hover {
+  background: #4a3b4c;
 }
 
 .akad-date-time {
@@ -216,20 +255,6 @@
   align-items: center;
   text-align: start;
   gap: 10px;
-  margin-bottom: 10px;
-}
-
-.akad-day {
-  font-family: "Platypi";
-  font-size: 80px;
-  color: #3D3D3D;
-  line-height: 30px;
-}
-
-.akad-month {
-  font-family: "Platypi";
-  font-size: 25px;
-  color: #3D3D3D;
 }
 
 .akad-detail {
@@ -238,21 +263,6 @@
   flex-direction: column;
   align-items: center;
   gap: 8px;
-}
-
-.akad-text {
-  font-family: "Platypi";
-  font-size: 20px;
-  color: #3D3D3D;
-  margin: 0;
-}
-
-.akad-address {
-  font-family: "Platypi", serif;
-  font-size: 20px;
-  color: #3D3D3D;
-  line-height: 40px;
-  text-align: center;
 }
 
 .clock-icon {
@@ -265,27 +275,11 @@
   height: 40px;
 }
 
-.btn-map {
-  background-color: #634F62;
-  color: #fff;
-  font-size: 15px;
-  font-family: "Poppins";
-  border-radius: 30px;
-  padding: 10px 30px;
-  border: none;
-  transition: background 0.3s ease;
-}
-
-.btn-map:hover {
-  background-color: #4a3b4c;
-}
-
 /* Halaman 5 */
 .save-date {
   font-family: "Pacifico";
-  color: #3D3D3D;
+  color: #3d3d3d;
   font-size: 30px;
-  margin: 25px;
 }
 
 .countdown-container {
@@ -298,7 +292,7 @@
 .countdown-box {
   width: 93px;
   padding: 5px 10px;
-  background: #68561C;
+  background: #68561c;
   border-radius: 20px;
   display: inline-flex;
   flex-direction: column;
@@ -332,7 +326,7 @@
   align-items: center;
   text-align: center;
   font-family: "Platypi";
-  color: #3D3D3D;
+  color: #3d3d3d;
   font-size: 20px;
   margin: 25px auto;
 }
@@ -343,7 +337,7 @@
 
 .rsvp-button {
   padding: 10px;
-  background: #68561C;
+  background: #68561c;
   overflow: hidden;
   border-radius: 20px;
   display: inline-flex;
@@ -353,6 +347,7 @@
   gap: 5px;
   text-decoration: none;
   color: inherit;
+  cursor: pointer;
 }
 
 .rsvp-button img {
@@ -374,40 +369,38 @@
 /* Halaman 6 */
 .galeri-2x3 {
   display: grid;
-  grid-template-columns: repeat(2, 1fr); /* dua kolom */
-  grid-template-rows: repeat(3, auto);   /* tiga baris */
-  gap: 20px; /* jarak antar gambar */
-  justify-items: center;
-  align-items: center;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 20px;
   width: 100%;
-  max-width: 720px; /* agar tidak terlalu lebar */
-  margin: 0 auto; /* posisi tengah */
-  padding: 20px 0;
+  max-width: 700px;
+  margin: 0 auto;
+  padding: 30px 0;
 }
 
 .galeri-2x3 img {
   width: 100%;
-  max-width: 336px;
-  height: 460px;
+  aspect-ratio: 3 / 4;
   object-fit: cover;
-  border-radius: 10px;
-  border: 3px solid black;
-  transition: transform 0.3s ease;
+  border-radius: 16px;
+  border: 3px solid #000;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 
 .galeri-2x3 img:hover {
-  transform: scale(1.05);
+  transform: scale(1.04);
+  box-shadow: 0 10px 25px rgba(0,0,0,0.25);
 }
 
-/* Responsif untuk HP */
+/* MOBILE */
 @media (max-width: 768px) {
   .galeri-2x3 {
-    grid-template-columns: 1fr;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 12px;
+    padding: 20px 0;
   }
 
   .galeri-2x3 img {
-    max-width: 90%;
-    height: auto;
+    aspect-ratio: 3 / 4;
   }
 }
 
@@ -607,8 +600,8 @@
 }
 
 .rekening-logo {
-  width: auto;
-  max-height: 55px;
+  width: 150px;
+  height: 150px;
   object-fit: contain;
 }
 
@@ -705,8 +698,8 @@
   line-height: 3rem;
   color: #baa14f;
   text-shadow:
-    0px 1px 1px rgba(255, 255, 255, 0.5),   /* cahaya atas */
-    0px -2px 3px rgba(0, 0.4, 0, 0.4); 
+    0px 1px 1px rgba(255, 255, 255, 0.5),
+    /* cahaya atas */ 0px -2px 3px rgba(0, 0.4, 0, 0.4);
 }
 
 /* Bagian bawah (footer) */
@@ -718,7 +711,7 @@
 }
 
 .closing-made {
-  font-family: "Roboto", ;
+  font-family: "Roboto";
   font-size: 1rem;
   color: #000;
 }
@@ -746,7 +739,9 @@
   padding: 14px;
   cursor: pointer;
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.25);
-  transition: transform 0.3s ease, background 0.3s ease;
+  transition:
+    transform 0.3s ease,
+    background 0.3s ease;
   z-index: 9999;
 }
 
@@ -785,3 +780,241 @@
   transform: scale(1.1);
 }
 
+/* ===============================
+   MOBILE OPTIMIZATION (FIXED)
+================================= */
+
+@media (max-width: 768px) {
+  .section-card {
+    min-height: 100dvh; /* lebih stabil di HP */
+    padding: 40px 15px;
+  }
+
+  .undangan-card {
+    width: 70%;
+    padding: 25px 18px;
+    border-radius: 20px;
+  }
+
+  /* Typography */
+  .judul {
+    font-size: 22px;
+  }
+
+  .nama {
+    font-size: 42px;
+  }
+
+  .tanggal {
+    font-size: 16px;
+  }
+
+  .lokasi {
+    font-size: 14px;
+    gap: 3px;
+  }
+
+  .lokasi img {
+    width: 20px;
+    height: 20px;
+  }
+
+  .ucapan {
+    font-size: 14px;
+  }
+
+  .kepada {
+    font-size: 16px;
+  }
+
+  /* Couple Section */
+  .judul2 {
+    font-size: 32px;
+  }
+
+  .foto-couple img {
+    width: 220px;
+    height: 320px;
+    max-height: none;
+    border-width: 6px;
+  }
+
+  .nama-couple {
+    font-size: 24px;
+  }
+
+  .ortu {
+    font-size: 14px;
+  }
+
+  /* Akad */
+  .akad-heading {
+    font-size: 30px;
+  }
+
+  .akad-day {
+    font-size: 50px;
+  }
+
+  .akad-month {
+    font-size: 16px;
+  }
+
+  .akad-text,
+  .akad-address {
+    font-size: 14px;
+    line-height: 22px;
+  }
+
+  .btn-map {
+    font-size: 13px;
+    padding: 8px 20px;
+  }
+
+  .clock-icon {
+    width: 20px;
+    height: 20px;
+  }
+
+  .location-icon {
+    width: 24px;
+    height: 24px;
+  }
+
+  /* Countdown */
+  .countdown-container {
+    flex-wrap: wrap;
+    gap: 10px;
+    justify-content: center;
+  }
+
+  .countdown-box {
+    width: 65px;
+    padding: 5px;
+  }
+
+  .countdown-value {
+    font-size: 20px;
+  }
+
+  .countdown-label {
+    font-size: 12px;
+    line-height: 18px;
+  }
+
+  .save-date {
+    font-size: 20px;
+  }
+
+  .save-text {
+    width: 100%;
+    font-size: 14px;
+  }
+
+  .rsvp-text {
+    font-size: 14px;
+    width: auto;
+  }
+
+  /* =========================================
+   GALLERY
+========================================= */
+
+  .galeri-2x3 {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 20px;
+  }
+
+  .galeri-2x3 img {
+    width: 100%;
+    height: 460px;
+    object-fit: cover;
+    border-radius: 10px;
+    border: 3px solid black;
+    transition: 0.3s;
+  }
+
+  .galeri-2x3 img:hover {
+    transform: scale(1.05);
+  }
+
+  /* RSVP */
+  .rsvp-title {
+    font-size: 30px;
+  }
+
+  .rsvp-icon {
+    width: 30px;
+    height: 30px;
+  }
+
+  .rsvp-list {
+    max-height: 200px;
+  }
+
+  /* =========================================
+   TANDA KASIH
+========================================= */
+
+  .tanda-kasih-title {
+    font-size: 2.5rem;
+  }
+
+  .tanda-kasih-subtitle {
+    font-size: 14px;
+    line-height: 22px;
+  }
+
+  .rekening-card {
+    width: 100%;
+    height: auto;
+    flex-direction: column;
+    gap: 15px;
+    padding: 20px;
+  }
+
+  .rekening-number,
+  .rekening-name {
+    font-size: 16px;
+    text-align: center;
+  }
+
+  .btn-salin {
+    font-size: 14px;
+    padding: 10px 15px;
+  }
+
+  /* Closing */
+  .closing-image {
+    width: 200px;
+    height: 280px;
+  }
+
+  .closing-message {
+    font-size: 14px;
+    line-height: 22px;
+  }
+
+  .closing-names {
+    font-size: 28px;
+  }
+
+  .closing-icons img {
+    width: 35px;
+    height: 35px;
+  }
+
+  /* Floating Buttons */
+  .music-icon {
+    bottom: 15px;
+    right: 15px;
+    padding: 10px;
+    font-size: 18px;
+  }
+
+  .whatsapp-float-container {
+    bottom: 80px;
+    right: 15px;
+  }
+}

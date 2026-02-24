@@ -15,14 +15,12 @@ module.exports = {
         groom_parent:
           "Anak ke-2 Putra dari Bapak Kardjamai dan Ibu Gustia",
         groom_sosmed: "faizal_a.s",
-        groom_bank: null,
         groom_norek: null,
         bride_img: "/uploads/1763401131655-bride_img.jpg",
         bride_name: "Caca",
         bride_parent:
           "Anak ke-1 Putri dari Bapak Suwada dan Ibu Suharti",
         bride_sosmed: "nrlalvinn_",
-        bride_bank: null,
         bride_norek: null,
         akad_date: null,
         resepsi_date: null,

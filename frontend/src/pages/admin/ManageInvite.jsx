@@ -9,7 +9,6 @@ import StepProgress from "../../components/StepProgress";
 import ToggleSwitch from "../../components/ToggleSwitch";
 import UploadFoto from "../../components/UploadFoto";
 import UploadFile from "../../components/UploadFile";
-import bankList from "../../assets/data/bankList";
 import Select from "react-select";
 
 const ManageInvite = () => {
@@ -19,6 +18,7 @@ const ManageInvite = () => {
 
   const [loading, setLoading] = useState(true);
   const [invitation, setInvitation] = useState(null);
+  const [bankList, setBankList] = useState([]);
 
   const [mainEvents, setMainEvents] = useState([
     {
@@ -241,6 +241,15 @@ const ManageInvite = () => {
 
   const adminId = localStorage.getItem("admin_id");
 
+  const formatDateInput = (dateString) => {
+    if (!dateString) return "";
+
+    const date = new Date(dateString);
+    date.setMinutes(date.getMinutes() - date.getTimezoneOffset());
+
+    return date.toISOString().split("T")[0];
+  };
+
   useEffect(() => {
     const load = async () => {
       if (!adminId) {
@@ -333,11 +342,12 @@ const ManageInvite = () => {
           couple_name: inv.couple_name ?? "",
           bride_name: inv.bride_name ?? "",
           groom_name: inv.groom_name ?? "",
-          akad_date: inv.akad_date ? inv.akad_date.slice(0, 10) : "",
-          resepsi_date: inv.resepsi_date ? inv.resepsi_date.slice(0, 10) : "",
-          wedding_date: inv.wedding_date ? inv.wedding_date.slice(0, 10) : "",
+          akad_date: formatDateInput(inv.akad_date),
+          resepsi_date: formatDateInput(inv.resepsi_date),
+          wedding_date: formatDateInput(inv.wedding_date),
           deskripsi_kasih: inv.deskripsi_kasih ?? "",
           location: inv.location ?? "",
+          detail_location: inv.detail_location ?? "",
           maps_link: inv.maps_link ?? "",
           closing_deskripsi: inv.closing_deskripsi ?? "",
           description: inv.description ?? "",
@@ -347,10 +357,12 @@ const ManageInvite = () => {
           bride_parent: inv.bride_parent ?? "",
           groom_sosmed: inv.groom_sosmed ?? "",
           bride_sosmed: inv.bride_sosmed ?? "",
-          groom_bank: inv.groom_bank ?? "",
+          groom_bank_id: inv.groom_bank_id ?? "",
           groom_norek: inv.groom_norek ?? "",
-          bride_bank: inv.bride_bank ?? "",
+          groom_name_bank: inv.groom_name_bank ?? "",
+          bride_bank_id: inv.bride_bank_id ?? "",
           bride_norek: inv.bride_norek ?? "",
+          bride_name_bank: inv.bride_name_bank ?? "",
           groom_img: inv.groom_img ?? "",
           bride_img: inv.bride_img ?? "",
           logo_img: inv.logo_img ?? "",
@@ -379,6 +391,12 @@ const ManageInvite = () => {
       })
       .catch((err) => console.error(err));
   }, [invitationId]);
+
+  useEffect(() => {
+    axios
+      .get("http://localhost:5000/api/banks")
+      .then((res) => setBankList(res.data));
+  }, []);
 
   useEffect(() => {
     if (!toggles.use_story) {
@@ -463,6 +481,7 @@ const ManageInvite = () => {
     formData.append("wedding_date", form.wedding_date);
     formData.append("deskripsi_kasih", form.deskripsi_kasih);
     formData.append("location", form.location);
+    formData.append('detail_location', form.detail_location);
     formData.append("maps_link", form.maps_link);
     formData.append("theme_id", form.theme_id);
 
@@ -811,7 +830,23 @@ const ManageInvite = () => {
               </div>
 
               <div className="mb-3">
-                <label className="sub-judul fw-bold mb-2 required">maps</label>
+                <label className="sub-judul fw-bold mb-2 required">
+                  Detail Lokasi
+                </label>
+                <input
+                  type="text"
+                  name="detail_location"
+                  value={form.detail_location}
+                  onChange={handleChange}
+                  className="form-control"
+                  required
+                />
+              </div>
+
+              <div className="mb-3">
+                <label className="sub-judul fw-bold mb-2 required">
+                  maps link
+                </label>
                 <input
                   type="text"
                   name="maps_link"
@@ -1087,18 +1122,20 @@ const ManageInvite = () => {
                     <label className="sub-judul fw-bold mb-2">Nama Bank</label>
                     <Select
                       options={bankList.map((bank) => ({
-                        value: bank,
-                        label: bank,
+                        value: bank.id,
+                        label: bank.name,
                       }))}
                       value={
-                        form.groom_bank
-                          ? { value: form.groom_bank, label: form.groom_bank }
+                        form.groom_bank_id
+                          ? bankList
+                              .map((b) => ({ value: b.id, label: b.name }))
+                              .find((b) => b.value === form.groom_bank_id)
                           : null
                       }
                       onChange={(selected) =>
                         setForm((prev) => ({
                           ...prev,
-                          groom_bank: selected?.value || "",
+                          groom_bank_id: selected?.value || null,
                         }))
                       }
                       placeholder="Pilih Bank"
@@ -1108,18 +1145,20 @@ const ManageInvite = () => {
                     <label className="sub-judul fw-bold mb-2">Nama Bank</label>
                     <Select
                       options={bankList.map((bank) => ({
-                        value: bank,
-                        label: bank,
+                        value: bank.id,
+                        label: bank.name,
                       }))}
                       value={
-                        form.bride_bank
-                          ? { value: form.bride_bank, label: form.bride_bank }
+                        form.bride_bank_id
+                          ? bankList
+                              .map((b) => ({ value: b.id, label: b.name }))
+                              .find((b) => b.value === form.bride_bank_id)
                           : null
                       }
                       onChange={(selected) =>
                         setForm((prev) => ({
                           ...prev,
-                          bride_bank: selected?.value || "",
+                          bride_bank_id: selected?.value || null,
                         }))
                       }
                       placeholder="Pilih Bank"
@@ -1163,6 +1202,32 @@ const ManageInvite = () => {
                           },
                         });
                       }}
+                      className="form-control"
+                    />
+                  </div>
+
+                  <div className="col-md-6 mb-3">
+                    <label className="sub-judul fw-bold mb-2">
+                      Nama Rekening Groom
+                    </label>
+                    <input
+                      type="text"
+                      name="groom_name_bank"
+                      value={form.groom_name_bank || ""}
+                      onChange={handleChange}
+                      className="form-control"
+                    />
+                  </div>
+
+                  <div className="col-md-6 mb-3">
+                    <label className="sub-judul fw-bold mb-2">
+                      Nama Rekening Bride
+                    </label>
+                    <input
+                      type="text"
+                      name="bride_name_bank"
+                      value={form.bride_name_bank || ""}
+                      onChange={handleChange}
                       className="form-control"
                     />
                   </div>
