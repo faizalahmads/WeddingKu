@@ -128,6 +128,8 @@ router.put(
     const { id } = req.params;
     const adminId = req.user.id;
 
+    const { groom_bank_id, bride_bank_id } = req.body;
+
     try {
       // 1️⃣ Ambil data lama dulu
       const [oldRows] = await db.query(
@@ -155,18 +157,21 @@ router.put(
         groom_name,
         groom_parent,
         groom_sosmed,
-        groom_bank,
+        groom_bank_id,
         groom_norek,
+        groom_name_bank,
         bride_name,
         bride_parent,
         bride_sosmed,
-        bride_bank,
+        bride_bank_id,
         bride_norek,
+        bride_name_bank,
         akad_date,
         resepsi_date,
         wedding_date,
         deskripsi_kasih,
         location,
+        detail_location,
         maps_link,
         closing_deskripsi,
         theme_id,
@@ -190,18 +195,21 @@ router.put(
         groom_name,
         groom_parent,
         groom_sosmed,
-        groom_bank,
+        groom_bank_id,
         groom_norek,
+        groom_name_bank,
         bride_name,
         bride_parent,
         bride_sosmed,
-        bride_bank,
+        bride_bank_id,
         bride_norek,
+        bride_name_bank,
         akad_date,
         resepsi_date,
         wedding_date,
         deskripsi_kasih,
         location,
+        detail_location,
         maps_link,
         closing_deskripsi,
         theme_id,
@@ -294,19 +302,30 @@ router.get("/undangan/:name/:code", async (req, res) => {
       i.groom_img,
       i.groom_parent,
       i.groom_sosmed,
-      i.groom_bank,
       i.groom_norek,
+      i.groom_name_bank,
+
+      bg.id AS groom_bank_id,
+      bg.name AS groom_bank_name,
+      bg.logo AS groom_bank_logo,
+
       i.bride_name,
       i.bride_img,
       i.bride_parent,
       i.bride_sosmed,
-      i.bride_bank,
       i.bride_norek,
+      i.bride_name_bank,
+
+      bb.id AS bride_bank_id,
+      bb.name AS bride_bank_name,
+      bb.logo AS bride_bank_logo,
+
       i.akad_date,
       i.resepsi_date,
       i.wedding_date,
       i.deskripsi_kasih,
       i.location,
+      i.detail_location,
       i.maps_link,
       i.closing_deskripsi,
       i.gallery_images,
@@ -321,6 +340,10 @@ router.get("/undangan/:name/:code", async (req, res) => {
 
     FROM guests g
     LEFT JOIN invitations i ON g.invitation_id = i.id
+
+    LEFT JOIN banks bg ON i.groom_bank_id = bg.id
+    LEFT JOIN banks bb ON i.bride_bank_id = bb.id
+
     WHERE g.code = ? AND g.name = ?
   `;
 
@@ -332,6 +355,14 @@ router.get("/undangan/:name/:code", async (req, res) => {
     }
 
     const data = results[0];
+
+    const [events] = await db.query(
+      "SELECT id, type, start_time, end_time FROM invitation_events WHERE invitation_id = ?",
+      [data.invitation_id],
+    );
+
+    data.events = events;
+
     data.inviteUrl = `http://localhost:5173/undangan-${data.groom_name}-${data.bride_name}/${data.guest_code}`;
 
     // Parse gallery_images
@@ -341,6 +372,24 @@ router.get("/undangan/:name/:code", async (req, res) => {
       } catch {
         data.gallery_images = [];
       }
+    }
+
+    const BASE_URL = "http://localhost:5000";
+
+    if (data.groom_bank_logo) {
+      data.groom_bank_logo = `${BASE_URL}${data.groom_bank_logo}`;
+    }
+
+    if (data.bride_bank_logo) {
+      data.bride_bank_logo = `${BASE_URL}${data.bride_bank_logo}`;
+    }
+    
+    if (data.groom_img && !data.groom_img.startsWith("http")) {
+      data.groom_img = `${BASE_URL}${data.groom_img}`;
+    }
+
+    if (data.bride_img && !data.bride_img.startsWith("http")) {
+      data.bride_img = `${BASE_URL}${data.bride_img}`;
     }
 
     res.json(data);
@@ -716,6 +765,22 @@ router.put("/undangan/:id/events", verifyToken, async (req, res) => {
 });
 
 // ========================
+// GET: List Semua Bank
+// ========================
+router.get("/banks", async (req, res) => {
+  try {
+    const [rows] = await db.query(
+      "SELECT id, name, logo FROM banks ORDER BY name ASC"
+    );
+
+    res.json(rows);
+  } catch (err) {
+    console.error("Gagal ambil bank:", err);
+    res.status(500).json({ error: "Gagal ambil data bank" });
+  }
+});
+
+// ========================
 // GET: Undangan berdasarkan kode tamu (untuk contoh)
 // ========================
 router.get("/invite/:code", async (req, res) => {
@@ -778,6 +843,20 @@ router.get("/undangan/:id", async (req, res) => {
     } catch {
       data.gallery_images = [];
     }
+
+    function formatDate(date) {
+      if (!date) return null;
+
+      if (date instanceof Date) {
+        return date.toLocaleDateString("en-CA");
+      }
+
+      return date;
+    }
+
+    data.akad_date = formatDate(data.akad_date);
+    data.resepsi_date = formatDate(data.resepsi_date);
+    data.wedding_date = formatDate(data.wedding_date);
 
     res.json(data);
   } catch (err) {

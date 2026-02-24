@@ -37,14 +37,12 @@ module.exports = {
       groom_name: Sequelize.STRING(100),
       groom_parent: Sequelize.STRING(255),
       groom_sosmed: Sequelize.STRING(255),
-      groom_bank: Sequelize.STRING(100),
       groom_norek: Sequelize.STRING(100),
 
       bride_img: Sequelize.STRING(255),
       bride_name: Sequelize.STRING(100),
       bride_parent: Sequelize.STRING(255),
       bride_sosmed: Sequelize.STRING(255),
-      bride_bank: Sequelize.STRING(100),
       bride_norek: Sequelize.STRING(100),
 
       akad_date: Sequelize.DATEONLY,
