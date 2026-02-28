@@ -38,16 +38,16 @@ const Dashboard = () => {
             return;
         }
 
-        fetch(`http://localhost:5000/api/guests/summary/${adminId}`)
-            .then((res) => res.json())
-            .then((data) => {
-                setTotalTamu(data);
-                setIsLoading(false);
-            })
-            .catch((err) => {
-                console.error("Gagal fetch data:", err);
-                setIsLoading(false);
-            });
+        fetch(`${import.meta.env.VITE_API_URL}/api/guests/summary/${adminId}`)
+          .then((res) => res.json())
+          .then((data) => {
+            setTotalTamu(data);
+            setIsLoading(false);
+          })
+          .catch((err) => {
+            console.error("Gagal fetch data:", err);
+            setIsLoading(false);
+          });
     }, []);
 
 

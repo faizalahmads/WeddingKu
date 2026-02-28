@@ -289,6 +289,7 @@ router.put(
 // ========================
 router.get("/undangan/:name/:code", async (req, res) => {
   const { name, code } = req.params;
+  const BASE_URL = process.env.BACKEND_URL;
 
   const sql = `
     SELECT 
@@ -363,7 +364,7 @@ router.get("/undangan/:name/:code", async (req, res) => {
 
     data.events = events;
 
-    data.inviteUrl = `http://localhost:5173/undangan-${data.groom_name}-${data.bride_name}/${data.guest_code}`;
+    data.inviteUrl = `${BASE_URL}/undangan-${data.groom_name}-${data.bride_name}/${data.guest_code}`;
 
     // Parse gallery_images
     if (data.gallery_images) {
@@ -374,7 +375,15 @@ router.get("/undangan/:name/:code", async (req, res) => {
       }
     }
 
-    const BASE_URL = "http://localhost:5000";
+    data.inviteUrl = `${BASE_URL}/undangan-${data.groom_name}-${data.bride_name}/${data.guest_code}`;
+
+    if (data.gallery_images) {
+      try {
+        data.gallery_images = JSON.parse(data.gallery_images);
+      } catch {
+        data.gallery_images = [];
+      }
+    }
 
     if (data.groom_bank_logo) {
       data.groom_bank_logo = `${BASE_URL}${data.groom_bank_logo}`;
@@ -383,7 +392,7 @@ router.get("/undangan/:name/:code", async (req, res) => {
     if (data.bride_bank_logo) {
       data.bride_bank_logo = `${BASE_URL}${data.bride_bank_logo}`;
     }
-    
+
     if (data.groom_img && !data.groom_img.startsWith("http")) {
       data.groom_img = `${BASE_URL}${data.groom_img}`;
     }
@@ -796,7 +805,7 @@ router.get("/invite/:code", async (req, res) => {
     }
 
     const guest = results[0];
-    guest.inviteUrl = `http://localhost:5173/invite/${guest.code}`;
+    guest.inviteUrl = `${BASE_URL}/invite/${guest.code}`;
     res.json(guest);
   } catch (err) {
     console.error("Database error:", err);
