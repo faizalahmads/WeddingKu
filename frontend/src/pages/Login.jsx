@@ -26,10 +26,13 @@ const Login = () => {
     setError("");
 
     try {
-      const res = await axios.post("http://localhost:5000/auth/login", formData);
+      const res = await axios.post(
+        `${import.meta.env.VITE_API_URL}/auth/login`,
+        formData,
+      );
       const { token, user } = res.data;
 
-      const now = new Date().getTime(); // waktu login sekarang
+      const now = new Date().getTime();
 
       localStorage.setItem("token", token);
       localStorage.setItem("role", user.role);

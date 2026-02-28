@@ -138,7 +138,7 @@ const ManageInvite = () => {
     try {
       if (story.id) {
         await axios.delete(
-          `http://localhost:5000/api/undangan/stories/${story.id}`,
+          `${import.meta.env.VITE_API_URL}/api/undangan/stories/${story.id}`,
           {
             headers: {
               Authorization: `Bearer ${localStorage.getItem("token")}`,
@@ -177,7 +177,7 @@ const ManageInvite = () => {
 
     try {
       await axios.put(
-        `http://localhost:5000/api/undangan/${invitationId}/stories`,
+        `${import.meta.env.VITE_API_URL}/api/undangan/${invitationId}/stories`,
         fd,
         {
           headers: {
@@ -188,7 +188,7 @@ const ManageInvite = () => {
 
       // 🔥 REFRESH DATA DARI SERVER
       const refreshed = await axios.get(
-        `http://localhost:5000/api/undangan/${invitationId}`,
+        `${import.meta.env.VITE_API_URL}/api/undangan/${invitationId}`,
       );
 
       setStories(
@@ -196,7 +196,7 @@ const ManageInvite = () => {
           id: s.id,
           title: s.title,
           description: s.description,
-          image: s.image_path ? `http://localhost:5000${s.image_path}` : null,
+          image: s.image_path ? `${import.meta.env.VITE_API_URL}${s.image_path}` : null,
         })),
       );
 
@@ -260,7 +260,12 @@ const ManageInvite = () => {
 
       try {
         const res = await axios.get(
-          `http://localhost:5000/api/undangan/${invitationId}`,
+          `${import.meta.env.VITE_API_URL}/api/undangan/${invitationId}`,
+          {
+            headers: {
+              Authorization: `Bearer ${localStorage.getItem("token")}`,
+            },
+          },
         );
         const inv = res.data;
         setInvitation(inv);
@@ -272,7 +277,7 @@ const ManageInvite = () => {
               title: s.title,
               description: s.description,
               image: s.image_path
-                ? `http://localhost:5000${s.image_path}`
+                ? `${import.meta.env.VITE_API_URL}${s.image_path}`
                 : null,
             })),
           );
@@ -385,7 +390,7 @@ const ManageInvite = () => {
     if (!invitationId) return;
 
     axios
-      .get(`http://localhost:5000/api/invite/${invitationId}/gallery`)
+      .get(`${import.meta.env.VITE_API_URL}/api/invite/${invitationId}/gallery`)
       .then((res) => {
         setGalleryFromDB(res.data.data);
       })
@@ -394,7 +399,7 @@ const ManageInvite = () => {
 
   useEffect(() => {
     axios
-      .get("http://localhost:5000/api/banks")
+      .get(`${import.meta.env.VITE_API_URL}/api/banks`)
       .then((res) => setBankList(res.data));
   }, []);
 
@@ -411,7 +416,7 @@ const ManageInvite = () => {
     images.forEach((file) => fd.append("images", file));
 
     await axios.post(
-      `http://localhost:5000/api/undangan/${invitationId}/gallery`,
+      `${import.meta.env.VITE_API_URL}/api/undangan/${invitationId}/gallery`,
       fd,
       {
         headers: {
@@ -429,7 +434,7 @@ const ManageInvite = () => {
 
     try {
       await axios.delete(
-        `http://localhost:5000/api/undangan/gallery/${imageId}`,
+        `${import.meta.env.VITE_API_URL}/api/undangan/gallery/${imageId}`,
         {
           headers: {
             Authorization: `Bearer ${localStorage.getItem("token")}`,
@@ -491,7 +496,7 @@ const ManageInvite = () => {
 
     try {
       const res = await axios.post(
-        "http://localhost:5000/api/undangan",
+        `${import.meta.env.VITE_API_URL}/api/undangan`,
         formData,
         {
           headers: {
@@ -505,7 +510,7 @@ const ManageInvite = () => {
 
       await uploadGallery(invitationId);
 
-      navigate(`/admin/manage/${invitationId}`);
+      navigate(`/admin/manage-invite/${invitationId}`);
     } catch (err) {
       console.error(err);
       alert("Gagal membuat undangan");
@@ -538,7 +543,7 @@ const ManageInvite = () => {
     formData.append("current_step", nextStep ?? step);
 
     await axios.put(
-      `http://localhost:5000/api/undangan/${invitationId}`,
+      `${import.meta.env.VITE_API_URL}/api/undangan/${invitationId}`,
       formData,
       {
         headers: {
@@ -594,7 +599,7 @@ const ManageInvite = () => {
       await updateInvitation(next);
 
       await axios.put(
-        `http://localhost:5000/api/undangan/${invitationId}/events`,
+        `${import.meta.env.VITE_API_URL}/api/undangan/${invitationId}/events`,
         {
           events: [...mainEvents, ...extraEvents],
         },
@@ -699,7 +704,7 @@ const ManageInvite = () => {
                     height={130}
                     defaultImage={
                       form?.groom_img
-                        ? `http://localhost:5000${form.groom_img}`
+                        ? `${import.meta.env.VITE_API_URL}${form.groom_img}`
                         : null
                     }
                     onChange={(file) => handleFileChange(file, "groom_img")}
@@ -714,7 +719,7 @@ const ManageInvite = () => {
                     height={130}
                     defaultImage={
                       form?.bride_img
-                        ? `http://localhost:5000${form.bride_img}`
+                        ? `${import.meta.env.VITE_API_URL}${form.bride_img}`
                         : null
                     }
                     onChange={(file) => handleFileChange(file, "bride_img")}
@@ -1085,7 +1090,7 @@ const ManageInvite = () => {
                       {galleryFromDB.map((img) => (
                         <div key={img.id} className="preview-item">
                           <img
-                            src={`http://localhost:5000${img.image_path}`}
+                            src={`${import.meta.env.VITE_API_URL}${img.image_path}`}
                             alt="gallery"
                           />
                           <button
@@ -1382,7 +1387,7 @@ const ManageInvite = () => {
                     height={120}
                     defaultImage={
                       form?.logo_img
-                        ? `http://localhost:5000${form.logo_img}`
+                        ? `${import.meta.env.VITE_API_URL}${form.logo_img}`
                         : null
                     }
                     onChange={(file) => handleFileChange(file, "logo_img")}
@@ -1408,7 +1413,7 @@ const ManageInvite = () => {
                     height={160}
                     defaultImage={
                       form?.cover_mobile_img
-                        ? `http://localhost:5000${form.cover_mobile_img}`
+                        ? `${import.meta.env.VITE_API_URL}${form.cover_mobile_img}`
                         : null
                     }
                     onChange={(file) =>
@@ -1436,7 +1441,7 @@ const ManageInvite = () => {
                     height={130}
                     defaultImage={
                       form?.cover_desktop_img
-                        ? `http://localhost:5000${form.cover_desktop_img}`
+                        ? `${import.meta.env.VITE_API_URL}${form.cover_desktop_img}`
                         : null
                     }
                     onChange={(file) =>

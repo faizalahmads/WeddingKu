@@ -10,7 +10,9 @@ const EditInvite = () => {
   useEffect(() => {
     const load = async () => {
       try {
-        const res = await axios.get(`http://localhost:5000/api/invitations/${invitationId}`);
+        const res = await axios.get(
+          `${import.meta.env.VITE_APP_URL}/api/invitations/${invitationId}`,
+        );
         setInv(res.data);
         setLoading(false);
       } catch (err) {

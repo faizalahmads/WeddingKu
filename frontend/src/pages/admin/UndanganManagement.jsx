@@ -7,7 +7,9 @@ const UndanganManagement = () => {
 
   const fetchUndangans = async () => {
     try {
-      const res = await axios.get("http://localhost:5000/api/undangan"); // endpoint GET semua undangan
+      const res = await axios.get(
+        `${import.meta.env.VITE_APP_URL}/api/undangan`,
+      ); // endpoint GET semua undangan
       setUndangans(res.data);
     } catch (err) {
       console.error(err);
@@ -22,7 +24,7 @@ const UndanganManagement = () => {
   const handleDelete = async (id) => {
     if (!window.confirm("Yakin ingin menghapus undangan ini?")) return;
     try {
-      await axios.delete(`http://localhost:5000/api/undangan/${id}`);
+      await axios.delete(`${import.meta.env.VITE_APP_URL}/api/undangan/${id}`);
       setUndangans(undangans.filter(u => u.id !== id));
     } catch (err) {
       console.error(err);

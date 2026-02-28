@@ -24,7 +24,7 @@ const UndanganSaya = () => {
 
       try {
         const res = await axios.get(
-          `http://localhost:5000/api/invitations/admin/${adminId}`,
+          `${import.meta.env.VITE_API_URL}/api/invitations/admin/${adminId}`,
         );
         setInvitation(res.data);
       } catch (err) {
@@ -37,7 +37,9 @@ const UndanganSaya = () => {
       }
 
       try {
-        const themesRes = await axios.get("http://localhost:5000/themes");
+        const themesRes = await axios.get(
+          `${import.meta.env.VITE_API_URL}/themes`,
+        );
         setThemes(themesRes.data || []);
       } catch (err) {
         console.error("Gagal memuat tema:", err);
@@ -61,10 +63,13 @@ const UndanganSaya = () => {
     if (!ok) return;
 
     try {
-      const res = await axios.post("http://localhost:5000/api/invitations", {
-        admin_id: adminId,
-        theme_id: themeId,
-      });
+      const res = await axios.post(
+        `${import.meta.env.VITE_API_URL}/api/invitations`,
+        {
+          admin_id: adminId,
+          theme_id: themeId,
+        },
+      );
 
       if (res.data && res.data.success) {
         const invId = res.data.invitation_id;
@@ -115,7 +120,7 @@ const UndanganSaya = () => {
                   <div className="saas-card">
                     <div className="saas-image-wrapper">
                       <img
-                        src={`http://localhost:5000/uploads/themes/${theme.thumbnail_url}`}
+                        src={`${import.meta.env.VITE_API_URL}/uploads/themes/${theme.thumbnail_url}`}
                         alt={theme.name}
                         className="saas-image"
                       />

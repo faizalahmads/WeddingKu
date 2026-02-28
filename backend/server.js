@@ -1,13 +1,22 @@
+require("dotenv").config();
 const express = require("express");
 const cors = require("cors");
 const errorHandler = require("./middleware/errorHandler");
 
 const app = express();
 
-app.use(cors({
-  origin: ["http://localhost:5173"],
-  credentials: true,
-}));
+const PORT = process.env.PORT || 5000;
+
+app.use(
+  cors({
+    origin: [process.env.FRONTEND_URL],
+    credentials: true,
+  }),
+);
+
+app.listen(PORT, () => {
+  console.log(`Server running at http://localhost:${PORT}`);
+});
 
 app.use(express.json());
 
@@ -37,13 +46,13 @@ app.get("/api/data", (req, res, next) => {
 
 app.use(errorHandler);
 
-app.get("/admin/secret", verifyToken, authorizeRoles("super_admin"), (req, res) => {
-  res.json({ message: "Hanya Super Admin yang bisa lihat ini!" });
-});
-
-const PORT = 5000;
-app.listen(PORT, () => {
-  console.log(`Server running at http://localhost:${PORT}`);
-});
+app.get(
+  "/admin/secret",
+  verifyToken,
+  authorizeRoles("super_admin"),
+  (req, res) => {
+    res.json({ message: "Hanya Super Admin yang bisa lihat ini!" });
+  },
+);
 
 console.log("Server path:", __dirname);

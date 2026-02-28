@@ -154,7 +154,7 @@ const Tema2 = () => {
     const fetchGallery = async () => {
       try {
         const res = await axios.get(
-          `http://localhost:5000/api/invite/${invite.invitation_id}/gallery`,
+          `${import.meta.env.VITE_API_URL}/api/invite/${invite.invitation_id}/gallery`,
         );
         setGallery(res.data.data);
       } catch (err) {
@@ -203,7 +203,7 @@ const Tema2 = () => {
       try {
         setLoading(true);
         const res = await axios.get(
-          `http://localhost:5000/api/undangan/${name}/${code}`,
+          `${import.meta.env.VITE_API_URL}/api/undangan/${name}/${code}`,
         );
         setInvite(res.data);
       } catch (err) {
@@ -243,7 +243,7 @@ const Tema2 = () => {
   }, []);
 
   const handleShareWhatsApp = () => {
-    const link = `http://localhost:5173/${invite.groom_name}-${invite.bride_name}?to=${invite.guest_name}/${invite.guest_code}`;
+    const link = `${import.meta.env.VITE_API_URL}/${invite.groom_name}-${invite.bride_name}?to=${invite.guest_name}/${invite.guest_code}`;
     const message = `
 Kepada Yth.
 Bapak/Ibu/Saudara/i
@@ -344,7 +344,7 @@ Terima kasih 💖
 
           <div className="qr">
             <QRCode
-              value={`http://localhost:5173/undangan/${invite?.groom_name}-${invite?.bride_name}?to=${invite?.guest_name}/${invite?.guest_code}`}
+              value={`${import.meta.env.VITE_API_URL}/undangan/${invite?.groom_name}-${invite?.bride_name}?to=${invite?.guest_name}/${invite?.guest_code}`}
               size={120}
               logoImage={Logo}
               logoWidth={60}
@@ -624,7 +624,7 @@ Terima kasih 💖
           {gallery.map((item) => (
             <img
               key={item.id}
-              src={`http://localhost:5000${item.image_path}`}
+              src={`${import.meta.env.VITE_API_URL}${item.image_path}`}
               alt="gallery"
             />
           ))}
@@ -724,7 +724,7 @@ Terima kasih 💖
                   alt={invite?.groom_bank_name}
                 />
                 <div className="rekening-info">
-                  <div className="rekening-number">{invite?.groom_bank}</div>
+                  <div className="rekening-number">{invite?.groom_norek}</div>
                   <button
                     className="btn btn-salin d-flex align-items-center justify-content-center gap-2"
                     onClick={() => handleCopy(invite?.groom_norek)}
@@ -750,7 +750,7 @@ Terima kasih 💖
                   alt={invite?.bride_bank_name}
                 />
                 <div className="rekening-info">
-                  <div className="rekening-number">{invite?.bride_bank}</div>
+                  <div className="rekening-number">{invite?.bride_norek}</div>
                   <button
                     className="btn btn-salin d-flex align-items-center justify-content-center gap-2"
                     onClick={() => handleCopy(invite?.bride_norek)}

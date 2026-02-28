@@ -37,7 +37,10 @@ const Register = () => {
 
     setLoading(true);
     try {
-      const res = await axios.post("http://localhost:5000/auth/register", formData);
+      const res = await axios.post(
+        `${import.meta.env.VITE_API_URL}/auth/register`,
+        formData,
+      );
       alert("Registrasi berhasil! Silakan login.");
       navigate("/login");
     } catch (err) {

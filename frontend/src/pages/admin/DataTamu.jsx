@@ -37,7 +37,7 @@ const DataTamu = () => {
   useEffect(() => {
     if (!adminId) return;
 
-    fetch(`http://localhost:5000/api/guests/${adminId}`)
+    fetch(`${import.meta.env.VITE_API_URL}/api/guests/${adminId}`)
       .then((res) => res.json())
       .then((data) => setTamu(data))
       .catch((err) => console.error("Gagal ambil data tamu:", err))
@@ -63,7 +63,9 @@ const DataTamu = () => {
       cancelButtonText: "Batal",
     }).then((result) => {
       if (result.isConfirmed) {
-        fetch(`http://localhost:5000/api/guests/${id}`, { method: "DELETE" })
+        fetch(`${import.meta.env.VITE_API_URL}/api/guests/${id}`, {
+          method: "DELETE",
+        })
           .then((res) => {
             if (!res.ok) throw new Error("Gagal hapus tamu");
             setTamu((prev) => prev.filter((t) => t.id !== id));
@@ -89,8 +91,8 @@ const DataTamu = () => {
     const adminId = localStorage.getItem("admin_id");
 
     const url = isEdit
-      ? `http://localhost:5000/api/guests/${data.id}`
-      : "http://localhost:5000/api/guests";
+      ? `${import.meta.env.VITE_API_URL}/api/guests/${data.id}`
+      : `${import.meta.env.VITE_API_URL}/api/guests`;
 
     const method = isEdit ? "PUT" : "POST";
 
@@ -117,7 +119,7 @@ const DataTamu = () => {
           showConfirmButton: false,
         });
         // Refresh data
-        fetch(`http://localhost:5000/api/guests/${adminId}`)
+        fetch(`${import.meta.env.VITE_API_URL}/api/guests/${adminId}`)
           .then((res) => res.json())
           .then((data) => setTamu(data));
 
@@ -180,11 +182,14 @@ const DataTamu = () => {
     const adminId = localStorage.getItem("admin_id");
 
     try {
-      const response = await fetch("http://localhost:5000/api/guests/import-xlsx", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ admin_id: adminId, guests: xlsxPreview }),
-      });
+      const response = await fetch(
+        `${import.meta.env.VITE_API_URL}/api/guests/import-xlsx`,
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ admin_id: adminId, guests: xlsxPreview }),
+        },
+      );
 
       if (!response.ok) throw new Error("Gagal mengimpor XLSX");
 
@@ -197,7 +202,9 @@ const DataTamu = () => {
       });
 
       // Refresh data
-      const res = await fetch(`http://localhost:5000/api/guests/${adminId}`);
+      const res = await fetch(
+        `${import.meta.env.VITE_API_URL}/api/guests/${adminId}`,
+      );
       const data = await res.json();
       setTamu(data);
       setShowXlsxModal(false);
@@ -340,25 +347,26 @@ const DataTamu = () => {
                     <td data-label="CPP/CPW">{item.type}</td>
                     <td data-label="Action" className="Action flex-wrap">
                       <div className="d-flex justify-content-center gap-2">
-                        <button 
+                        <button
                           className="btn btn-sm me-2"
-                          onClick={() => handleDeleteClick(item.id)}>
+                          onClick={() => handleDeleteClick(item.id)}
+                        >
                           <img src={TrashIcon} alt="hapus" />
                         </button>
-                        <button 
+                        <button
                           className="btn btn-sm me-2"
-                          onClick={() => handleEditClick(item)}>
+                          onClick={() => handleEditClick(item)}
+                        >
                           <img src={EditIcon} alt="edit" />
                         </button>
                         <a
-                          href={`http://localhost:5173/undangan/${item.groom_name}-${item.bride_name}?to=${item.name}/${item.code}`}
+                          href={`${import.meta.env.VITE_APP_URL}/undangan/${item.groom_name}-${item.bride_name}?to=${item.name}/${item.code}`}
                           target="_blank"
                           rel="noopener noreferrer"
                           className="btn btn-sm"
                         >
                           <img src={EyeIcon} alt="lihat" />
                         </a>
-
                       </div>
                     </td>
                   </tr>
@@ -373,7 +381,6 @@ const DataTamu = () => {
             </tbody>
           </table>
         </div>
-
 
         {/* 📌 Total data & pagination */}
         <div className="d-flex justify-content-between align-items-center mt-2">

@@ -22,7 +22,9 @@ const Undangan = () => {
   useEffect(() => {
     const fetchInvite = async () => {
       try {
-        const res = await axios.get(`http://localhost:5000/api/undangan/${name}/${code}`);
+        const res = await axios.get(
+          `${import.meta.env.VITE_API_URL}/api/undangan/${name}/${code}`,
+        );
         setInvite(res.data);
       } catch (err) {
         console.error(err);
@@ -46,7 +48,7 @@ const Undangan = () => {
   }
 
   const handleShareWhatsApp = () => {
-    const link = `http://localhost:5173/${invite.groom_name}-${invite.bride_name}?to=${invite.guest_name}/${invite.guest_code}`;
+    const link = `${import.meta.env.VITE_APP_URL}/${invite.groom_name}-${invite.bride_name}?to=${invite.guest_name}/${invite.guest_code}`;
     const message = `
 Kepada Yth.
 Bapak/Ibu/Saudara/i
@@ -75,48 +77,75 @@ Terima kasih 💖
       <div className="overlay"></div>
       <div className="content-container text-center text-white">
         <h2 className="font-script mb-3">The Wedding of</h2>
-        <h1 className="font-serif couple-name"> {invite.groom_name} & {invite.bride_name} </h1>
-        <p className="mb-4 date"> 
-          {new Date(invite.wedding_date).toLocaleDateString("id-ID", 
-          { weekday: "long",
+        <h1 className="font-serif couple-name">
+          {" "}
+          {invite.groom_name} & {invite.bride_name}{" "}
+        </h1>
+        <p className="mb-4 date">
+          {new Date(invite.wedding_date).toLocaleDateString("id-ID", {
+            weekday: "long",
             day: "numeric",
             month: "long",
-            year: "numeric", })}
+            year: "numeric",
+          })}
         </p>
         <div className="divider my-4"></div>
         <p className="font-light px-3">
-          {invite.description || "Dengan memohon rahmat dan ridho Allah SWT, kami bermaksud menyelenggarakan pernikahan putra-putri kami."}
+          {invite.description ||
+            "Dengan memohon rahmat dan ridho Allah SWT, kami bermaksud menyelenggarakan pernikahan putra-putri kami."}
         </p>
         <div className="info-box mt-4">
           <h5 className="font-serif">Lokasi Acara</h5>
           <p className="font-light">{invite.location}</p>
         </div>
-          {invite.maps_link && (
-            <a href={invite.maps_link} target="_blank" rel="noopener noreferrer"
-            className="btn btn-light mt-4 px-4" > 📍 Lihat Lokasi </a> )}
-        <div className="divider my-4"></div> 
-        <p className="font-light small"> Kami sangat bahagia jika Bapak/Ibu/Saudara/i berkenan hadir untuk memberikan doa restu 💌 </p>
+        {invite.maps_link && (
+          <a
+            href={invite.maps_link}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="btn btn-light mt-4 px-4"
+          >
+            {" "}
+            📍 Lihat Lokasi{" "}
+          </a>
+        )}
+        <div className="divider my-4"></div>
+        <p className="font-light small">
+          {" "}
+          Kami sangat bahagia jika Bapak/Ibu/Saudara/i berkenan hadir untuk
+          memberikan doa restu 💌{" "}
+        </p>
         <h1 className="guest-name">{invite?.guest_name || "Tamu Undangan"}</h1>
-          {invite?.guest_category === "VIP" && ( <p className="guest-name">{invite.guest_category}</p> )} 
+        {invite?.guest_category === "VIP" && (
+          <p className="guest-name">{invite.guest_category}</p>
+        )}
         <QRCode
-          value={`http://localhost:5173/undangan/${invite.groom_name}-${invite.bride_name}?to=${invite.guest_name}/${invite.guest_code}`}
+          value={`${import.meta.env.VITE_APP_URL}/undangan/${invite.groom_name}-${invite.bride_name}?to=${invite.guest_name}/${invite.guest_code}`}
           size={180}
           className="my-3"
         />
 
         {/* ===== GALERI FOTO ===== */}
         <section className="gallery-section container my-5">
-          <h2 className="font-script text-center mb-4 text-white">Galeri Foto</h2>
+          <h2 className="font-script text-center mb-4 text-white">
+            Galeri Foto
+          </h2>
           <div className="row g-3">
-            {galleryImages.length > 0 ? ( galleryImages.map((img, index) =>( 
-              <div className="col-6 col-md-4" key={index}>
-                <div className="gallery-item">
-                  <img src="http://localhost:5000/uploads/${img}"
-                  alt="galeri-${index}"
-                  className="img-fluid rounded shadow" />
+            {galleryImages.length > 0 ? (
+              galleryImages.map((img, index) => (
+                <div className="col-6 col-md-4" key={index}>
+                  <div className="gallery-item">
+                    <img
+                      src="${import.meta.env.VITE_APP_URL}:5000/uploads/${img}"
+                      alt="galeri-${index}"
+                      className="img-fluid rounded shadow"
+                    />
+                  </div>
                 </div>
-              </div> )) 
-              ) : ( <p className="text-center text-white">Belum ada foto galeri</p> )}
+              ))
+            ) : (
+              <p className="text-center text-white">Belum ada foto galeri</p>
+            )}
           </div>
         </section>
 
