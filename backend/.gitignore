@@ -1,0 +1,6 @@
+.env
+
+#Uploads
+/uploads/gallery/
+/uploads/invitations/
+/uploads/stories/
