@@ -13,14 +13,6 @@ import ClockIcon from "../../assets/images/clock-brown.png";
 import MailIcon from "../../assets/images/icon-mail.png";
 import MailRsvp from "../../assets/images/mail-rsvp.png";
 import IconSalin from "../../assets/images/copy-icon.png";
-import FotoGrom from "../../images/foto-groom-2.jpg";
-import FotoBride from "../../images/foto-bride-2.jpg";
-import Galeri1 from "../../images/2-galeri-1.png";
-import Galeri2 from "../../images/2-galeri-2.png";
-import Galeri3 from "../../images/2-galeri-3.png";
-import Galeri4 from "../../images/2-galeri-4.png";
-import Galeri5 from "../../images/2-galeri-1.png";
-import Galeri6 from "../../images/2-galeri-2.png";
 import FpMade from "../../images/fp-made.png";
 import LogoMade from "../../assets/icons/Logo.svg";
 import { motion } from "framer-motion";
@@ -40,6 +32,7 @@ const Tema2 = () => {
     seconds: 0,
   });
 
+  const stories = invite?.stories || [];
   const [gallery, setGallery] = useState([]);
 
   const [loading, setLoading] = useState(true);
@@ -68,7 +61,7 @@ const Tema2 = () => {
     return type === "akad" ? invite.akad_date : invite.resepsi_date;
   };
 
-  const sectionRefs = Array.from({ length: 9 }, () => useRef(null));
+  const sectionRefs = Array.from({ length: 10 }, () => useRef(null));
   const [toast, setToast] = useState({ show: false, message: "" });
   const [gunakanNamaLain, setGunakanNamaLain] = useState(false);
 
@@ -618,8 +611,53 @@ Terima kasih 💖
         </div>
       </section>
 
-      {/* ====== Halaman 6 ====== */}
-      <section className="section-card" ref={sectionRefs[5]}>
+      {/* ====== Halaman 6 (Story Board) ====== */}
+      {invite?.use_story && stories.length > 0 && (
+        <section className="section-card" ref={sectionRefs[5]}>
+          <div
+            className="undangan-card text-center"
+            style={{ position: "relative", overflow: "hidden" }}
+          >
+            <FloatingFlower src={Bunga1} style={{ top: "5%", left: "-30px" }} />
+            <FloatingFlower
+              src={Bunga2}
+              style={{ top: "87%", right: "-20px" }}
+            />
+            <FloatingFlower
+              src={Bunga1}
+              style={{ bottom: "10%", left: "-50px" }}
+            />
+
+            <div className="akad-title">
+              <div className="akad-line"></div>
+              <h2 className="akad-heading">Cerita Cinta</h2>
+              <div className="akad-line"></div>
+            </div>
+
+            <div className="story-container mt-4">
+              {stories.map((story, index) => (
+                <div key={story.id} className="story-item">
+                  {story.image_path ? (
+                    <img
+                      src={story.image_path}
+                      alt={story.title}
+                      className="story-image"
+                    />
+                  ) : (
+                    <div className="no-image">No Image</div>
+                  )}
+
+                  <h3 className="story-title mt-3">{story.title}</h3>
+                  <p className="story-desc">{story.description}</p>
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
+      )}
+
+      {/* ====== Halaman 7 ====== */}
+      <section className="section-card" ref={sectionRefs[6]}>
         <div className="galeri-2x3">
           {gallery.map((item) => (
             <img
@@ -631,8 +669,8 @@ Terima kasih 💖
         </div>
       </section>
 
-      {/* ====== Halaman 7 ====== */}
-      <section id="section7" className="section-card" ref={sectionRefs[6]}>
+      {/* ====== Halaman 8 ====== */}
+      <section id="section7" className="section-card" ref={sectionRefs[7]}>
         <div
           className="undangan-card text-center"
           style={{ position: "relative", overflow: "hidden" }}
@@ -703,8 +741,8 @@ Terima kasih 💖
         </div>
       </section>
 
-      {/* ====== Halaman 8 ====== */}
-      <section className="section-card" ref={sectionRefs[7]}>
+      {/* ====== Halaman 9 ====== */}
+      <section className="section-card" ref={sectionRefs[8]}>
         <div className="undangan-card text-center">
           <div className="text-center tanda-kasih-section position-relative">
             {/* Judul */}
@@ -796,8 +834,8 @@ Terima kasih 💖
         </div>
       </section>
 
-      {/* ====== Halaman 9 ====== */}
-      <section className="section-card" ref={sectionRefs[8]}>
+      {/* ====== Halaman 10 ====== */}
+      <section className="section-card" ref={sectionRefs[9]}>
         <div
           className="undangan-card text-center"
           style={{ position: "relative", overflow: "hidden" }}

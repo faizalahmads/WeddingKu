@@ -10,6 +10,16 @@ import ToggleSwitch from "../../components/ToggleSwitch";
 import UploadFoto from "../../components/UploadFoto";
 import UploadFile from "../../components/UploadFile";
 import Select from "react-select";
+import { DndContext, closestCenter } from "@dnd-kit/core";
+
+import {
+  SortableContext,
+  verticalListSortingStrategy,
+  useSortable,
+  arrayMove,
+} from "@dnd-kit/sortable";
+
+import { CSS } from "@dnd-kit/utilities";
 
 const ManageInvite = () => {
   const navigate = useNavigate();
@@ -130,6 +140,16 @@ const ManageInvite = () => {
     ]);
   };
 
+  const moveStory = (fromIndex, toIndex) => {
+    if (toIndex < 0 || toIndex >= stories.length) return;
+
+    const updated = [...stories];
+    const [movedItem] = updated.splice(fromIndex, 1);
+    updated.splice(toIndex, 0, movedItem);
+
+    setStories(updated);
+  };
+
   const removeStoryCard = async (index) => {
     const story = stories[index];
 
@@ -162,9 +182,11 @@ const ManageInvite = () => {
     fd.append(
       "stories",
       JSON.stringify(
-        stories.map(({ title, description }) => ({
-          title,
-          description,
+        stories.map((story, index) => ({
+          id: story.id || null,
+          title: story.title,
+          description: story.description,
+          order: index + 1,
         })),
       ),
     );
@@ -630,6 +652,92 @@ const ManageInvite = () => {
       </div>
     );
   }
+
+  const SortableStory = ({
+    story,
+    index,
+    stories,
+    setStories,
+    removeStoryCard,
+  }) => {
+    const { attributes, listeners, setNodeRef, transform, transition } =
+      useSortable({ id: story.id || story.tempId });
+
+    const style = {
+      transform: CSS.Transform.toString(transform),
+      transition,
+    };
+
+    return (
+      <div
+        ref={setNodeRef}
+        style={style}
+        className="story-card mb-4 position-relative"
+      >
+        {/* DRAG HANDLE */}
+        <div
+          {...attributes}
+          {...listeners}
+          className="drag-handle"
+          style={{
+            cursor: "grab",
+            position: "absolute",
+            left: "12px",
+            top: "50%",
+            transform: "translateY(-50%)",
+          }}
+        >
+          ☰
+        </div>
+
+        {stories.length > 1 && (
+          <button
+            className="btn-remove-story"
+            onClick={() => removeStoryCard(index)}
+          >
+            ✕
+          </button>
+        )}
+
+        <UploadFoto
+          name={`story_img_${index}`}
+          width={200}
+          height={200}
+          defaultImage={story.image}
+          onChange={(file) => {
+            const updated = [...stories];
+            updated[index].image = file;
+            setStories(updated);
+          }}
+        />
+
+        <div className="story-form">
+          <label className="sub-judul fw-bold required">Judul</label>
+          <input
+            type="text"
+            className="input"
+            value={story.title}
+            onChange={(e) => {
+              const updated = [...stories];
+              updated[index].title = e.target.value;
+              setStories(updated);
+            }}
+          />
+
+          <label className="sub-judul fw-bold required">Deskripsi</label>
+          <textarea
+            className="textarea"
+            value={story.description}
+            onChange={(e) => {
+              const updated = [...stories];
+              updated[index].description = e.target.value;
+              setStories(updated);
+            }}
+          />
+        </div>
+      </div>
+    );
+  };
 
   return (
     <div className="d-flex flex-column min-vh-100 bg-light">
@@ -1263,64 +1371,41 @@ const ManageInvite = () => {
 
               {toggles.use_story && (
                 <>
-                  {stories.map((story, index) => (
-                    <div
-                      className="story-card mb-4 position-relative"
-                      key={story.id || story.tempId}
+                  <DndContext
+                    collisionDetection={closestCenter}
+                    onDragEnd={(event) => {
+                      const { active, over } = event;
+                      if (!over) return;
+
+                      if (active.id !== over.id) {
+                        const oldIndex = stories.findIndex(
+                          (s) => (s.id || s.tempId) === active.id,
+                        );
+
+                        const newIndex = stories.findIndex(
+                          (s) => (s.id || s.tempId) === over.id,
+                        );
+
+                        setStories(arrayMove(stories, oldIndex, newIndex));
+                      }
+                    }}
+                  >
+                    <SortableContext
+                      items={stories.map((s) => s.id || s.tempId)}
+                      strategy={verticalListSortingStrategy}
                     >
-                      {stories.length > 1 && (
-                        <button
-                          className="btn-remove-story"
-                          onClick={() => removeStoryCard(index)}
-                        >
-                          ✕
-                        </button>
-                      )}
-
-                      <UploadFoto
-                        name={`story_img_${index}`}
-                        label={null}
-                        width={200}
-                        height={200}
-                        defaultImage={story.image}
-                        onChange={(file) => {
-                          const updated = [...stories];
-                          updated[index].image = file;
-                          setStories(updated);
-                        }}
-                      />
-
-                      <div className="story-form">
-                        <label className="sub-judul fw-bold required">
-                          Judul
-                        </label>
-                        <input
-                          type="text"
-                          className="input"
-                          placeholder="Pertemuan Pertama"
-                          value={story.title}
-                          onChange={(e) => {
-                            const updated = [...stories];
-                            updated[index].title = e.target.value;
-                            setStories(updated);
-                          }}
+                      {stories.map((story, index) => (
+                        <SortableStory
+                          key={story.id || story.tempId}
+                          story={story}
+                          index={index}
+                          stories={stories}
+                          setStories={setStories}
+                          removeStoryCard={removeStoryCard}
                         />
-
-                        <label className="sub-judul fw-bold required">
-                          Deskripsi
-                        </label>
-                        <textarea
-                          className="textarea"
-                          value={story.description}
-                          onChange={(e) => {
-                            const updated = [...stories];
-                            updated[index].description = e.target.value;
-                            setStories(updated);
-                          }}
-                        />
-                      </div>
-                    </div>
-                  ))}
+                      ))}
+                    </SortableContext>
+                  </DndContext>
 
                   <div className="btn-wrapper mb-3">
                     <button

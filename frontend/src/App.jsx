@@ -19,6 +19,7 @@ import UndanganManagement from "./pages/admin/UndanganManagement.jsx";
 import EditInvite from "./pages/admin/EditInvite.jsx";
 import PreviewTema from "./pages/admin/PreviewTema.jsx";
 import Tema2 from "./pages/admin/Tema2.jsx";
+import Checkin from "./pages/admin/Checkin.jsx";
 
 import ErrorBoundary from "./components/ErrorBoundary.jsx";
 import ToastWrapper from "./components/ToastContainer.jsx";
@@ -89,6 +90,7 @@ function AppContent() {
           <Route path="/admin/edit-invite/:id" element={<EditInvite />} />
           <Route path="/undangan/:slug" element={<Tema2 />} />
           <Route path="/:slug" element={<Tema2 />} />
+          <Route path="/admin/checkin" element={<Checkin />} />
           <Route path="/preview/:id" element={<PreviewTema />} />
           <Route path="/preview-undangan/:id" element={<PreviewTema />} />
           <Route path="/invite/:code" element={<InviteWrapper />} />
