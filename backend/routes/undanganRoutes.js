@@ -364,6 +364,19 @@ router.get("/undangan/:name/:code", async (req, res) => {
 
     data.events = events;
 
+    const [stories] = await db.query(
+      `SELECT id, title, description, image_path, sort_order
+   FROM invitation_stories 
+   WHERE invitation_id = ?
+   ORDER BY sort_order ASC`,
+      [data.invitation_id],
+    );
+
+    data.stories = stories.map((story) => ({
+      ...story,
+      image_path: story.image_path ? `${BASE_URL}${story.image_path}` : null,
+    }));
+
     data.inviteUrl = `${BASE_URL}/undangan-${data.groom_name}-${data.bride_name}/${data.guest_code}`;
 
     // Parse gallery_images

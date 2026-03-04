@@ -642,6 +642,34 @@
   height: 35px;
 }
 
+.story-container {
+  display: flex;
+  flex-direction: column;
+  gap: 40px;
+}
+
+.story-item {
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+.story-image {
+  width: 100%;
+  border-radius: 20px;
+  box-shadow: 0 10px 25px rgba(0,0,0,0.08);
+}
+
+.story-title {
+  font-weight: 700;
+  font-size: 22px;
+}
+
+.story-desc {
+  font-size: 15px;
+  line-height: 1.7;
+  color: #555;
+}
+
 @media (max-width: 576px) {
   .tanda-kasih-title {
     font-size: 3rem;
