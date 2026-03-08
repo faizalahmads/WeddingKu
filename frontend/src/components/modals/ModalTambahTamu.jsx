@@ -7,22 +7,35 @@ const ModalTambahTamu = ({
   handleSubmit,
   isEdit = false,
   dataEdit = {},
+  simpleMode = false,
 }) => {
   const [namaTamu, setNamaTamu] = useState("");
   const [kategori, setKategori] = useState("");
   const [cppCpw, setCppCpw] = useState("");
 
   useEffect(() => {
-    if (isEdit && dataEdit) {
-      setNamaTamu(dataEdit.name || "");
-      setKategori(dataEdit.category || "");
-      setCppCpw(dataEdit.type || "");
+    if (show) {
+      if (isEdit && dataEdit) {
+        setNamaTamu(dataEdit.name || "");
+        setKategori(dataEdit.category || "");
+        setCppCpw(dataEdit.type || "");
+      } else {
+        setNamaTamu("");
+        setKategori("");
+        setCppCpw("");
+      }
+
+      document.body.style.overflow = "hidden";
     } else {
-      setNamaTamu("");
-      setKategori("");
-      setCppCpw("");
+      document.body.style.overflow = "auto";
     }
-  }, [isEdit, dataEdit]);
+
+    return () => {
+      document.body.style.overflow = "auto";
+    };
+  }, [show, isEdit, dataEdit]);
+
+  if (!show) return null;
 
   const submitForm = (e) => {
     e.preventDefault();
@@ -30,126 +43,116 @@ const ModalTambahTamu = ({
   };
 
   return (
-    <div
-      className={`modal fade ${show ? "show d-block modal-fade-in" : ""}`}
-      tabIndex="-1"
-      style={{ backgroundColor: "rgba(0,0,0,0.5)" }}
-    >
+    <>
+      {/* BACKDROP */}
       <div
-        className="modal-dialog modal-dialog-centered modal-dialog-scrollable"
-        style={{
-          width: "100%",
-          maxWidth: "600px",
-        }}
+        className="modal-backdrop fade show"
+        style={{ zIndex: 1040 }}
+        onClick={handleClose}
+      />
+
+      {/* MODAL */}
+      <div
+        className="modal show d-block"
+        tabIndex="-1"
+        style={{ zIndex: 1050 }}
       >
-        <div className="modal-content rounded-3">
-          {/* Header */}
-          <div
-            className="modal-header"
-            style={{ background: "white", borderBottom: "2px solid #D1D1D1" }}
-          >
-            <h5 className="modal-title fw-bold">
-              {isEdit ? "Edit Tamu" : "Tambah Tamu"}
-            </h5>
-            <button
-              type="button"
-              className="btn-close"
-              onClick={handleClose}
-            ></button>
-          </div>
+        <div className="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+          <div className="modal-content rounded-4 shadow">
+            {/* HEADER */}
+            <div className="modal-header border-0 pb-2">
+              <h5 className="modal-title fw-bold">
+                {isEdit ? "Edit Tamu" : "Tambah Tamu"}
+              </h5>
+              <button
+                type="button"
+                className="btn-close"
+                onClick={handleClose}
+              />
+            </div>
 
-          {/* Body */}
-          <form onSubmit={submitForm}>
-            <div className="modal-body" style={{ background: "#EFF3F8" }}>
-              {/* Nama Tamu */}
-              <div className="mb-3">
-                <label className="form-label-modal fw-bold mb-1">
-                  Nama Tamu <span className="text-danger">*</span>
-                </label>
-                <input
-                  type="text"
-                  className="form-control"
-                  placeholder="Masukkan nama tamu"
-                  value={namaTamu}
-                  onChange={(e) => setNamaTamu(e.target.value)}
-                  required
-                />
-              </div>
-
-              {/* Kategori */}
-              <div className="mb-3">
-                <label className="form-label-modal fw-bold mb-1">
-                  Kategori Tamu <span className="text-danger">*</span>
-                </label>
-                <select
-                  className="form-select"
-                  value={kategori}
-                  onChange={(e) => setKategori(e.target.value)}
-                  required
-                >
-                  <option value="">Pilih kategori</option>
-                  <option value="VIP">VIP</option>
-                  <option value="Reguler">Reguler</option>
-                </select>
-              </div>
-
-              {/* CPP / CPW */}
-              <div className="mb-3">
-                <label className="form-label-modal fw-bold mb-1">
-                  CPP / CPW <span className="text-danger">*</span>
-                </label>
-                {isEdit && dataEdit.type === "Tamu Tambahan" ? (
+            <form onSubmit={submitForm}>
+              {/* BODY */}
+              <div className="modal-body">
+                {/* Nama */}
+                <div className="mb-3">
+                  <label className="fw-semibold mb-2">
+                    Nama Tamu <span className="text-danger">*</span>
+                  </label>
                   <input
                     type="text"
                     className="form-control"
-                    value="Tamu Tambahan"
-                    readOnly
-                    style={{
-                      backgroundColor: "#E9ECEF",
-                      color: "#6C757D",
-                      cursor: "not-allowed",
-                    }}
-                  />
-                ) : (
-                  <select
-                    className="form-select"
-                    value={cppCpw}
-                    onChange={(e) => setCppCpw(e.target.value)}
+                    placeholder="Masukkan nama tamu"
+                    value={namaTamu}
+                    onChange={(e) => setNamaTamu(e.target.value)}
+                    autoFocus
                     required
-                  >
-                    <option value="">Pilih salah satu</option>
-                    <option value="CPP">CPP</option>
-                    <option value="CPW">CPW</option>
-                  </select>
+                  />
+                </div>
+
+                {!simpleMode && (
+                  <>
+                    {/* Kategori */}
+                    <div className="mb-3">
+                      <label className="fw-semibold mb-2">
+                        Kategori Tamu <span className="text-danger">*</span>
+                      </label>
+                      <select
+                        className="form-select"
+                        value={kategori}
+                        onChange={(e) => setKategori(e.target.value)}
+                        required
+                      >
+                        <option value="">Pilih kategori</option>
+                        <option value="VIP">VIP</option>
+                        <option value="Reguler">Reguler</option>
+                      </select>
+                    </div>
+
+                    {/* CPP / CPW */}
+                    <div className="mb-3">
+                      <label className="fw-semibold mb-2">
+                        CPP / CPW <span className="text-danger">*</span>
+                      </label>
+
+                      {isEdit && dataEdit.type === "Tamu Tambahan" ? (
+                        <input
+                          type="text"
+                          className="form-control"
+                          value="Tamu Tambahan"
+                          readOnly
+                        />
+                      ) : (
+                        <select
+                          className="form-select"
+                          value={cppCpw}
+                          onChange={(e) => setCppCpw(e.target.value)}
+                          required
+                        >
+                          <option value="">Pilih salah satu</option>
+                          <option value="CPP">CPP</option>
+                          <option value="CPW">CPW</option>
+                        </select>
+                      )}
+                    </div>
+                  </>
                 )}
               </div>
-            </div>
 
-            {/* Footer */}
-            <div
-              className="modal-footer"
-              style={{ background: "white", borderTop: "2px solid #D1D1D1" }}
-            >
-              <button
-                type="submit"
-                className="btn fw-bold"
-                style={{ background: "#0B5AFD", color: "white", borderRadius: 15 }}
-              >
-                {isEdit ? "Simpan Perubahan" : "Tambah"}
-              </button>
-              <button
-                type="button"
-                className="btn fw-bold"
-                style={{ background: "#FD0B0B", color: "white", borderRadius: 15 }}
-                onClick={handleClose}
-              >
-                Close
-              </button>
-            </div>
-          </form>
+              {/* FOOTER */}
+              <div className="modal-footer border-0 pt-0">
+                <button
+                  type="submit"
+                  className="btn btn-primary w-100 fw-semibold"
+                >
+                  {isEdit ? "Simpan Perubahan" : "Tambah"}
+                </button>
+              </div>
+            </form>
+          </div>
         </div>
       </div>
-    </div>
+    </>
   );
 };
 

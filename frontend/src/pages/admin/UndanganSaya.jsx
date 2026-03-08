@@ -99,7 +99,7 @@ const UndanganSaya = () => {
 
   return (
     <div className="d-flex flex-column min-vh-100 bg-latar">
-      <Navbar />
+      <Navbar role="admin" />
       <div className="container my-5 text-center">
         {invitation ? (
           <div>

@@ -298,6 +298,7 @@ router.get("/undangan/:name/:code", async (req, res) => {
       g.category AS guest_category,
       g.code AS guest_code,
       i.id AS invitation_id,
+      ct.token AS checkin_token,
       i.couple_name,
       i.groom_name,
       i.groom_img,
@@ -344,6 +345,9 @@ router.get("/undangan/:name/:code", async (req, res) => {
 
     LEFT JOIN banks bg ON i.groom_bank_id = bg.id
     LEFT JOIN banks bb ON i.bride_bank_id = bb.id
+    LEFT JOIN checkin_tokens ct 
+    ON ct.invitation_id = i.id 
+    AND ct.is_active = 1
 
     WHERE g.code = ? AND g.name = ?
   `;
@@ -551,7 +555,7 @@ router.put(
     Array.from({ length: 10 }, (_, i) => ({
       name: `story_images[${i}]`,
       maxCount: 1,
-    }))
+    })),
   ),
   async (req, res) => {
     const { id } = req.params;
@@ -572,7 +576,7 @@ router.put(
         WHERE invitation_id = ?
         ORDER BY sort_order ASC
         `,
-        [id]
+        [id],
       );
 
       // 🔥 Mapping gambar lama
@@ -610,7 +614,7 @@ router.put(
           SELECT id FROM invitation_stories
           WHERE invitation_id = ? AND sort_order = ?
           `,
-          [id, i]
+          [id, i],
         );
 
         if (existing.length > 0) {
@@ -627,7 +631,7 @@ router.put(
               imagePath,
               id,
               i,
-            ]
+            ],
           );
         } else {
           // INSERT
@@ -643,7 +647,7 @@ router.put(
               parsedStories[i].description,
               imagePath,
               i,
-            ]
+            ],
           );
         }
       }
@@ -654,7 +658,7 @@ router.put(
         FROM invitation_stories
         WHERE invitation_id = ? AND sort_order >= ?
         `,
-        [id, parsedStories.length]
+        [id, parsedStories.length],
       );
 
       for (const story of extraStories) {
@@ -671,7 +675,7 @@ router.put(
         DELETE FROM invitation_stories
         WHERE invitation_id = ? AND sort_order >= ?
         `,
-        [id, parsedStories.length]
+        [id, parsedStories.length],
       );
 
       await conn.commit();
@@ -687,9 +691,8 @@ router.put(
     } finally {
       conn.release();
     }
-  }
+  },
 );
-
 
 // ========================
 // GET: Cerita Cinta
@@ -792,7 +795,7 @@ router.put("/undangan/:id/events", verifyToken, async (req, res) => {
 router.get("/banks", async (req, res) => {
   try {
     const [rows] = await db.query(
-      "SELECT id, name, logo FROM banks ORDER BY name ASC"
+      "SELECT id, name, logo FROM banks ORDER BY name ASC",
     );
 
     res.json(rows);

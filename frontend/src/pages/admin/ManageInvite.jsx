@@ -741,7 +741,7 @@ const ManageInvite = () => {
 
   return (
     <div className="d-flex flex-column min-vh-100 bg-light">
-      <Navbar />
+      <Navbar role="admin" />
       <div className="container py-5">
         <h2 className="mb-4 text-center">Manajemen Undangan</h2>
         <form

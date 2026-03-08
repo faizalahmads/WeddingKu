@@ -5,10 +5,9 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import Logo from "../assets/icons/Logo.svg";
 import "../assets/css/Navbar.css";
 
-const Navbar = () => {
+const Navbar = ({ role }) => {
   const location = useLocation();
   const navigate = useNavigate();
-  const role = localStorage.getItem("role");
   const navRef = useRef(null);
 
   const showNavbar = () => {
@@ -26,7 +25,8 @@ const Navbar = () => {
     navigate("/login");
   };
 
-  const isActive = (...paths) => paths.some(path => location.pathname.startsWith(path));
+  const isActive = (...paths) =>
+    paths.some((path) => location.pathname.startsWith(path));
 
   const getNavbarClass = () => {
     switch (role) {
@@ -44,28 +44,47 @@ const Navbar = () => {
   return (
     <header className={`shadow-sm ${getNavbarClass()}`}>
       {/* Logo */}
-      <Link to="/admin/dashboard" className="navbar-logo"> <img src={Logo} alt="Wedding Ku" className="img-fluid" />
+      <Link to="/admin/dashboard" className="navbar-logo">
+        {" "}
+        <img src={Logo} alt="Wedding Ku" className="img-fluid" />
       </Link>
-      <nav className={`navbar border-bottom py-3 ${getNavbarClass()}`} ref={navRef}>
-        
+      <nav
+        className={`navbar border-bottom py-3 ${getNavbarClass()}`}
+        ref={navRef}
+      >
         <div className="navbar-wrapper d-flex align-items-center justify-content-start gap-4 w-100">
           {/* Menu berdasarkan role */}
           <div className="navbar-links d-flex align-items-center gap-3">
             {role === "super_admin" && (
               <>
-                <Link to="/dashboard/super" className={`nav-item ${isActive("/dashboard/super") ? "active" : ""}`}>
+                <Link
+                  to="/dashboard/super"
+                  className={`nav-item ${isActive("/dashboard/super") ? "active" : ""}`}
+                >
                   <div className="nav-text">Dashboard</div>
                 </Link>
-                <Link to="/dashboard/tema" className={`nav-item ${isActive("/dashboard/tema") ? "active" : ""}`}>
+                <Link
+                  to="/dashboard/tema"
+                  className={`nav-item ${isActive("/dashboard/tema") ? "active" : ""}`}
+                >
                   <div className="nav-text">Tema</div>
                 </Link>
-                <Link to="/dashboard/user" className={`nav-item ${isActive("/dashboard/user") ? "active" : ""}`}>
+                <Link
+                  to="/dashboard/user"
+                  className={`nav-item ${isActive("/dashboard/user") ? "active" : ""}`}
+                >
                   <div className="nav-text">User</div>
                 </Link>
-                <Link to="/dashboard/laporan" className={`nav-item ${isActive("/dashboard/laporan") ? "active" : ""}`}>
+                <Link
+                  to="/dashboard/laporan"
+                  className={`nav-item ${isActive("/dashboard/laporan") ? "active" : ""}`}
+                >
                   <div className="nav-text">Laporan</div>
                 </Link>
-                <Link to="/dashboard/pengaturan" className={`nav-item ${isActive("/dashboard/pengaturan") ? "active" : ""}`}>
+                <Link
+                  to="/dashboard/pengaturan"
+                  className={`nav-item ${isActive("/dashboard/pengaturan") ? "active" : ""}`}
+                >
                   <div className="nav-text">Pengaturan</div>
                 </Link>
               </>
@@ -73,19 +92,34 @@ const Navbar = () => {
 
             {role === "admin" && (
               <>
-                <Link to="/admin/dashboard" className={`nav-item ${isActive("/admin/dashboard") ? "active" : ""}`}>
+                <Link
+                  to="/admin/dashboard"
+                  className={`nav-item ${isActive("/admin/dashboard") ? "active" : ""}`}
+                >
                   <div className="nav-text">Dashboard</div>
                 </Link>
-                <Link to="/admin/undangan-saya" className={`nav-item ${isActive("/admin/undangan-saya", "/admin/manage-invite") ? "active" : ""}`}>
+                <Link
+                  to="/admin/undangan-saya"
+                  className={`nav-item ${isActive("/admin/undangan-saya", "/admin/manage-invite") ? "active" : ""}`}
+                >
                   <div className="nav-text">Undangan Saya</div>
                 </Link>
-                <Link to="/admin/data-tamu" className={`nav-item ${isActive("/admin/data-tamu") ? "active" : ""}`}>
+                <Link
+                  to="/admin/data-tamu"
+                  className={`nav-item ${isActive("/admin/data-tamu") ? "active" : ""}`}
+                >
                   <div className="nav-text">Data Tamu</div>
                 </Link>
-                <Link to="/admin/buku-tamu" className={`nav-item ${isActive("/admin/buku-tamu") ? "active" : ""}`}>
+                <Link
+                  to="/admin/buku-tamu"
+                  className={`nav-item ${isActive("/admin/buku-tamu") ? "active" : ""}`}
+                >
                   <div className="nav-text">Buku Tamu</div>
                 </Link>
-                <Link to="/admin/checkin" className={`nav-item ${isActive("/admin/checkin") ? "active" : ""}`}>
+                <Link
+                  to="/admin/checkin"
+                  className={`nav-item ${isActive("/admin/checkin") ? "active" : ""}`}
+                >
                   <div className="nav-text">Check-in</div>
                 </Link>
               </>
@@ -93,12 +127,23 @@ const Navbar = () => {
 
             {role === "penerima_tamu" && (
               <>
-                <Link to="/checkin" className={`nav-item ${isActive("/checkin") ? "active" : ""}`}>
-                  <div className="nav-text">Check-in</div>
-                </Link>
-                <Link to="/daftar-hadir" className={`nav-item ${isActive("/daftar-hadir") ? "active" : ""}`}>
-                  <div className="nav-text">Daftar Hadir</div>
-                </Link>
+                {role === "penerima_tamu" && (
+                  <>
+                    <Link
+                      to={`/checkin${location.search}`}
+                      className={`nav-item ${isActive("/checkin") ? "active" : ""}`}
+                    >
+                      <div className="nav-text">Check-in</div>
+                    </Link>
+
+                    <Link
+                      to={`/buku-tamu${location.search}`}
+                      className={`nav-item ${isActive("/buku-tamu") ? "active" : ""}`}
+                    >
+                      <div className="nav-text">Buku Tamu</div>
+                    </Link>
+                  </>
+                )}
               </>
             )}
           </div>
