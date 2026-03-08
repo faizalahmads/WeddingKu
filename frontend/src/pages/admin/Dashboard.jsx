@@ -101,7 +101,7 @@ const Dashboard = () => {
     
     return (
         <div className="d-flex flex-column min-vh-100 bg-latar">
-            <Navbar />
+            <Navbar role="admin"/>
             <div className="container py-4 d-flex flex-column align-items-center">
                 {/* Baris pertama */}
                 <div className="row g-3 justify-content-center w-100">

@@ -337,8 +337,7 @@ Terima kasih 💖
 
           <div className="qr">
             <QRCode
-              value={`${import.meta.env.VITE_API_URL}/undangan/${invite?.groom_name}-${invite?.bride_name}?to=${invite?.guest_name}/${invite?.guest_code}`}
-              size={120}
+              value={`${import.meta.env.VITE_APP_URL}/checkin?token=${invite?.checkin_token}&code=${invite?.guest_code}`}
               logoImage={Logo}
               logoWidth={60}
               logoHeight={15}

@@ -26,12 +26,14 @@ const guestRoutes = require("./routes/guests");
 const authRoutes = require("./routes/auth");
 const invitationRoutes = require("./routes/invitationRoutes");
 const undanganRoutes = require("./routes/undanganRoutes");
+const checkinRoutes = require("./routes/checkinRoutes");
 const themesRoute = require("./routes/themes");
 
 // Pakai routes
 app.use("/auth", authRoutes);
 app.use("/api", guestRoutes);
 app.use("/api", undanganRoutes);
+app.use("/api/checkin", checkinRoutes);
 app.use("/themes", themesRoute);
 app.use("/uploads", express.static("uploads"));
 

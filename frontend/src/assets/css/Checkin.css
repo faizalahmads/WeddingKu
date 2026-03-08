@@ -1,0 +1,36 @@
+.checkin-card {
+  border-radius: 14px;
+  background: #ffffff;
+}
+
+.btn-blue {
+  background: #0B5AFD;
+  color: #FFFFFF;
+  border-radius: 15px;
+}
+
+.btn-blue:hover {
+  background: #4583ff;
+  color: #E6E6E6;
+  border-radius: 15px;
+}
+
+.link-text {
+  font-size: 1rem;
+  font-weight: 500;
+  color: #212529;
+  word-break: break-word;
+}
+
+.links-scroll {
+  max-height: 60vh;
+  overflow-y: auto;
+  padding-right: 5px;
+}
+
+/* Responsive tweak */
+@media (max-width: 768px) {
+  .link-text {
+    font-size: 0.9rem;
+  }
+}

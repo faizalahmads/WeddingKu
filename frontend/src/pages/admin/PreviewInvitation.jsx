@@ -27,7 +27,7 @@ const PreviewInvitation = () => {
 
   return (
     <div className="vh-100 vw-100 d-flex flex-column">
-      <Navbar />
+      <Navbar role="admin" />
       <div
         className="flex-grow-1 d-flex justify-content-center align-items-center"
         style={{

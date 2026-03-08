@@ -50,17 +50,35 @@ router.post("/login", async (req, res) => {
     if (!valid)
       return res.status(401).json({ message: "Password salah" });
 
+    const [invitation] = await db.query(
+      "SELECT id, code FROM invitations WHERE admin_id = ? LIMIT 1",
+      [user.id],
+    );
+
+    const invitationId = invitation.length ? invitation[0].id : null;
+    const code = invitation.length ? invitation[0].code : null;
+
     // ✅ JWT berlaku 3 jam
     const token = jwt.sign(
-      { id: user.id, email: user.email, role: user.role },
+      {
+        id: user.id,
+        email: user.email,
+        role: user.role,
+        invitation_id: invitationId,
+      },
       "secretKey123",
-      { expiresIn: "3h" }
+      { expiresIn: "3h" },
     );
 
     res.json({
       message: "Login berhasil",
       token,
-      user: { id: user.id, name: user.name, role: user.role },
+      user: {
+        id: user.id,
+        name: user.name,
+        role: user.role,
+        invitation_id: invitationId,
+      },
     });
   } catch (err) {
     console.error(err);

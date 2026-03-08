@@ -20,6 +20,8 @@ import EditInvite from "./pages/admin/EditInvite.jsx";
 import PreviewTema from "./pages/admin/PreviewTema.jsx";
 import Tema2 from "./pages/admin/Tema2.jsx";
 import Checkin from "./pages/admin/Checkin.jsx";
+import CheckinScanner from "./pages/penerima-tamu/CheckinScanner.jsx";
+import BukuTamu from "./pages/penerima-tamu/BukuTamu.jsx";
 
 import ErrorBoundary from "./components/ErrorBoundary.jsx";
 import ToastWrapper from "./components/ToastContainer.jsx";
@@ -75,6 +77,8 @@ function AppContent() {
         {/* Halaman publik */}
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
+        <Route path="/checkin" element={<CheckinScanner />} />
+        <Route path="/buku-tamu" element={<BukuTamu />} />
 
         {/* Halaman error umum */}
         <Route path="/404" element={<NotFound />} />
@@ -85,8 +89,14 @@ function AppContent() {
           <Route path="/admin/dashboard" element={<Dashboard />} />
           <Route path="/admin/data-tamu" element={<DataTamu />} />
           <Route path="/admin/undangan-saya" element={<UndanganSaya />} />
-          <Route path="/admin/manage-invite/:invitationId" element={<ManageInvite />} />
-          <Route path="/admin/undangan-management" element={<UndanganManagement />} />
+          <Route
+            path="/admin/manage-invite/:invitationId"
+            element={<ManageInvite />}
+          />
+          <Route
+            path="/admin/undangan-management"
+            element={<UndanganManagement />}
+          />
           <Route path="/admin/edit-invite/:id" element={<EditInvite />} />
           <Route path="/undangan/:slug" element={<Tema2 />} />
           <Route path="/:slug" element={<Tema2 />} />
