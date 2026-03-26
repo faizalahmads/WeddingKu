@@ -3,6 +3,7 @@ import axios from "axios";
 import Navbar from "../../components/Navbar";
 import ModalTambahTamu from "../../components/modals/ModalTambahTamu"
 import "bootstrap/dist/css/bootstrap.min.css";
+import ModalConfirm from "../../components/modals/ModalConfirm";
 
 const BukuTamu = () => {
   const token = localStorage.getItem("token");
@@ -15,6 +16,9 @@ const BukuTamu = () => {
   const [filter, setFilter] = useState("all");
   const [page, setPage] = useState(1);
   const [total, setTotal] = useState(0);
+  const [showConfirmModal, setShowConfirmModal] = useState(false);
+  const [selectedGuest, setSelectedGuest] = useState(null);
+  const [confirmType, setConfirmType] = useState(""); // "checkin" | "cancel"
 
   const fetchGuests = async () => {
     try {
@@ -85,6 +89,53 @@ const BukuTamu = () => {
       fetchGuests();
     } catch (err) {
       alert("Gagal menambahkan tamu");
+    }
+  };
+
+  const confirmCheckin = async () => {
+    if (!selectedGuest) return;
+
+    try {
+      await axios.post(
+        `${import.meta.env.VITE_API_URL}/api/checkin/manual`,
+        { guest_id: selectedGuest.id },
+        { headers: { Authorization: `Bearer ${token}` } },
+      );
+
+      setShowConfirmModal(false);
+      setSelectedGuest(null);
+      fetchGuests();
+    } catch (err) {
+      alert(err.response?.data?.message || "Gagal check-in");
+    }
+  };
+
+  const handleConfirmAction = async () => {
+    if (!selectedGuest) return;
+
+    try {
+      if (confirmType === "checkin") {
+        await axios.post(
+          `${import.meta.env.VITE_API_URL}/api/checkin/manual`,
+          { guest_id: selectedGuest.id },
+          { headers: { Authorization: `Bearer ${token}` } },
+        );
+      }
+
+      if (confirmType === "cancel") {
+        await axios.put(
+          `${import.meta.env.VITE_API_URL}/api/checkin/cancel/${selectedGuest.id}`,
+          {},
+          { headers: { Authorization: `Bearer ${token}` } },
+        );
+      }
+
+      setShowConfirmModal(false);
+      setSelectedGuest(null);
+      setConfirmType("");
+      fetchGuests();
+    } catch (err) {
+      alert(err.response?.data?.message || "Gagal proses");
     }
   };
 
@@ -168,14 +219,22 @@ const BukuTamu = () => {
                     {guest.is_checked_in ? (
                       <button
                         className="btn btn-link text-danger"
-                        onClick={() => handleCancel(guest)}
+                        onClick={() => {
+                          setSelectedGuest(guest);
+                          setConfirmType("cancel");
+                          setShowConfirmModal(true);
+                        }}
                       >
                         Batalkan
                       </button>
                     ) : (
                       <button
                         className="btn btn-link text-primary"
-                        onClick={() => handleCheckin(guest)}
+                        onClick={() => {
+                          setSelectedGuest(guest);
+                          setConfirmType("checkin");
+                          setShowConfirmModal(true);
+                        }}
                       >
                         Check-in
                       </button>
@@ -190,6 +249,30 @@ const BukuTamu = () => {
         {/* TOTAL */}
         <div className="mt-3 text-muted">Total data : {total}</div>
       </div>
+      <ModalConfirm
+        show={showConfirmModal}
+        title={
+          confirmType === "checkin"
+            ? "Konfirmasi Check-in"
+            : "Konfirmasi Pembatalan"
+        }
+        message={
+          confirmType === "checkin"
+            ? `Yakin check-in tamu ${selectedGuest?.name}?`
+            : `Yakin batalkan kehadiran ${selectedGuest?.name}?`
+        }
+        confirmText={
+          confirmType === "checkin" ? "Ya, Check-in" : "Ya, Batalkan"
+        }
+        cancelText="Batal"
+        onConfirm={handleConfirmAction}
+        onClose={() => {
+          setShowConfirmModal(false);
+          setSelectedGuest(null);
+          setConfirmType("");
+        }}
+      />
+
       <ModalTambahTamu
         show={showTambahModal}
         handleClose={() => {
