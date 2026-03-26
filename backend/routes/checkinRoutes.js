@@ -5,6 +5,31 @@ const db = require("../db");
 
 const router = express.Router();
 
+function generateExpiredAt(type) {
+  const now = new Date();
+
+  switch (type) {
+    case "today_2359":
+      now.setHours(23, 59, 59, 0);
+      return now;
+
+    case "tomorrow_2359":
+      now.setDate(now.getDate() + 1);
+      now.setHours(23, 59, 59, 0);
+      return now;
+
+    case "3_days":
+      now.setDate(now.getDate() + 3);
+      now.setHours(23, 59, 59, 0);
+      return now;
+
+    default:
+      now.setDate(now.getDate() + 1);
+      now.setHours(23, 59, 59, 0);
+      return now;
+  }
+}
+
 // ========================
 // POST: Generate Link Check-in
 // ========================
@@ -35,8 +60,16 @@ router.post("/generate-link", verifyToken, async (req, res) => {
 
     const token = crypto.randomBytes(32).toString("hex");
 
-    const expiredAt = new Date();
-    expiredAt.setHours(expiredAt.getHours() + 24);
+    const { expiry_type } = req.body;
+
+    const allowedTypes = ["today_2359", "tomorrow_2359", "3_days", "6_hours"];
+
+    const expiryType = allowedTypes.includes(expiry_type)
+      ? expiry_type
+      : "tomorrow_2359";
+
+    const expiredAt = generateExpiredAt(expiryType);
+    const expiredAtLocal = expiredAt;
 
     await conn.beginTransaction();
 
@@ -52,7 +85,7 @@ router.post("/generate-link", verifyToken, async (req, res) => {
       `INSERT INTO checkin_tokens 
        (invitation_id, token, expired_at, is_active, created_at)
        VALUES (?, ?, ?, 1, NOW())`,
-      [invitation_id, token, expiredAt]
+      [invitation_id, token, expiredAtLocal],
     );
 
     await conn.commit();
@@ -242,6 +275,78 @@ router.post("/scan", async (req, res) => {
     });
   } catch (err) {
     console.error("Scan checkin error:", err);
+    res.status(500).json({
+      message: "Server error",
+    });
+  }
+});
+
+// ========================
+// POST: Manual Check-in
+// ========================
+router.post("/manual", verifyToken, async (req, res) => {
+  try {
+    const { guest_id } = req.body;
+
+    if (!guest_id) {
+      return res.status(400).json({
+        message: "guest_id wajib diisi",
+      });
+    }
+
+    const invitationId = req.user.invitation_id;
+
+    if (!invitationId) {
+      return res.status(400).json({
+        message: "Invitation tidak ditemukan di token",
+      });
+    }
+
+    // 🔍 cek tamu
+    const [guestRows] = await db.query(
+      `SELECT id, name, is_checked_in, invitation_id 
+       FROM guests 
+       WHERE id = ?`,
+      [guest_id],
+    );
+
+    if (guestRows.length === 0) {
+      return res.status(404).json({
+        message: "Tamu tidak ditemukan",
+      });
+    }
+
+    const guest = guestRows[0];
+
+    // 🔒 pastikan tamu sesuai invitation
+    if (guest.invitation_id !== invitationId) {
+      return res.status(403).json({
+        message: "Tamu tidak sesuai invitation",
+      });
+    }
+
+    // ⚠️ sudah check-in?
+    if (guest.is_checked_in) {
+      return res.status(400).json({
+        message: "Tamu sudah check-in",
+      });
+    }
+
+    // ✅ update check-in
+    await db.query(
+      `UPDATE guests 
+       SET is_checked_in = 1, checked_in_at = NOW() 
+       WHERE id = ?`,
+      [guest.id],
+    );
+
+    res.json({
+      success: true,
+      message: "Check-in berhasil",
+      guest_name: guest.name,
+    });
+  } catch (err) {
+    console.error("Manual checkin error:", err);
     res.status(500).json({
       message: "Server error",
     });

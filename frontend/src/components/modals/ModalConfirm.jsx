@@ -9,6 +9,9 @@ const ModalConfirm = ({
   cancelText = "Batal",
   onConfirm,
   onClose,
+  expiryType,
+  setExpiryType,
+  showExpiry,
 }) => {
   if (!show) return null;
 
@@ -24,11 +27,25 @@ const ModalConfirm = ({
 
             <div className="modal-body text-muted">{message}</div>
 
+            {showExpiry && (
+              <div className="mb-2 ms-3 me-5">
+                <select
+                  className="form-select"
+                  value={expiryType}
+                  onChange={(e) => setExpiryType(e.target.value)}
+                >
+                  <option value="today_2359">Hari ini (23:59)</option>
+                  <option value="tomorrow_2359">Besok (23:59)</option>
+                  <option value="3_days">3 Hari</option>
+                </select>
+              </div>
+            )}
+
             <div className="modal-footer border-0">
               <button className="btn btn-success" onClick={onConfirm}>
                 {confirmText}
               </button>
-              
+
               <button className="btn btn-light" onClick={onClose}>
                 {cancelText}
               </button>

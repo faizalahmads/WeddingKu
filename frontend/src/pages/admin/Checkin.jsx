@@ -37,11 +37,16 @@ const Checkin = () => {
     fetchLinks();
   }, []);
 
+  const [expiryType, setExpiryType] = useState("tomorrow_2359");
+
   const generateLink = async () => {
     try {
       await axios.post(
         `${import.meta.env.VITE_API_URL}/api/checkin/generate-link`,
-        { invitation_id: invitationId },
+        {
+          invitation_id: invitationId,
+          expiry_type: expiryType,
+        },
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -90,7 +95,7 @@ const Checkin = () => {
         <div className="links-scroll">
           {links.map((item) => {
             const isExpired = new Date(item.expired_at) < new Date();
-            const isActive = item.is_active && !isExpired;
+            const isActive = item.is_active > 0 && !isExpired;
 
             return (
               <div
@@ -103,6 +108,10 @@ const Checkin = () => {
                     <span className="text-break link-text">{item.link}</span>
                   </div>
 
+                  <p className="mt-2 text-muted small">
+                    Token: <b>{new URL(item.link).searchParams.get("token")}</b>
+                  </p>
+
                   {/* Badge */}
                   <span
                     className={`badge rounded-pill px-3 py-2 fs-6 ${
@@ -114,12 +123,15 @@ const Checkin = () => {
 
                   <p className="mt-3 mb-2 fw-semibold text-muted">
                     Expired :{" "}
-                    {new Date(item.expired_at).toLocaleString("id-ID")}
+                    {new Date(item.expired_at).toLocaleString("id-ID", {
+                      timeZone: "Asia/Jakarta",
+                    })}
                   </p>
 
                   {/* Tombol hanya muncul jika benar-benar aktif */}
                   {isActive && (
                     <div className="d-flex gap-3">
+                      {/* SALIN LINK */}
                       <button
                         className="btn btn-link text-primary fw-semibold p-0"
                         onClick={() => {
@@ -135,6 +147,36 @@ const Checkin = () => {
                         Salin Link
                       </button>
 
+                      {/* 🔥 SALIN TOKEN */}
+                      <button
+                        className="btn btn-link text-success fw-semibold p-0"
+                        onClick={() => {
+                          try {
+                            const url = new URL(item.link);
+                            const token = url.searchParams.get("token");
+
+                            if (!token) {
+                              alert("Token tidak ditemukan");
+                              return;
+                            }
+
+                            const textArea = document.createElement("textarea");
+                            textArea.value = token;
+                            document.body.appendChild(textArea);
+                            textArea.select();
+                            document.execCommand("copy");
+                            document.body.removeChild(textArea);
+
+                            alert("Token berhasil disalin!");
+                          } catch (err) {
+                            alert("Gagal mengambil token");
+                          }
+                        }}
+                      >
+                        Salin Token
+                      </button>
+
+                      {/* NONAKTIFKAN */}
                       <button
                         className="btn btn-link text-danger fw-semibold p-0"
                         onClick={() => {
@@ -156,6 +198,9 @@ const Checkin = () => {
           title="Generate Link Baru"
           message="Apakah Anda yakin ingin membuat link check-in baru? Link sebelumnya akan dinonaktifkan."
           confirmText="Generate"
+          expiryType={expiryType}
+          setExpiryType={setExpiryType}
+          showExpiry={true} // ✅ tampilkan
           onConfirm={async () => {
             setShowGenerateModal(false);
             await generateLink();
@@ -168,6 +213,7 @@ const Checkin = () => {
           title="Nonaktifkan Link"
           message="Apakah Anda yakin ingin menonaktifkan link ini?"
           confirmText="Ya"
+          showExpiry={false} // ❌ tidak tampil
           onConfirm={async () => {
             setShowDeactivateModal(false);
             await deactivateLink(selectedLinkId);

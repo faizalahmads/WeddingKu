@@ -337,7 +337,7 @@ Terima kasih 💖
 
           <div className="qr">
             <QRCode
-              value={`${import.meta.env.VITE_APP_URL}/checkin?token=${invite?.checkin_token}&code=${invite?.guest_code}`}
+              value={invite?.guest_code}
               logoImage={Logo}
               logoWidth={60}
               logoHeight={15}
