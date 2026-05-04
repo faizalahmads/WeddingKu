@@ -1,0 +1,9 @@
+@font-face {
+  font-family: 'Madelyn';
+  src: url('./assets/fonts/Madelyn-Trial-Regular.otf') format('opentype');
+}
+
+@font-face {
+  font-family: 'Symphony Pro';
+  src: url('./assets/fonts/symphony-pro-regular.otf') format('opentype');
+}

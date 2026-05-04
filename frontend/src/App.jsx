@@ -5,6 +5,7 @@ import '@fontsource/platypi';
 import '@fontsource/poppins';
 import '@fontsource/pt-sans-caption';
 import '@fontsource/playfair-display-sc';
+import './fonts.css';
 
 import ProtectedRoute from "./components/ProtectedRoute.jsx";
 import InvitePage from "./pages/InvitePage.jsx";
