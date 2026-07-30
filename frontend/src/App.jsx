@@ -19,7 +19,7 @@ import ManageInvite from "./pages/admin/ManageInvite.jsx";
 import UndanganManagement from "./pages/admin/UndanganManagement.jsx";
 import EditInvite from "./pages/admin/EditInvite.jsx";
 import PreviewTema from "./pages/admin/PreviewTema.jsx";
-import Tema2 from "./pages/admin/Tema2.jsx";
+import Tema2 from "../src/pages/admin/themes/tema2/Tema2.jsx";
 import Checkin from "./pages/admin/Checkin.jsx";
 import CheckinScanner from "./pages/penerima-tamu/CheckinScanner.jsx";
 import BukuTamu from "./pages/penerima-tamu/BukuTamu.jsx";
