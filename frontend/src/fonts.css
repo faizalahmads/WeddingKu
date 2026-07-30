@@ -7,3 +7,8 @@
   font-family: 'Symphony Pro';
   src: url('./assets/fonts/symphony-pro-regular.otf') format('opentype');
 }
+
+@font-face {
+  font-family: 'Awesome Lathusca';
+  src: url('./assets/fonts/Awesome-Lathusca.TTF') format('opentype');
+}

@@ -1,6 +1,6 @@
 import { useParams } from "react-router-dom";
-import PreviewTema1 from "./PreviewTema1";
-import PreviewTema2 from "./PreviewTema2";
+import PreviewTema1 from "../admin/themes/tema1/PreviewTema1";
+import PreviewTema2 from "../admin/themes/tema2/PreviewTema2";
 
 const PreviewTema = () => {
   const { id } = useParams();

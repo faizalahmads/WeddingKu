@@ -1,10 +1,184 @@
-.wrapper-tema1 {
+.desktop-layout {
+  display: flex;
+  width: 100%;
+  min-height: 100dvh;
   background: #590000;
+}
+
+.gallery-side {
+  position: sticky;
+  top: 0;
+  align-self: flex-start;
+
+  flex: 1;
+  height: 100dvh;
+
+  background: #590000;
+
+  display: flex;
   flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 20px;
+
+  overflow: hidden;
+  padding: 40px;
+}
+
+.gallery-main {
+  position: relative;
+  z-index: 3;
+  flex: 1;
+  width: 100%;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  overflow: hidden;
+}
+
+.gallery-thumbs {
+  position: relative;
+  z-index: 3;
+
+  display: flex;
+  gap: 10px;
+  max-width: 100%;
+  overflow-x: auto;
+  padding: 4px;
+}
+
+.thumb-img {
+  width: 90px;
+  height: 60px;
+  object-fit: cover;
+  border-radius: 8px;
+
+  opacity: 0.55;
+  border: 2px solid transparent;
+  cursor: pointer;
+  flex-shrink: 0;
+
+  transition: all 0.3s ease;
+}
+
+.thumb-img:hover {
+  opacity: 0.85;
+}
+
+.thumb-img.active {
+  opacity: 1;
+  border-color: #FFF6E7;
+  transform: scale(1.05);
+}
+
+.wrapper-tema1 {
+  position: relative;
+  width: 100%;
+  max-width: 463px;
+  min-height: 100dvh;
+  background: #590000;
+  overflow: hidden;
+  box-shadow: -10px 0 30px rgba(0,0,0,0.25);
+}
+
+.gallery-bg {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  filter: blur(18px);
+  transform: scale(1.15);
+  opacity: 0.45;
+  z-index: 1;
+}
+
+.gallery-overlay {
+  position: absolute;
+  inset: 0;
+  background: #590000;
+  z-index: 2;
+}
+
+.gallery-img {
+  position: absolute;
+
+  max-width: 78%;
+  max-height: 78vh;
+
+
+  object-fit: cover;
+
+  border-radius: 32px;
+  border: 1px solid rgba(255,255,255,0.08);
+  box-shadow:
+    0 30px 80px rgba(0,0,0,0.35),
+    0 10px 30px rgba(0,0,0,0.2);
+
+  z-index: 3;
+}
+
+.gallery-side::after {
+  content: "";
+
+  position: absolute;
+
+  width: 500px;
+  height: 500px;
+
+  background: rgba(255,255,255,0.05);
+
+  filter: blur(120px);
+
+  border-radius: 50%;
+
+  z-index: 2;
+}
+
+.qr-toggle-btn {
+  position: fixed;
+  bottom: 83px;
+  right: 24px;
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  background: #590000;
+  border: 2px solid #ebceba;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  z-index: 998;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+}
+
+.music-toggle-btn {
+  position: fixed;
+  bottom: 24px;
+  right: 24px;
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  background: #590000;
+  border: 2px solid #ebceba;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  z-index: 998; /* di bawah QR modal (999) tapi di atas konten lain */
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+}
+
+.music-icon {
+  width: 28px;
+  height: 28px;
+  object-fit: contain;
 }
 
 .section-1 {
-  height: 100vh;
+  min-height: 100dvh;
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -12,43 +186,31 @@
 }
 
 .section-2 {
-  height: 100vh;
+  position: relative;
+  margin-top: 10%;
+  width: 100%;
+  min-height: 100dvh;
+
   display: flex;
   justify-content: center;
   align-items: center;
+
+  overflow: hidden;
 }
 
 .section-3 {
   position: relative;
-  height: 100vh;
-  width: 100%;
+  min-height: 100dvh;
+
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
+
+  padding: 40px 20px;
   margin: 0 auto;
-}
 
-/* garis umum */
-.garis {
-  position: absolute;
-  width: 70%;
-  max-width: 400px;
-  opacity: 0.6;
-}
-
-/* atas */
-.garis-atas {
-  top: 0px;
-  left: 67%;
-  transform: translateX(-50%);
-}
-
-/* bawah */
-.garis-bawah {
-  bottom: 0px;
-  left: 33%;
-  transform: translateX(-50%) rotate(180deg);
+  overflow: hidden;
 }
 
 .judul {
@@ -101,56 +263,185 @@
   position: relative;
 }
 
-.qr-label {
-  font-size: 12px;
-  color: #fff;
-  margin-top: 8px;
-  opacity: 0.8;
+.guest-overlay{
+  position:fixed;
+  inset:0;
+  background:rgba(0,0,0,.45);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  padding:25px;
+  z-index:9999;
 }
 
-.qr-outside {
-  background: white;
-  padding: 5px;
-  border-radius: 12px;
-  display: inline-block;
-  margin: 20px 0 0 0;
-
-  box-shadow: 0 5px 15px rgba(0,0,0,0.15);
+.guest-modal{
+  position:relative;
+  max-width:100%;
+  background:#fff;
+  border-radius:22px;
+  padding:50px;
+  text-align:center;
+  overflow:hidden;
+  box-shadow:0 25px 80px rgba(0,0,0,.18);
 }
 
-.qr-overlay {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-
-  background: rgba(0,0,0,0.4); /* transparan */
-
-  display: flex;
-  justify-content: center;
-  align-items: center;
-
-  z-index: 999;
+.guest-close{
+  position:absolute;
+  top:25px;
+  right:25px;
+  width:55px;
+  height:55px;
+  border:none;
+  background:#fff;
+  border-radius:50%;
+  box-shadow:0 8px 20px rgba(0,0,0,.15);
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  font-size:28px;
+  transition:.3s;
 }
 
-.qr-modal {
-  background: white;
-  padding: 25px 30px;
-  border-radius: 20px;
-  text-align: center;
-
-  box-shadow: 0 20px 50px rgba(0,0,0,0.3);
+.guest-close:hover{
+  transform:rotate(90deg);
 }
 
-.qr-title {
-  font-size: 18px;
-  margin-bottom: 5px;
+.guest-pass{
+  font-size:16px;
+  letter-spacing:2px;
+  font-weight:700;
+  color:#44474D;
+  margin-bottom:60px;
 }
 
-.qr-name {
-  font-size: 16px;
-  margin-bottom: 20px;
+.guest-name{
+  font-family:"Playfair Display",serif;
+  font-size:42px;
+  color:#031632;
+  margin-bottom:8px;
+}
+
+.guest-role{
+  font-size:18px;
+  color:#50637E;
+  font-style:italic;
+  margin-bottom:45px;
+}
+
+.guest-qr{
+  display:flex;
+  justify-content:center;
+  margin-bottom:20px;
+}
+
+.guest-caption{
+  font-style: inter;
+  font-size:14px;
+  font-weight:600;
+  color:#44474D;
+  margin-bottom:40px;
+}
+
+.guest-info{
+  display:flex;
+  border:1px solid #ECECEC;
+  margin:auto;
+  width:100%;
+  max-width:680px;
+  height:145px;
+  margin-bottom:45px;
+}
+
+.guest-item{
+  flex:1;
+  display:flex;
+  flex-direction:column;
+  justify-content:center;
+  align-items:center;
+}
+
+.guest-divider{
+  width:1px;
+  background:#ECECEC;
+}
+
+.guest-icon{
+  color:#8A6516;
+  font-size:24px;
+  margin-bottom:8px;
+}
+
+.guest-item span{
+  font-size:14px;
+  color:#666;
+  margin-bottom:8px;
+}
+
+.guest-item strong{
+  font-size:18px;
+  font-weight:700;
+}
+
+.guest-download{
+  background:#031632;
+  color:#fff;
+  border:none;
+  border-radius:10px;
+  padding:15px 32px;
+  display:inline-flex;
+  align-items:center;
+  gap:12px;
+  font-size:18px;
+}
+
+@media (max-width: 768px) {
+
+  .guest-modal{
+    padding:35px 20px;
+  }
+
+  .guest-pass{
+    font-size:12px;
+  }
+
+  .guest-name{
+    font-size:24px;
+  }
+
+  .guest-role{
+    font-size:14px;
+  }
+
+  .guest-info{
+    display:flex;
+    flex-direction:row;
+    align-items:center;
+    justify-content:space-between;
+    width:100%;
+    max-width:100%;
+    height:110px;
+  }
+
+  .guest-item{
+    flex:1;
+    padding:10px;
+  }
+
+  .guest-divider{
+    width:1px;
+    height:100%;
+  }
+
+  .guest-item span{
+    font-size:14px;
+  }
+
+  .guest-item strong{
+    font-size:18px;
+    text-align:center;
+  }
 }
 
 /* flap */
@@ -262,11 +553,11 @@
 
 .judulcatin {
   position: relative;
-  width: 220px;
+  width: 200px;
   Perspective: 1000px;
 }
 
-.text-wrapper {
+.judul-text-wrapper {
   position: absolute;
   top: 50%;
   left: 48%;
@@ -279,31 +570,119 @@
   gap: 4px;
 }
 
-.text-wrapper .t-judul {
+.judul-text-wrapper .t-judul {
   font-family: Symphony Pro;
-  font-size: 1.5em;
+  font-size: 1.3em;
   color: #590000;
 }
 
-.text-wrapper .t-dan {
+.judul-text-wrapper .t-dan {
   font-family: Marck Script;
   margin-top: -5%;
   font-size: 1.5em;
   color: #590000;
 }
 
-.text-wrapper .t-nama-cpw {
+.judul-text-wrapper .t-nama-cpw {
   font-family: Marck Script;
   margin-top: 5%;
   font-size: 1.5em;
   color: #590000;
 }
 
-.text-wrapper .t-nama-cpp {
+.judul-text-wrapper .t-nama-cpp {
   font-family: Marck Script;
   margin-top: -5%;
   font-size: 1.5em;
   color: #590000;
+}
+
+.tanggalcard {
+  position: relative;
+  width: 230px;
+  Perspective: 1000px;
+}
+
+.tanggal-text-wrapper {
+  position: absolute;
+  top: 53%;
+  left: 58%;
+  transform: translate(-50%, -50%);
+  z-index: 2;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  line-height: 1;
+}
+
+.tanggal-text-wrapper .t-hari {
+  font-family: Awesome Lathusca;
+  font-size: 1.5em;
+  color: #6C0815;
+}
+
+.tanggal-text-wrapper .t-tanggal {
+  font-family: Awesome Lathusca;
+  margin-top: 1%;
+  font-size: 5em;
+  color: #6C0815;
+}
+
+.tanggal-text-wrapper .t-bulan {
+  font-family: Awesome Lathusca;
+  margin-top: 5%;
+  font-size: 1.5em;
+  color: #6C0815;
+}
+
+.tanggal-text-wrapper .t-tahun {
+  font-family: Awesome Lathusca;
+  margin-top: -5%;
+  font-size: 1.5em;
+  color: #6C0815;
+}
+
+.qrcard {
+  position: relative;
+  width: 180px;
+  perspective: 1000px;
+}
+
+.qr-wrapper {
+  position: absolute;
+  top: 52%;
+  left: 78.5%;
+  transform: translate(-50%, -50%);
+  z-index: 2;
+  width: 100%;
+  max-width: 200px;
+}
+
+.qr-wrapper img {
+  width: 35%;
+  height: 35%;
+}
+
+/* Wrapper ini yang urus posisi & centering, TIDAK disentuh Framer Motion */
+.qr-position-wrapper {
+  position: absolute;
+  top: 25%;
+  left: 1%;
+  transform: translate(-50%, -50%);
+  z-index: 2;
+  width: 100%;
+  max-width: 200px;
+}
+
+/* qr-wrapper sekarang cuma urus animasi scale, tidak perlu position lagi */
+.qr-wrapper {
+  width: 100%;
+}
+
+.qr-wrapper img {
+  width: 35%;
+  height: 35%;
 }
 
 .garis-atas-kiri {
@@ -340,8 +719,6 @@
 
 .bg-letter {
   position: absolute;
-  top: 50%;
-  left: 50%;
   transform: translate(-50%, -50%);
   width: 100%;
   max-width: 500px;
@@ -349,17 +726,159 @@
 
 .section-3 span {
   color: #590000;
-  font-size: 12px;
   font-weight: 400;
-  width: 50%;
+  width: 90%;
   text-align: center;
   font-family: 'IBM Plex Mono', sans-serif;
   z-index: 1;
 }
 
+.bride-section {
+  position: relative;
+
+  background-image: url('../../assets/images/tema1/section4/BgFlower.png');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+
+.bride-section .bride-section-profile {
+  position: relative;
+  min-height: 90dvh;
+  width: 90%;
+  background: #590000;
+
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 20px;
+
+  padding: 40px 24px;
+  margin: 0 auto;
+
+  overflow: hidden;
+}
+
+/* ===== Judul "The Bride" ===== */
+.the-bride {
+  color: #EBCEBA;
+  font-size: 70px;         /* diperbesar untuk judul utama, proporsional ke referensi */
+  font-family: 'Symphony Pro';
+  font-weight: 400;
+  line-height: 1.1;
+  word-wrap: break-word;
+}
+
+/* ===== Wrapper foto + frame ===== */
+.photo-frame-wrapper {
+  width: 100%;
+  max-width: 320px;        /* sesuaikan dengan lebar layar target */
+  aspect-ratio: 1310.03 / 1610.95; /* jaga rasio asli frame */
+}
+
+.bride-bg {
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0;
+  z-index: 0;
+  object-fit: contain;
+}
+
+.bride-photo {
+  width: 65%;
+  height: 55%;
+  top: 20%;
+  left: 17.5%;
+  object-fit: cover;
+  object-position: center top;
+  border-radius: 50%;
+  z-index: 1;
+}
+
+.bride-photo {
+  width: 65%;
+  height: 73%;
+  top: 13.5%;
+  left: 17.5%;
+  object-fit: cover;
+  object-position: center top;
+  border-radius: 50%;
+  z-index: 1;
+}
+
+/* ===== Nama mempelai ===== */
+.nama-mempelai {
+  color: #F4EBD1;
+  font-size: 35px;         /* lebih kecil dari judul, tapi lebih besar dari teks orang tua */
+  font-family: 'Awesome Lathusca';
+  font-weight: 400;
+  line-height: 1.2;
+  word-wrap: break-word;
+}
+
+/* ===== Nama orang tua ===== */
+.orang-tua {
+  color: #F4EBD1;
+  font-size: 20px;         /* paling kecil, sesuai referensi */
+  font-family: 'IBM Plex Mono';
+  line-height: 1.6;
+  word-wrap: break-word;
+}
+
+/* ===== Instagram ===== */
+.ig-wrapper {
+  cursor: pointer;
+}
+
+.ig-icon-wrapper {
+  width: 42px;
+  height: 42px;
+  display: flex;          /* pastikan wrapper jadi flex container */
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;          /* biar tidak menyusut kalau teks panjang */
+}
+
+.ig-icon-img {
+  width: 100%;
+  height: 100%;
+  display: block;          /* HAPUS efek inline baseline gap */
+  object-fit: contain;     /* jaga rasio gambar icon, tidak gepeng */
+}
+
+.ig-username {
+  color: #EBCEBA;
+  font-size: 18px;
+  font-family: 'IBM Plex Mono';
+  font-weight: 400;
+  line-height: 1;           /* penting, biar tinggi teks pas & tidak menggeser alignment */
+}
+
+/* ===== RESPONSIVE ===== */
+@media (max-width: 480px) {
+  .bride-title {
+    font-size: 2.5em;
+  }
+
+  .bride-frame-wrapper {
+    width: 230px;
+    height: 280px;
+  }
+
+  .bride-name {
+    font-size: 1.6em;
+  }
+
+  .bride-parents,
+  .bride-instagram {
+    font-size: 0.85rem;
+  }
+}
+
 @media (min-width: 768px) {
   .section-3 {
-    width: 50%;
     margin: 10px;
   }
 
@@ -368,6 +887,380 @@
   }
 
   .section-3 span {
-    font-size: 20px;
+    font-size: 16px;
   }
+}
+
+/* ===== TABLET (481px - 768px) ===== */
+@media (max-width: 768px) {
+  .desktop-layout {
+    display: block;
+  }
+
+  .gallery-side {
+    display: none;
+  }
+
+  .wrapper-tema1 {
+    max-width: 100%;
+  }
+
+  .section-3 {
+    margin: 8px;
+    padding: 32px 24px;
+  }
+
+  .bg-letter {
+    max-width: 500px;
+  }
+
+  .section-3 span {
+    font-size: 14px;
+  }
+}
+
+/* ===== MOBILE (≤480px) ===== */
+@media (max-width: 480px) {
+  .section-3 {
+    margin: 4px;
+    padding: 24px 16px;
+  }
+
+  .bg-letter {
+    max-width: 360px;
+  }
+
+  .section-3 span {
+    font-size: 12px;
+  }
+
+  .garis-atas-kiri,
+  .garis-atas-kanan,
+  .garis-bawah-kiri,
+  .garis-bawah-kanan {
+    width: 80px;
+  }
+}
+
+/* ===== MOBILE KECIL (≤360px) ===== */
+@media (max-width: 360px) {
+  .bg-letter {
+    max-width: 300px;
+  }
+
+  .section-3 span {
+    font-size: 11px;
+  }
+
+  .garis-atas-kiri,
+  .garis-atas-kanan,
+  .garis-bawah-kiri,
+  .garis-bawah-kanan {
+    width: 60px;
+  }
+}
+
+/* ===== Container utama ===== */
+.save-the-date-section {
+  width: 100%;
+  aspect-ratio: 2479 / 5365; /* menjaga proporsi asli desain */
+  background: #590000;
+}
+
+/* ===== Judul "SAVE THE DATE" ===== */
+.std-title {
+  position: absolute;
+  top: 15%;
+  transform: translateX(-50%);
+  width: 100%;
+
+  color: #ffffff;
+  font-family: "TAN - MON CHERI";
+  font-weight: 400;
+  font-size: clamp(28px, 8.9vw, 88px); /* 220/2479 ≈ 8.9% dari lebar */
+  word-wrap: break-word;
+  line-height: 1.1;
+}
+
+/* ===== Foto utama ===== */
+.std-photo {
+  position: absolute;
+  left: 6.86%; /* 170 / 2479 */
+  top: 21.34%; /* 1145 / 5365 */
+  width: 86.28%; /* 2139 / 2479 */
+  height: 52.06%; /* 2793 / 5365 */
+  object-fit: cover;
+}
+
+/* ===== Tanggal "26 . 09 . 26" ===== */
+.std-date {
+  position: absolute;
+  top: 77%;
+  transform: translateX(-50%);
+  width: 100%;
+
+  color: #ffffff;
+  font-family: "TAN - MON CHERI";
+  font-weight: 400;
+  font-size: clamp(24px, 8.07vw, 80px); /* 200/2479 ≈ 8.07% dari lebar */
+  word-wrap: break-word;
+  line-height: 1.1;
+}
+
+/* ===== Container utama ===== */
+.event-detail-section {
+  width: 100%;
+  aspect-ratio: 2479 / 5365;
+  background: #590000;
+}
+
+/* ===== Foto utama ===== */
+.event-photo {
+  position: absolute;
+  left: 6.98%; /* 173 / 2479 */
+  top: 23.06%; /* 1237 / 5365 */
+  width: 86.04%; /* 2133 / 2479 */
+  height: 53.9%; /* 2892 / 5365 */
+  object-fit: cover;
+}
+
+/* ===== Block generik (Akad, Resepsi, Lokasi) ===== */
+.event-block {
+  position: absolute;
+  left: 8.5%;
+  width: 84%; /* 2126 / 2479 */
+  gap: 2%; /* 100 / 5365, disesuaikan relatif ke tinggi container */
+}
+
+.event-block-akad {
+  top: 36%;
+}
+
+.event-block-resepsi {
+  top: 47%;
+}
+
+.event-block-lokasi {
+  top: 57.5%;
+  gap: 1%;
+}
+
+/* ===== Label "Akad" / "Resepsi" ===== */
+.event-label {
+  color: #590000;
+  font-family: "Awesome Lathusca";
+  font-weight: 400;
+  font-size: clamp(28px, 7.26vw, 72px); /* 180/2479 ≈ 7.26% */
+  line-height: 1.1;
+  word-wrap: break-word;
+}
+
+/* ===== Waktu acara ===== */
+.event-time {
+  color: #590000;
+  font-family: "IBM Plex Mono";
+  font-weight: 400;
+  font-size: clamp(14px, 2.82vw, 28px); /* 70/2479 ≈ 2.82% */
+  line-height: 1.5;
+  word-wrap: break-word;
+}
+
+/* ===== Nama lokasi ===== */
+.location-name {
+  color: #590000;
+  font-family: "IBM Plex Mono";
+  font-weight: 700;
+  font-size: 16px;
+  line-height: 1.3;
+  word-wrap: break-word;
+}
+
+.location-detail-wrapper {
+  gap: 2%;
+}
+
+/* ===== Alamat lengkap ===== */
+.location-address {
+  max-width: 66%;
+  color: #590000;
+  font-family: "IBM Plex Mono";
+  font-weight: 400;
+  font-size: 14px;
+  line-height: 1.5;
+  word-wrap: break-word;
+}
+
+/* ===== "LIHAT LOKASI" ===== */
+.location-link {
+  display: block;
+  color: #590000;
+  font-family: "IBM Plex Mono";
+  font-weight: 700;
+  font-size: 14px;
+  line-height: 1.3;
+  word-wrap: break-word;
+}
+
+.location-link:hover {
+  color: #590000;
+}
+
+/* ===== Container utama ===== */
+.wedding-gift-section {
+  width: 100%;
+  min-height: 100dvh;
+  background: #590000;
+  padding: 60px 24px;
+  gap: 32px;
+}
+
+/* ===== Judul ===== */
+.gift-title-wrapper {
+  gap: 12px;
+}
+
+.gift-hands-icon {
+  width: 60px;
+  height: auto;
+  object-fit: contain;
+}
+
+.gift-title {
+  color: #fffbef;
+  font-family: "Sprite Graffiti";
+  font-weight: 400;
+  font-size: clamp(28px, 6vw, 48px);
+  text-decoration: underline;
+  line-height: 1.1;
+}
+
+/* ===== Deskripsi ===== */
+.gift-description {
+  color: #ffffff;
+  font-family: "IBM Plex Mono";
+  font-weight: 400;
+  font-size: clamp(14px, 3vw, 18px);
+  line-height: 1.6;
+  max-width: 90%;
+}
+
+/* ===== Wrapper dua kartu + pensil ===== */
+.bank-cards-wrapper {
+  width: 100%;
+  max-width: 500px;
+  gap: 0;
+}
+
+.pencils-icon {
+  position: absolute;
+  top: -20px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 90px;
+  z-index: 2;
+  pointer-events: none;
+}
+
+/* ===== Kartu bank individual ===== */
+.bank-card {
+  position: relative;
+  flex: 1;
+  max-width: 45%;
+}
+
+.bank-card-frame {
+  width: 120%;
+  left: 50%;
+  transform: translate(-10%, 0%);
+  height: auto;
+  display: block;
+}
+
+.bank-card-content {
+  position: absolute;
+  top: 70%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 85%;
+  gap: 3px;
+  text-align: center;
+}
+
+.bank-name {
+  color: #FFFFFF;
+  font-family: "IBM Plex Mono";
+  font-weight: 700;
+  font-size: clamp(11px, 2.2vw, 14px);
+  line-height: 1.2;
+}
+
+.bank-number {
+  color: #FFFFFF;
+  font-family: "IBM Plex Mono";
+  font-weight: 700;
+  font-size: clamp(12px, 2.6vw, 16px);
+  line-height: 1.2;
+  word-break: break-all;
+}
+
+.bank-account-name {
+  color: #FFFFFF;
+  font-family: "IBM Plex Mono";
+  font-weight: 400;
+  font-size: 12px;
+  line-height: 1.2;
+}
+
+.bank-copy-btn {
+  background: none;
+  border: none;
+  padding: 0;
+  margin-top: 4px;
+  color: #FFFFFF;
+  font-family: "IBM Plex Mono";
+  font-weight: 400;
+  font-size: clamp(9px, 1.8vw, 11px);
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+.bank-copy-btn:hover {
+  opacity: 0.8;
+}
+
+/* ===== Teks hadiah fisik ===== */
+.gift-physical-text {
+  color: #ffffff;
+  font-family: "IBM Plex Mono";
+  font-weight: 400;
+  font-size: clamp(14px, 3vw, 18px);
+  line-height: 1.6;
+  max-width: 90%;
+}
+
+/* ===== Banner nomor WA ===== */
+.gift-phone-wrapper {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  max-width: 320px;
+}
+
+.gift-phone-banner {
+  width: 70%;
+  height: auto;
+  display: block;
+}
+
+.gift-phone-number {
+  position: absolute;
+  left: 55%;
+  top: 55%;
+  transform: translate(-50%, -50%);
+  color: #590000;
+  font-family: "IBM Plex Mono";
+  font-weight: 700;
+  font-size: clamp(16px, 4vw, 22px);
+  white-space: nowrap;
 }
