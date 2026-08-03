@@ -1,18 +1,10 @@
-import React, { useRef } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
-import { FaBars, FaTimes } from "react-icons/fa";
-import "bootstrap/dist/css/bootstrap.min.css";
-import Logo from "../assets/icons/Logo.svg";
+import { FaBars } from "react-icons/fa";
 import "../assets/css/Navbar.css";
 
-const Navbar = ({ role }) => {
+const Navbar = ({ role, onToggleSidebar }) => {
   const location = useLocation();
   const navigate = useNavigate();
-  const navRef = useRef(null);
-
-  const showNavbar = () => {
-    navRef.current.classList.toggle("responsive_nav");
-  };
 
   const handleLogout = async () => {
     await fetch(`${import.meta.env.VITE_APP_URL}/api/logout`, {
@@ -28,143 +20,71 @@ const Navbar = ({ role }) => {
   const isActive = (...paths) =>
     paths.some((path) => location.pathname.startsWith(path));
 
-  const getNavbarClass = () => {
-    switch (role) {
-      case "super_admin":
-        return "navbar-super-admin";
-      case "admin":
-        return "navbar-admin";
-      case "penerima_tamu":
-        return "navbar-tamu";
-      default:
-        return "navbar-default";
-    }
+  const tabsByRole = {
+    admin: [
+      { to: "/admin/dashboard", label: "Dashboard" },
+      {
+        to: "/admin/undangan-saya",
+        label: "My Invitation",
+        extra: "/admin/manage-invite",
+      },
+      { to: "/admin/data-tamu", label: "Guest List" },
+      { to: "/admin/checkin", label: "Scanner" },
+    ],
+    super_admin: [
+      { to: "/dashboard/super", label: "Dashboard" },
+      { to: "/dashboard/tema", label: "Tema" },
+      { to: "/dashboard/user", label: "User" },
+      { to: "/dashboard/laporan", label: "Laporan" },
+      { to: "/dashboard/pengaturan", label: "Pengaturan" },
+    ],
+    penerima_tamu: [
+      { to: `/checkin${location.search}`, label: "Check-in" },
+      { to: `/buku-tamu${location.search}`, label: "Buku Tamu" },
+    ],
   };
 
+  const tabs = tabsByRole[role] || [];
+
   return (
-    <header className={`shadow-sm ${getNavbarClass()}`}>
-      {/* Logo */}
-      <Link to="/admin/dashboard" className="navbar-logo">
-        {" "}
-        <img src={Logo} alt="Wedding Ku" className="img-fluid" />
-      </Link>
-      <nav
-        className={`navbar border-bottom py-3 ${getNavbarClass()}`}
-        ref={navRef}
+    <header className="admin-navbar">
+      {/* Hamburger -> toggle SIDEBAR, bukan nav-links sendiri */}
+      <button
+        className="hamburger-btn"
+        onClick={onToggleSidebar}
+        aria-label="Toggle sidebar"
+        type="button"
       >
-        <div className="navbar-wrapper d-flex align-items-center justify-content-start gap-4 w-100">
-          {/* Menu berdasarkan role */}
-          <div className="navbar-links d-flex align-items-center gap-3">
-            {role === "super_admin" && (
-              <>
-                <Link
-                  to="/dashboard/super"
-                  className={`nav-item ${isActive("/dashboard/super") ? "active" : ""}`}
-                >
-                  <div className="nav-text">Dashboard</div>
-                </Link>
-                <Link
-                  to="/dashboard/tema"
-                  className={`nav-item ${isActive("/dashboard/tema") ? "active" : ""}`}
-                >
-                  <div className="nav-text">Tema</div>
-                </Link>
-                <Link
-                  to="/dashboard/user"
-                  className={`nav-item ${isActive("/dashboard/user") ? "active" : ""}`}
-                >
-                  <div className="nav-text">User</div>
-                </Link>
-                <Link
-                  to="/dashboard/laporan"
-                  className={`nav-item ${isActive("/dashboard/laporan") ? "active" : ""}`}
-                >
-                  <div className="nav-text">Laporan</div>
-                </Link>
-                <Link
-                  to="/dashboard/pengaturan"
-                  className={`nav-item ${isActive("/dashboard/pengaturan") ? "active" : ""}`}
-                >
-                  <div className="nav-text">Pengaturan</div>
-                </Link>
-              </>
-            )}
-
-            {role === "admin" && (
-              <>
-                <Link
-                  to="/admin/dashboard"
-                  className={`nav-item ${isActive("/admin/dashboard") ? "active" : ""}`}
-                >
-                  <div className="nav-text">Dashboard</div>
-                </Link>
-                <Link
-                  to="/admin/undangan-saya"
-                  className={`nav-item ${isActive("/admin/undangan-saya", "/admin/manage-invite") ? "active" : ""}`}
-                >
-                  <div className="nav-text">Undangan Saya</div>
-                </Link>
-                <Link
-                  to="/admin/data-tamu"
-                  className={`nav-item ${isActive("/admin/data-tamu") ? "active" : ""}`}
-                >
-                  <div className="nav-text">Data Tamu</div>
-                </Link>
-                <Link
-                  to="/admin/buku-tamu"
-                  className={`nav-item ${isActive("/admin/buku-tamu") ? "active" : ""}`}
-                >
-                  <div className="nav-text">Buku Tamu</div>
-                </Link>
-                <Link
-                  to="/admin/checkin"
-                  className={`nav-item ${isActive("/admin/checkin") ? "active" : ""}`}
-                >
-                  <div className="nav-text">Check-in</div>
-                </Link>
-              </>
-            )}
-
-            {role === "penerima_tamu" && (
-              <>
-                {role === "penerima_tamu" && (
-                  <>
-                    <Link
-                      to={`/checkin${location.search}`}
-                      className={`nav-item ${isActive("/checkin") ? "active" : ""}`}
-                    >
-                      <div className="nav-text">Check-in</div>
-                    </Link>
-
-                    <Link
-                      to={`/buku-tamu${location.search}`}
-                      className={`nav-item ${isActive("/buku-tamu") ? "active" : ""}`}
-                    >
-                      <div className="nav-text">Buku Tamu</div>
-                    </Link>
-                  </>
-                )}
-              </>
-            )}
-          </div>
-
-          {/* Logout */}
-          <button
-            className="btn btn-link text-decoration-none fw-bold ms-auto logout-btn"
-            onClick={handleLogout}
-          >
-            Logout
-          </button>
-        </div>
-
-        {/* Hamburger */}
-        <button className="nav-btn nav-close-btn" onClick={showNavbar}>
-          <FaTimes />
-        </button>
-      </nav>
-      <button className="nav-btn" onClick={showNavbar}>
-        <FaBars />
+        <FaBars size={18} />
       </button>
+
+      <Link to="/admin/dashboard" className="weku-logo text-decoration-none">
+        WeKu
+      </Link>
+
+      <nav className="nav-tabs-wrapper">
+        {tabs.map((tab) => (
+          <Link
+            key={tab.to}
+            to={tab.to}
+            className={`nav-tab-item ${
+              isActive(tab.to, tab.extra) ? "active" : ""
+            }`}
+          >
+            {tab.label}
+          </Link>
+        ))}
+      </nav>
+
+      <div className="navbar-avatar">
+        <button
+          className="btn btn-link text-decoration-none fw-bold p-0"
+          onClick={handleLogout}
+          type="button"
+        >
+          Logout
+        </button>
+      </div>
     </header>
   );
 };

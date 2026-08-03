@@ -1,184 +1,80 @@
-/* Umum */
-
-header {
-  height: 70px;
+.admin-navbar {
+  height: 75px;
+  background: #FFFFFF;
   display: flex;
-  justify-content: space-between;
   align-items: center;
-  padding: 0rem 2rem;
+  gap: 16px;
+  padding: 0 20px; /* tambahkan ini */
+  position: sticky; /* biar navbar tetap di atas saat scroll */
+  top: 0;
+  z-index: 1100;
 }
 
-header .nav-btn {
-  padding: 5px;
-  cursor: pointer;
+.hamburger-btn {
   background: transparent;
   border: none;
-  outline: none;
-  color: var(--primary-color);
-  visibility: hidden;
-  opacity: 0;
-}
-
-@media only screen and (max-width: 1024px){
-  header {
-    height: 70px;
-  }
-
-  header .nav-btn {
-    visibility: visible;
-    opacity: 1;
-  }
-
-  .navbar {
-    position: fixed !important;
-    inset: 0;
-    height: 100% !important;
-    width: 100%;
-    display: flex; 
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    gap: 1.5rem;
-    background-color: var(--primary-color);
-    transition: 1s;
-    transform: translateY(-100vh);
-    z-index: 9999;
-  }
-
-  header .responsive_nav {
-    transform: none;
-  }
-
-  nav .nav-close-btn {
-    position: absolute;
-    top: 2rem;
-    right: 2rem;
-  }
-
-  .navbar-wrapper,
-  .navbar-links {
-    display: flex !important;
-    flex-direction: column !important;
-    justify-content: center !important;
-    align-items: center !important;
-    width: 100%;
-    gap: 1.5rem;
-  }
-
-  .nav-item {
-    font-size: 1.3rem !important;
-    color: #3D3D3D !important;
-  }
-
-  .nav-item.active {
-    outline: 3px solid #3D3D3D;
-    outline-offset: 4px;
-  }
-
-  .logout-btn {
-    margin-top: auto;
-    color: #3D3D3D !important;
-    font-weight: 600;
-    padding-bottom: 2rem;
-    margin-left: 0 !important;
-  }
-
-}
-
-.navbar {
-    transition: all 0.3s ease;
-    height: 70px;
-}
-
-.navbar-logo .logo-img {
-    height: 40px;
-}
-
-.navbar-wrapper {
+  color: #44474D;
   display: flex;
-  align-items: center;
-  justify-content: flex-start;
-  padding: 0rem 3rem;
+  cursor: pointer;
 }
 
-.navbar-logo {
-  height: auto;
-  width: 8rem;
+.weku-logo {
+  color: #d6336c;
+  font-family: "Georgia", serif;
+  font-weight: 700;
+  font-size: 2.5rem;
 }
 
-.navbar-container {
-  width: auto;
-  height: auto;
-  display: inline-flex;
-  justify-content: flex-start;
-  align-items: center;
+.nav-tabs-wrapper {
+  display: flex;
+  gap: 32px;
+  margin: 0 auto;
 }
 
-.nav-item {
-  display: inline-flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  gap: 10px;
-  overflow: hidden;
-  padding: 5px 20px;
-  border-radius: 20px;
-  align-items: center;
+.nav-tab-item {
+  color: #44474D;
   text-decoration: none;
-  color: #0A0A0A;
-  font-size: 25px;
-  font-weight: 500;
-  transition: all 0.2s ease;
+  font-size: 1rem;
+  padding: 6px 0;
 }
 
-.nav-item.active {
-  outline: 3px solid #FC8EAC;
-  outline-offset: -3px;
-}
-
-.nav-item:hover {
-  color: #F33A6B;
-}
-
-.nav-text {
-  align-self: stretch;
-  font-family: 'PT Sans Caption', sans-serif;
-  font-size: 18px;
-  word-wrap: break-word;
-}
-
-.nav-item.active .nav-text {
-  color: #F33A6B;
+.nav-tab-item:hover {
+  color: #031632;
+  text-decoration: none;
   font-weight: 700;
 }
 
-.logout-btn {
-    color: #3D3D3D !important;
-    border: none;
-    font-weight: 800;
+.nav-tab-item.active {
+  color: #031632;
+  font-weight: 700;
+  border-bottom: 2px solid #031632;
 }
 
-/* Warna tema tiap role */
-.navbar-super-admin {
-    background-color: #02225A;
-    width: 100%;
-    /* biru tua */
+.navbar-avatar .btn-link {
+  color: #d6336c;
+  font-size: 1rem;
 }
 
-.navbar-admin {
-    background-color: #FFE0DC;
-    width: 100%;
-    /* pink lembut */
+.navbar-avatar img {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  object-fit: cover;
 }
 
-.navbar-tamu {
-    background-color: #7cc674;
-    width: 100%;
-    /* hijau muda */
+@media (min-width: 768px) {
+  .hamburger-btn {
+    display: none;
+  }
 }
 
-.navbar-default {
-    background-color: #333;
-    width: 100%;
-    /* hitam */
+/* Tab menu cuma untuk desktop */
+@media (max-width: 767.98px) {
+  .nav-tabs-wrapper {
+    display: none;
+  }
+
+  .navbar-avatar {
+    display: none;
+  }
 }

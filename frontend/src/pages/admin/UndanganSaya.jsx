@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import "../../assets/css/PilihTema.css";
 import axios from "axios";
-import Navbar from "../../components/Navbar";
+import AdminLayout from "../../components/AdminLayout";
 import Footer from "../../components/Footer";
 
 
@@ -99,60 +99,62 @@ const UndanganSaya = () => {
 
   return (
     <div className="d-flex flex-column min-vh-100 bg-latar">
-      <Navbar role="admin" />
-      <div className="container my-5 text-center">
-        {invitation ? (
-          <div>
-            <h2 className="mb-4">Anda memiliki undangan</h2>
-            <button
-              className="btn btn-success"
-              onClick={() => handleEditInvitation(invitation.id)}
-            >
-              Lanjut ke Edit Undangan
-            </button>
-          </div>
-        ) : (
-          <>
-            <h2 className="mb-4">Pilih Tema Undangan</h2>
-            <div className="row g-4">
-              {themes.map((theme) => (
-                <div className="col-lg-3 col-md-6" key={theme.id}>
-                  <div className="saas-card">
-                    <div className="saas-image-wrapper">
-                      <img
-                        src={`${import.meta.env.VITE_API_URL}/uploads/themes/${theme.thumbnail_url}`}
-                        alt={theme.name}
-                        className="saas-image"
-                      />
+      <AdminLayout role="admin">
+        <div className="container my-5 text-center">
+          {invitation ? (
+            <div>
+              <h2 className="mb-4">Anda memiliki undangan</h2>
+              <button
+                className="btn btn-success"
+                onClick={() => handleEditInvitation(invitation.id)}
+              >
+                Lanjut ke Edit Undangan
+              </button>
+            </div>
+          ) : (
+            <>
+              <h2 className="mb-4">Pilih Tema Undangan</h2>
+              <div className="row g-4">
+                {themes.map((theme) => (
+                  <div className="col-lg-3 col-md-6" key={theme.id}>
+                    <div className="saas-card">
+                      <div className="saas-image-wrapper">
+                        <img
+                          src={`${import.meta.env.VITE_API_URL}/uploads/themes/${theme.thumbnail_url}`}
+                          alt={theme.name}
+                          className="saas-image"
+                        />
 
-                      <div className="saas-overlay">
-                        <button
-                          className="btn btn-light btn-sm me-2"
-                          onClick={() => navigate(`/preview/${theme.id}`)}
-                        >
-                          Preview
-                        </button>
+                        <div className="saas-overlay">
+                          <button
+                            className="btn btn-light btn-sm me-2"
+                            onClick={() => navigate(`/preview/${theme.id}`)}
+                          >
+                            Preview
+                          </button>
 
-                        <button
-                          className="btn btn-primary btn-sm"
-                          onClick={() => handleSelectTheme(theme.id)}
-                        >
-                          Gunakan Tema
-                        </button>
+                          <button
+                            className="btn btn-primary btn-sm"
+                            onClick={() => handleSelectTheme(theme.id)}
+                          >
+                            Gunakan Tema
+                          </button>
+                        </div>
+                      </div>
+
+                      <div className="saas-content">
+                        <small className="text-muted">Wedding Template</small>
+                        <h5 className="mt-1">{theme.name}</h5>
                       </div>
                     </div>
-
-                    <div className="saas-content">
-                      <small className="text-muted">Wedding Template</small>
-                      <h5 className="mt-1">{theme.name}</h5>
-                    </div>
                   </div>
-                </div>
-              ))}
-            </div>
-          </>
-        )}
-      </div>
+                ))}
+              </div>
+            </>
+          )}
+        </div>
+      </AdminLayout>
+
       <Footer />
     </div>
   );
