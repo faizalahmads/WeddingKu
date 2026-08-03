@@ -3,7 +3,7 @@ import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { useParams, useSearchParams } from "react-router-dom";
 import "../../assets/css/ManageInvite.css";
-import Navbar from "../../components/Navbar";
+import AdminLayout from "../../components/AdminLayout";
 import Footer from "../../components/Footer";
 import StepProgress from "../../components/StepProgress";
 import ToggleSwitch from "../../components/ToggleSwitch";
@@ -741,807 +741,823 @@ const ManageInvite = () => {
 
   return (
     <div className="d-flex flex-column min-vh-100 bg-light">
-      <Navbar role="admin" />
-      <div className="container py-5">
-        <h2 className="mb-4 text-center">Manajemen Undangan</h2>
-        <form
-          onSubmit={handleSubmit}
-          className="border-manage shadow p-4 bg-white"
-        >
-          <div className="d-flex justify-content-between mb-3">
-            {step > 1 ? (
-              <button
-                type="button"
-                className="btn btn-secondary"
-                onClick={prevStep}
-              >
-                Back
-              </button>
-            ) : (
-              <div></div>
-            )}
+      <AdminLayout role="admin">
+        <div className="container py-5">
+          <h2 className="mb-4 text-center">Manajemen Undangan</h2>
+          <form
+            onSubmit={handleSubmit}
+            className="border-manage shadow p-4 bg-white"
+          >
+            <div className="d-flex justify-content-between mb-3">
+              {step > 1 ? (
+                <button
+                  type="button"
+                  className="btn btn-secondary"
+                  onClick={prevStep}
+                >
+                  Back
+                </button>
+              ) : (
+                <div></div>
+              )}
 
-            {step < 5 && (
-              <button
-                type="button"
-                className="btn btn-primary"
-                onClick={nextStep}
-              >
-                Next
-              </button>
-            )}
-          </div>
+              {step < 5 && (
+                <button
+                  type="button"
+                  className="btn btn-primary"
+                  onClick={nextStep}
+                >
+                  Next
+                </button>
+              )}
+            </div>
 
-          <StepProgress activeStep={step} completedStep={completedStep} />
-          {step === 1 && (
-            <>
-              <div className="row">
-                <div className="col-md-6 mb-3">
-                  <label className="sub-judul fw-bold mb-2 required">
-                    Nama Pengantin Pria
-                  </label>
-                  <input
-                    type="text"
-                    name="groom_name"
-                    value={form.groom_name}
-                    onChange={handleChange}
-                    className="form-control"
-                    required
-                  />
-                </div>
-
-                <div className="col-md-6 mb-3">
-                  <label className="sub-judul fw-bold mb-2 required">
-                    Nama Pengantin Wanita
-                  </label>
-                  <input
-                    type="text"
-                    name="bride_name"
-                    value={form.bride_name}
-                    onChange={handleChange}
-                    className="form-control"
-                    required
-                  />
-                </div>
-
-                <div className="col-md-6 d-flex justify-content-start sub-judul fw-bold mb-3 required">
-                  <UploadFoto
-                    name="groom_img"
-                    label="Foto Pengantin Pria"
-                    width={130}
-                    height={130}
-                    defaultImage={
-                      form?.groom_img
-                        ? `${import.meta.env.VITE_API_URL}${form.groom_img}`
-                        : null
-                    }
-                    onChange={(file) => handleFileChange(file, "groom_img")}
-                  />
-                </div>
-
-                <div className="col-md-6 d-flex justify-content-start sub-judul fw-bold mb-3 required">
-                  <UploadFoto
-                    name="bride_img"
-                    label="Foto Pengantin Wanita"
-                    width={130}
-                    height={130}
-                    defaultImage={
-                      form?.bride_img
-                        ? `${import.meta.env.VITE_API_URL}${form.bride_img}`
-                        : null
-                    }
-                    onChange={(file) => handleFileChange(file, "bride_img")}
-                  />
-                </div>
-
-                <div className="col-md-6 d-flex justify-content-start mb-2">
-                  <ToggleSwitch
-                    label="Nama Orang Tua Pria"
-                    value={toggles.show_groom_parent}
-                    onChange={setToggle("show_groom_parent")}
-                  />
-                </div>
-
-                <div className="col-md-6 d-flex justify-content-start mb-2">
-                  <ToggleSwitch
-                    label="Nama Orang Tua Wanita"
-                    value={toggles.show_bride_parent}
-                    onChange={setToggle("show_bride_parent")}
-                  />
-                </div>
-
-                {toggles.show_groom_parent ? (
+            <StepProgress activeStep={step} completedStep={completedStep} />
+            {step === 1 && (
+              <>
+                <div className="row">
                   <div className="col-md-6 mb-3">
-                    <textarea
-                      name="groom_parent"
-                      value={form.groom_parent}
+                    <label className="sub-judul fw-bold mb-2 required">
+                      Nama Pengantin Pria
+                    </label>
+                    <input
+                      type="text"
+                      name="groom_name"
+                      value={form.groom_name}
+                      onChange={handleChange}
+                      className="form-control"
+                      required
+                    />
+                  </div>
+
+                  <div className="col-md-6 mb-3">
+                    <label className="sub-judul fw-bold mb-2 required">
+                      Nama Pengantin Wanita
+                    </label>
+                    <input
+                      type="text"
+                      name="bride_name"
+                      value={form.bride_name}
+                      onChange={handleChange}
+                      className="form-control"
+                      required
+                    />
+                  </div>
+
+                  <div className="col-md-6 d-flex justify-content-start sub-judul fw-bold mb-3 required">
+                    <UploadFoto
+                      name="groom_img"
+                      label="Foto Pengantin Pria"
+                      width={130}
+                      height={130}
+                      defaultImage={
+                        form?.groom_img
+                          ? `${import.meta.env.VITE_API_URL}${form.groom_img}`
+                          : null
+                      }
+                      onChange={(file) => handleFileChange(file, "groom_img")}
+                    />
+                  </div>
+
+                  <div className="col-md-6 d-flex justify-content-start sub-judul fw-bold mb-3 required">
+                    <UploadFoto
+                      name="bride_img"
+                      label="Foto Pengantin Wanita"
+                      width={130}
+                      height={130}
+                      defaultImage={
+                        form?.bride_img
+                          ? `${import.meta.env.VITE_API_URL}${form.bride_img}`
+                          : null
+                      }
+                      onChange={(file) => handleFileChange(file, "bride_img")}
+                    />
+                  </div>
+
+                  <div className="col-md-6 d-flex justify-content-start mb-2">
+                    <ToggleSwitch
+                      label="Nama Orang Tua Pria"
+                      value={toggles.show_groom_parent}
+                      onChange={setToggle("show_groom_parent")}
+                    />
+                  </div>
+
+                  <div className="col-md-6 d-flex justify-content-start mb-2">
+                    <ToggleSwitch
+                      label="Nama Orang Tua Wanita"
+                      value={toggles.show_bride_parent}
+                      onChange={setToggle("show_bride_parent")}
+                    />
+                  </div>
+
+                  {toggles.show_groom_parent ? (
+                    <div className="col-md-6 mb-3">
+                      <textarea
+                        name="groom_parent"
+                        value={form.groom_parent}
+                        onChange={handleChange}
+                        className="form-control"
+                      />
+                    </div>
+                  ) : (
+                    <div className="col-md-6 mb-3">
+                      <p className="text-muted fst-italic">
+                        Tidak menggunakan Nama Orang Tua
+                      </p>
+                    </div>
+                  )}
+
+                  {toggles.show_bride_parent ? (
+                    <div className="col-md-6 mb-3">
+                      <textarea
+                        name="bride_parent"
+                        value={form.bride_parent}
+                        onChange={handleChange}
+                        className="form-control"
+                      />
+                    </div>
+                  ) : (
+                    <div className="col-md-6 mb-3">
+                      <p className="text-muted fst-italic">
+                        Tidak menggunakan Nama Orang Tua
+                      </p>
+                    </div>
+                  )}
+
+                  <div className="col-md-6 mb-3">
+                    <label className="sub-judul fw-bold mb-2">Instagram</label>
+                    <input
+                      type="text"
+                      name="groom_sosmed"
+                      value={form.groom_sosmed}
                       onChange={handleChange}
                       className="form-control"
                     />
                   </div>
-                ) : (
-                  <div className="col-md-6 mb-3">
-                    <p className="text-muted fst-italic">
-                      Tidak menggunakan Nama Orang Tua
-                    </p>
-                  </div>
-                )}
 
-                {toggles.show_bride_parent ? (
                   <div className="col-md-6 mb-3">
-                    <textarea
-                      name="bride_parent"
-                      value={form.bride_parent}
+                    <label className="sub-judul fw-bold mb-2">Instagram</label>
+                    <input
+                      type="text"
+                      name="bride_sosmed"
+                      value={form.bride_sosmed}
                       onChange={handleChange}
                       className="form-control"
                     />
                   </div>
-                ) : (
-                  <div className="col-md-6 mb-3">
-                    <p className="text-muted fst-italic">
-                      Tidak menggunakan Nama Orang Tua
-                    </p>
-                  </div>
-                )}
-
-                <div className="col-md-6 mb-3">
-                  <label className="sub-judul fw-bold mb-2">Instagram</label>
-                  <input
-                    type="text"
-                    name="groom_sosmed"
-                    value={form.groom_sosmed}
-                    onChange={handleChange}
-                    className="form-control"
-                  />
                 </div>
+                <button type="submit" className="btn-simpan">
+                  Simpan
+                </button>
+              </>
+            )}
 
-                <div className="col-md-6 mb-3">
-                  <label className="sub-judul fw-bold mb-2">Instagram</label>
-                  <input
-                    type="text"
-                    name="bride_sosmed"
-                    value={form.bride_sosmed}
-                    onChange={handleChange}
-                    className="form-control"
-                  />
-                </div>
-              </div>
-              <button type="submit" className="btn-simpan">
-                Simpan
-              </button>
-            </>
-          )}
-
-          {step === 2 && (
-            <div>
-              <div className="mb-3">
-                <label className="sub-judul fw-bold mb-2 required">
-                  Deskripsi
-                </label>
-                <textarea
-                  type="text"
-                  name="deskripsi_kasih"
-                  value={form.deskripsi_kasih}
-                  onChange={handleChange}
-                  className="form-control"
-                  required
-                />
-              </div>
-
-              <div className="mb-3">
-                <label className="sub-judul fw-bold mb-2 required">
-                  Lokasi
-                </label>
-                <input
-                  type="text"
-                  name="location"
-                  value={form.location}
-                  onChange={handleChange}
-                  className="form-control"
-                  required
-                />
-              </div>
-
-              <div className="mb-3">
-                <label className="sub-judul fw-bold mb-2 required">
-                  Detail Lokasi
-                </label>
-                <input
-                  type="text"
-                  name="detail_location"
-                  value={form.detail_location}
-                  onChange={handleChange}
-                  className="form-control"
-                  required
-                />
-              </div>
-
-              <div className="mb-3">
-                <label className="sub-judul fw-bold mb-2 required">
-                  maps link
-                </label>
-                <input
-                  type="text"
-                  name="maps_link"
-                  value={form.maps_link}
-                  onChange={handleChange}
-                  className="form-control"
-                  required
-                />
-              </div>
-
-              <div className="col-md-6 d-flex justify-content-start mb-2">
-                <ToggleSwitch
-                  label="Tanggal Akad dan Resepsi Sama"
-                  value={toggles.same_date}
-                  onChange={setToggle("same_date")}
-                />
-              </div>
-
-              {toggles.same_date && (
+            {step === 2 && (
+              <div>
                 <div className="mb-3">
                   <label className="sub-judul fw-bold mb-2 required">
-                    Tanggal
+                    Deskripsi
                   </label>
-                  <input
-                    type="date"
-                    name="wedding_date"
-                    value={form.wedding_date}
+                  <textarea
+                    type="text"
+                    name="deskripsi_kasih"
+                    value={form.deskripsi_kasih}
                     onChange={handleChange}
                     className="form-control"
                     required
                   />
                 </div>
-              )}
 
-              {!toggles.same_date && (
-                <div className="row">
-                  <div className="col-md-6 mb-3">
+                <div className="mb-3">
+                  <label className="sub-judul fw-bold mb-2 required">
+                    Lokasi
+                  </label>
+                  <input
+                    type="text"
+                    name="location"
+                    value={form.location}
+                    onChange={handleChange}
+                    className="form-control"
+                    required
+                  />
+                </div>
+
+                <div className="mb-3">
+                  <label className="sub-judul fw-bold mb-2 required">
+                    Detail Lokasi
+                  </label>
+                  <input
+                    type="text"
+                    name="detail_location"
+                    value={form.detail_location}
+                    onChange={handleChange}
+                    className="form-control"
+                    required
+                  />
+                </div>
+
+                <div className="mb-3">
+                  <label className="sub-judul fw-bold mb-2 required">
+                    maps link
+                  </label>
+                  <input
+                    type="text"
+                    name="maps_link"
+                    value={form.maps_link}
+                    onChange={handleChange}
+                    className="form-control"
+                    required
+                  />
+                </div>
+
+                <div className="col-md-6 d-flex justify-content-start mb-2">
+                  <ToggleSwitch
+                    label="Tanggal Akad dan Resepsi Sama"
+                    value={toggles.same_date}
+                    onChange={setToggle("same_date")}
+                  />
+                </div>
+
+                {toggles.same_date && (
+                  <div className="mb-3">
                     <label className="sub-judul fw-bold mb-2 required">
-                      Tanggal Akad
+                      Tanggal
                     </label>
                     <input
                       type="date"
-                      name="akad_date"
-                      value={form.akad_date}
+                      name="wedding_date"
+                      value={form.wedding_date}
                       onChange={handleChange}
                       className="form-control"
                       required
                     />
                   </div>
-
-                  <div className="col-md-6 mb-3">
-                    <label className="sub-judul fw-bold mb-2 required">
-                      Tanggal Resepsi
-                    </label>
-                    <input
-                      type="date"
-                      name="resepsi_date"
-                      value={form.resepsi_date}
-                      onChange={handleChange}
-                      className="form-control"
-                      required
-                    />
-                  </div>
-                </div>
-              )}
-
-              <div className="row">
-                <div className="col-md-6">
-                  <label className="sub-judul fw-bold mb-2 required">
-                    Jam Akad
-                  </label>
-                  <div className="row">
-                    <div className="col-md-6 mb-3">
-                      <input
-                        type="time"
-                        name="start_time"
-                        value={mainEvents[0].start_time}
-                        onChange={(e) =>
-                          handleEventChange(0, "start_time", e.target.value)
-                        }
-                        className="form-control"
-                        placeholder="Mulai"
-                        required
-                      />
-                    </div>
-
-                    <div className="col-md-6 mb-3">
-                      <input
-                        type="time"
-                        name="end_time"
-                        value={mainEvents[0].end_time}
-                        onChange={(e) =>
-                          handleEventChange(0, "end_time", e.target.value)
-                        }
-                        className="form-control"
-                        placeholder="Akhir"
-                        required
-                      />
-                    </div>
-                  </div>
-                </div>
-
-                <div className="col-md-6">
-                  <label className="sub-judul fw-bold mb-2 required">
-                    Jam Resepsi
-                  </label>
-                  <div className="row">
-                    <div className="col-md-6 mb-3">
-                      <input
-                        type="time"
-                        name="start_time"
-                        value={mainEvents[1].start_time}
-                        onChange={(e) =>
-                          handleEventChange(1, "start_time", e.target.value)
-                        }
-                        className="form-control"
-                        placeholder="Mulai"
-                        required
-                      />
-                    </div>
-
-                    <div className="col-md-6 mb-3">
-                      <input
-                        type="time"
-                        name="end_time"
-                        value={mainEvents[1].end_time}
-                        onChange={(e) =>
-                          handleEventChange(1, "end_time", e.target.value)
-                        }
-                        className="form-control"
-                        placeholder="Akhir"
-                        required
-                      />
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-              <button type="submit" className="btn-simpan">
-                Simpan
-              </button>
-            </div>
-          )}
-
-          {step === 3 && (
-            <div>
-              <div className="col-md-6 d-flex justify-content-start mb-2">
-                <ToggleSwitch
-                  label="Lagu"
-                  value={toggles.custom_music}
-                  onChange={setToggle("custom_music")}
-                  switchWidth={120}
-                  handleWidth={60}
-                />
-              </div>
-              {toggles.custom_music && (
-                <UploadFile
-                  onFileSelect={(file) => {
-                    console.log("File dipilih:", file);
-                  }}
-                />
-              )}
-
-              {!toggles.custom_music && (
-                <p className="text-muted fst-italic mb-4">
-                  Menggunakan Musik Default
-                </p>
-              )}
-
-              <div className="mb-3">
-                <label className="sub-judul fw-bold mb-2 required">
-                  Deskripsi
-                </label>
-                <textarea
-                  type="text"
-                  name="closing_deskripsi" // Blm dibuat di BE
-                  value={form.closing_deskripsi}
-                  onChange={handleChange}
-                  className="form-control"
-                  required
-                />
-              </div>
-
-              <div className="mb-3">
-                <label className="sub-judul fw-bold required">
-                  Galeri Foto
-                </label>
-                <label className="w-100 text-center text-muted small mb-2 d-block">
-                  Silahkan upload beberapa gambar disini Max 5 Mb (jpg, jpeg,
-                  png)
-                </label>
-
-                {/* Upload */}
-                <UploadFile
-                  label="Silahkan Drag & Drop Foto atau Browse File"
-                  width="100%"
-                  height="70px"
-                  multiple
-                  accept="image/jpeg,image/png"
-                  onFileSelect={handleUploadFile}
-                />
-
-                {imagePreviews.length > 0 && (
-                  <>
-                    <h6 className="mt-4">Preview Upload</h6>
-                    <div className="gallery-preview">
-                      {imagePreviews.map((img, index) => (
-                        <div key={index} className="preview-item">
-                          <img src={img.url} alt={`preview-${index}`} />
-                          <button
-                            type="button"
-                            className="remove-btn"
-                            onClick={() => {
-                              const newPreview = imagePreviews.filter(
-                                (_, i) => i !== index,
-                              );
-                              const newImages = images.filter(
-                                (_, i) => i !== index,
-                              );
-                              setImagePreviews(newPreview);
-                              setImages(newImages);
-                            }}
-                          >
-                            ✕
-                          </button>
-                        </div>
-                      ))}
-                    </div>
-                  </>
                 )}
 
-                {galleryFromDB.length > 0 && (
-                  <>
-                    <h6 className="mt-4">Gallery Tersimpan</h6>
-                    <div className="gallery-preview">
-                      {galleryFromDB.map((img) => (
-                        <div key={img.id} className="preview-item">
-                          <img
-                            src={`${import.meta.env.VITE_API_URL}${img.image_path}`}
-                            alt="gallery"
-                          />
-                          <button
-                            type="button"
-                            className="remove-btn"
-                            onClick={() => handleDeleteGallery(img.id)}
-                          >
-                            ✕
-                          </button>
-                        </div>
-                      ))}
+                {!toggles.same_date && (
+                  <div className="row">
+                    <div className="col-md-6 mb-3">
+                      <label className="sub-judul fw-bold mb-2 required">
+                        Tanggal Akad
+                      </label>
+                      <input
+                        type="date"
+                        name="akad_date"
+                        value={form.akad_date}
+                        onChange={handleChange}
+                        className="form-control"
+                        required
+                      />
                     </div>
-                  </>
-                )}
-              </div>
 
-              <div className="col-md-6 d-flex justify-content-start mt-4 mb-2">
-                <ToggleSwitch
-                  label="Bank"
-                  value={toggles.show_bank}
-                  onChange={setToggle("show_bank")}
-                />
-              </div>
-              {toggles.show_bank && (
+                    <div className="col-md-6 mb-3">
+                      <label className="sub-judul fw-bold mb-2 required">
+                        Tanggal Resepsi
+                      </label>
+                      <input
+                        type="date"
+                        name="resepsi_date"
+                        value={form.resepsi_date}
+                        onChange={handleChange}
+                        className="form-control"
+                        required
+                      />
+                    </div>
+                  </div>
+                )}
+
                 <div className="row">
-                  <div className="col-md-6 mb-2">
-                    <label className="judul fw-bold required">Pria</label>
-                  </div>
-                  <div className="col-md-6 mb-2">
-                    <label className="judul fw-bold required">Wanita</label>
-                  </div>
-
-                  <div className="col-md-6 mb-3">
-                    <label className="sub-judul fw-bold mb-2">Nama Bank</label>
-                    <Select
-                      options={bankList.map((bank) => ({
-                        value: bank.id,
-                        label: bank.name,
-                      }))}
-                      value={
-                        form.groom_bank_id
-                          ? bankList
-                              .map((b) => ({ value: b.id, label: b.name }))
-                              .find((b) => b.value === form.groom_bank_id)
-                          : null
-                      }
-                      onChange={(selected) =>
-                        setForm((prev) => ({
-                          ...prev,
-                          groom_bank_id: selected?.value || null,
-                        }))
-                      }
-                      placeholder="Pilih Bank"
-                    />
-                  </div>
-                  <div className="col-md-6 mb-3">
-                    <label className="sub-judul fw-bold mb-2">Nama Bank</label>
-                    <Select
-                      options={bankList.map((bank) => ({
-                        value: bank.id,
-                        label: bank.name,
-                      }))}
-                      value={
-                        form.bride_bank_id
-                          ? bankList
-                              .map((b) => ({ value: b.id, label: b.name }))
-                              .find((b) => b.value === form.bride_bank_id)
-                          : null
-                      }
-                      onChange={(selected) =>
-                        setForm((prev) => ({
-                          ...prev,
-                          bride_bank_id: selected?.value || null,
-                        }))
-                      }
-                      placeholder="Pilih Bank"
-                    />
-                  </div>
-
-                  <div className="col-md-6 mb-3">
-                    <label className="sub-judul fw-bold mb-2">
-                      No Rekening
+                  <div className="col-md-6">
+                    <label className="sub-judul fw-bold mb-2 required">
+                      Jam Akad
                     </label>
-                    <input
-                      type="text"
-                      name="groom_norek"
-                      value={form.groom_norek}
-                      onChange={(e) => {
-                        const onlyNums = e.target.value.replace(/[^0-9]/g, "");
-                        handleChange({
-                          target: {
-                            name: "groom_norek",
-                            value: onlyNums,
-                          },
-                        });
-                      }}
-                      className="form-control"
-                    />
-                  </div>
-                  <div className="col-md-6 mb-3">
-                    <label className="sub-judul fw-bold mb-2">
-                      No Rekening
-                    </label>
-                    <input
-                      type="text"
-                      name="bride_norek"
-                      value={form.bride_norek}
-                      onChange={(e) => {
-                        const onlyNums = e.target.value.replace(/[^0-9]/g, "");
-                        handleChange({
-                          target: {
-                            name: "bride_norek",
-                            value: onlyNums,
-                          },
-                        });
-                      }}
-                      className="form-control"
-                    />
-                  </div>
-
-                  <div className="col-md-6 mb-3">
-                    <label className="sub-judul fw-bold mb-2">
-                      Nama Rekening Groom
-                    </label>
-                    <input
-                      type="text"
-                      name="groom_name_bank"
-                      value={form.groom_name_bank || ""}
-                      onChange={handleChange}
-                      className="form-control"
-                    />
-                  </div>
-
-                  <div className="col-md-6 mb-3">
-                    <label className="sub-judul fw-bold mb-2">
-                      Nama Rekening Bride
-                    </label>
-                    <input
-                      type="text"
-                      name="bride_name_bank"
-                      value={form.bride_name_bank || ""}
-                      onChange={handleChange}
-                      className="form-control"
-                    />
-                  </div>
-                </div>
-              )}
-
-              <button type="submit" className="btn-simpan">
-                Simpan
-              </button>
-            </div>
-          )}
-
-          {step === 4 && (
-            <div>
-              <div className="col-md-6 d-flex justify-content-start mt-4 mb-2">
-                <ToggleSwitch
-                  label="Cerita Cinta"
-                  value={toggles.use_story}
-                  onChange={setToggle("use_story")}
-                />
-              </div>
-
-              {!toggles.use_story && (
-                <p className="text-muted fst-italic mb-4">
-                  Tidak Menggunakan Cerita Cinta
-                </p>
-              )}
-
-              {toggles.use_story && (
-                <>
-                  <DndContext
-                    collisionDetection={closestCenter}
-                    onDragEnd={(event) => {
-                      const { active, over } = event;
-                      if (!over) return;
-
-                      if (active.id !== over.id) {
-                        const oldIndex = stories.findIndex(
-                          (s) => (s.id || s.tempId) === active.id,
-                        );
-
-                        const newIndex = stories.findIndex(
-                          (s) => (s.id || s.tempId) === over.id,
-                        );
-
-                        setStories(arrayMove(stories, oldIndex, newIndex));
-                      }
-                    }}
-                  >
-                    <SortableContext
-                      items={stories.map((s) => s.id || s.tempId)}
-                      strategy={verticalListSortingStrategy}
-                    >
-                      {stories.map((story, index) => (
-                        <SortableStory
-                          key={story.id || story.tempId}
-                          story={story}
-                          index={index}
-                          stories={stories}
-                          setStories={setStories}
-                          removeStoryCard={removeStoryCard}
+                    <div className="row">
+                      <div className="col-md-6 mb-3">
+                        <input
+                          type="time"
+                          name="start_time"
+                          value={mainEvents[0].start_time}
+                          onChange={(e) =>
+                            handleEventChange(0, "start_time", e.target.value)
+                          }
+                          className="form-control"
+                          placeholder="Mulai"
+                          required
                         />
-                      ))}
-                    </SortableContext>
-                  </DndContext>
+                      </div>
 
-                  <div className="btn-wrapper mb-3">
-                    <button
-                      type="button"
-                      className="btn-addStory me-3"
-                      onClick={addStoryCard}
-                    >
-                      + Add Story
-                    </button>
-
-                    <button
-                      type="button"
-                      className="btn-addStory"
-                      onClick={handleSaveStoryOnly}
-                    >
-                      {stories.length === 1
-                        ? "Simpan Cerita"
-                        : "Simpan Semua Cerita"}
-                    </button>
+                      <div className="col-md-6 mb-3">
+                        <input
+                          type="time"
+                          name="end_time"
+                          value={mainEvents[0].end_time}
+                          onChange={(e) =>
+                            handleEventChange(0, "end_time", e.target.value)
+                          }
+                          className="form-control"
+                          placeholder="Akhir"
+                          required
+                        />
+                      </div>
+                    </div>
                   </div>
-                </>
-              )}
 
-              <button type="submit" className="btn-simpan">
-                Simpan
-              </button>
-            </div>
-          )}
+                  <div className="col-md-6">
+                    <label className="sub-judul fw-bold mb-2 required">
+                      Jam Resepsi
+                    </label>
+                    <div className="row">
+                      <div className="col-md-6 mb-3">
+                        <input
+                          type="time"
+                          name="start_time"
+                          value={mainEvents[1].start_time}
+                          onChange={(e) =>
+                            handleEventChange(1, "start_time", e.target.value)
+                          }
+                          className="form-control"
+                          placeholder="Mulai"
+                          required
+                        />
+                      </div>
 
-          {step === 5 && (
-            <div>
-              <div className="col-md-4 mb-3">
-                <label className="sub-judul fw-bold mb-2 required">
-                  Nama Couple
-                </label>
-                <input
-                  type="text"
-                  name="couple_name"
-                  value={form.couple_name}
-                  onChange={handleChange}
-                  className="form-control"
-                  required
-                />
+                      <div className="col-md-6 mb-3">
+                        <input
+                          type="time"
+                          name="end_time"
+                          value={mainEvents[1].end_time}
+                          onChange={(e) =>
+                            handleEventChange(1, "end_time", e.target.value)
+                          }
+                          className="form-control"
+                          placeholder="Akhir"
+                          required
+                        />
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <button type="submit" className="btn-simpan">
+                  Simpan
+                </button>
               </div>
-              <div className="d-flex justify-content-start mt-4 mb-2">
-                <ToggleSwitch
-                  label="Logo"
-                  value={toggles.show_logo}
-                  onChange={setToggle("show_logo")}
-                />
-              </div>
-              {!toggles.show_logo && (
-                <p className="text-muted fst-italic mb-4">
-                  Tidak Menggunakan Logo Cover
-                </p>
-              )}
+            )}
 
-              {toggles.show_logo && (
+            {step === 3 && (
+              <div>
+                <div className="col-md-6 d-flex justify-content-start mb-2">
+                  <ToggleSwitch
+                    label="Lagu"
+                    value={toggles.custom_music}
+                    onChange={setToggle("custom_music")}
+                    switchWidth={120}
+                    handleWidth={60}
+                  />
+                </div>
+                {toggles.custom_music && (
+                  <UploadFile
+                    onFileSelect={(file) => {
+                      console.log("File dipilih:", file);
+                    }}
+                  />
+                )}
+
+                {!toggles.custom_music && (
+                  <p className="text-muted fst-italic mb-4">
+                    Menggunakan Musik Default
+                  </p>
+                )}
+
                 <div className="mb-3">
-                  <UploadFoto
-                    name="logo_img"
-                    label={null}
-                    width={120}
-                    height={120}
-                    defaultImage={
-                      form?.logo_img
-                        ? `${import.meta.env.VITE_API_URL}${form.logo_img}`
-                        : null
-                    }
-                    onChange={(file) => handleFileChange(file, "logo_img")}
+                  <label className="sub-judul fw-bold mb-2 required">
+                    Deskripsi
+                  </label>
+                  <textarea
+                    type="text"
+                    name="closing_deskripsi" // Blm dibuat di BE
+                    value={form.closing_deskripsi}
+                    onChange={handleChange}
+                    className="form-control"
+                    required
                   />
                 </div>
-              )}
 
-              <div className="mb-3">
-                <label className="Judul fw-bold mb-1">Foto Cover Mobile</label>
-                <div className="d-flex justify-content-start mb-2">
-                  <ToggleSwitch
-                    label="Gunakan Foto Gallery"
-                    labelClass="sub-judul"
-                    value={toggles.cover_mobile}
-                    onChange={setToggle("cover_mobile")}
-                  />
-                </div>
-                {toggles.cover_mobile && (
-                  <UploadFoto
-                    name="cover_mobile_img"
-                    label={null}
-                    width={130}
-                    height={160}
-                    defaultImage={
-                      form?.cover_mobile_img
-                        ? `${import.meta.env.VITE_API_URL}${form.cover_mobile_img}`
-                        : null
-                    }
-                    onChange={(file) =>
-                      handleFileChange(file, "cover_mobile_img")
-                    }
-                  />
-                )}
-              </div>
+                <div className="mb-3">
+                  <label className="sub-judul fw-bold required">
+                    Galeri Foto
+                  </label>
+                  <label className="w-100 text-center text-muted small mb-2 d-block">
+                    Silahkan upload beberapa gambar disini Max 5 Mb (jpg, jpeg,
+                    png)
+                  </label>
 
-              <div className="mb-3">
-                <label className="Judul fw-bold mb-1">Foto Cover Desktop</label>
-                <div className="d-flex justify-content-start mb-2">
+                  {/* Upload */}
+                  <UploadFile
+                    label="Silahkan Drag & Drop Foto atau Browse File"
+                    width="100%"
+                    height="70px"
+                    multiple
+                    accept="image/jpeg,image/png"
+                    onFileSelect={handleUploadFile}
+                  />
+
+                  {imagePreviews.length > 0 && (
+                    <>
+                      <h6 className="mt-4">Preview Upload</h6>
+                      <div className="gallery-preview">
+                        {imagePreviews.map((img, index) => (
+                          <div key={index} className="preview-item">
+                            <img src={img.url} alt={`preview-${index}`} />
+                            <button
+                              type="button"
+                              className="remove-btn"
+                              onClick={() => {
+                                const newPreview = imagePreviews.filter(
+                                  (_, i) => i !== index,
+                                );
+                                const newImages = images.filter(
+                                  (_, i) => i !== index,
+                                );
+                                setImagePreviews(newPreview);
+                                setImages(newImages);
+                              }}
+                            >
+                              ✕
+                            </button>
+                          </div>
+                        ))}
+                      </div>
+                    </>
+                  )}
+
+                  {galleryFromDB.length > 0 && (
+                    <>
+                      <h6 className="mt-4">Gallery Tersimpan</h6>
+                      <div className="gallery-preview">
+                        {galleryFromDB.map((img) => (
+                          <div key={img.id} className="preview-item">
+                            <img
+                              src={`${import.meta.env.VITE_API_URL}${img.image_path}`}
+                              alt="gallery"
+                            />
+                            <button
+                              type="button"
+                              className="remove-btn"
+                              onClick={() => handleDeleteGallery(img.id)}
+                            >
+                              ✕
+                            </button>
+                          </div>
+                        ))}
+                      </div>
+                    </>
+                  )}
+                </div>
+
+                <div className="col-md-6 d-flex justify-content-start mt-4 mb-2">
                   <ToggleSwitch
-                    label="Gunakan Foto Gallery"
-                    labelClass="sub-judul"
-                    value={toggles.cover_desktop}
-                    onChange={setToggle("cover_desktop")}
+                    label="Bank"
+                    value={toggles.show_bank}
+                    onChange={setToggle("show_bank")}
                   />
                 </div>
-                {toggles.cover_desktop && (
-                  <UploadFoto
-                    name="cover_desktop_img"
-                    label={null}
-                    width={160}
-                    height={130}
-                    defaultImage={
-                      form?.cover_desktop_img
-                        ? `${import.meta.env.VITE_API_URL}${form.cover_desktop_img}`
-                        : null
-                    }
-                    onChange={(file) =>
-                      handleFileChange(file, "cover_desktop_img")
-                    }
-                  />
+                {toggles.show_bank && (
+                  <div className="row">
+                    <div className="col-md-6 mb-2">
+                      <label className="judul fw-bold required">Pria</label>
+                    </div>
+                    <div className="col-md-6 mb-2">
+                      <label className="judul fw-bold required">Wanita</label>
+                    </div>
+
+                    <div className="col-md-6 mb-3">
+                      <label className="sub-judul fw-bold mb-2">
+                        Nama Bank
+                      </label>
+                      <Select
+                        options={bankList.map((bank) => ({
+                          value: bank.id,
+                          label: bank.name,
+                        }))}
+                        value={
+                          form.groom_bank_id
+                            ? bankList
+                                .map((b) => ({ value: b.id, label: b.name }))
+                                .find((b) => b.value === form.groom_bank_id)
+                            : null
+                        }
+                        onChange={(selected) =>
+                          setForm((prev) => ({
+                            ...prev,
+                            groom_bank_id: selected?.value || null,
+                          }))
+                        }
+                        placeholder="Pilih Bank"
+                      />
+                    </div>
+                    <div className="col-md-6 mb-3">
+                      <label className="sub-judul fw-bold mb-2">
+                        Nama Bank
+                      </label>
+                      <Select
+                        options={bankList.map((bank) => ({
+                          value: bank.id,
+                          label: bank.name,
+                        }))}
+                        value={
+                          form.bride_bank_id
+                            ? bankList
+                                .map((b) => ({ value: b.id, label: b.name }))
+                                .find((b) => b.value === form.bride_bank_id)
+                            : null
+                        }
+                        onChange={(selected) =>
+                          setForm((prev) => ({
+                            ...prev,
+                            bride_bank_id: selected?.value || null,
+                          }))
+                        }
+                        placeholder="Pilih Bank"
+                      />
+                    </div>
+
+                    <div className="col-md-6 mb-3">
+                      <label className="sub-judul fw-bold mb-2">
+                        No Rekening
+                      </label>
+                      <input
+                        type="text"
+                        name="groom_norek"
+                        value={form.groom_norek}
+                        onChange={(e) => {
+                          const onlyNums = e.target.value.replace(
+                            /[^0-9]/g,
+                            "",
+                          );
+                          handleChange({
+                            target: {
+                              name: "groom_norek",
+                              value: onlyNums,
+                            },
+                          });
+                        }}
+                        className="form-control"
+                      />
+                    </div>
+                    <div className="col-md-6 mb-3">
+                      <label className="sub-judul fw-bold mb-2">
+                        No Rekening
+                      </label>
+                      <input
+                        type="text"
+                        name="bride_norek"
+                        value={form.bride_norek}
+                        onChange={(e) => {
+                          const onlyNums = e.target.value.replace(
+                            /[^0-9]/g,
+                            "",
+                          );
+                          handleChange({
+                            target: {
+                              name: "bride_norek",
+                              value: onlyNums,
+                            },
+                          });
+                        }}
+                        className="form-control"
+                      />
+                    </div>
+
+                    <div className="col-md-6 mb-3">
+                      <label className="sub-judul fw-bold mb-2">
+                        Nama Rekening Groom
+                      </label>
+                      <input
+                        type="text"
+                        name="groom_name_bank"
+                        value={form.groom_name_bank || ""}
+                        onChange={handleChange}
+                        className="form-control"
+                      />
+                    </div>
+
+                    <div className="col-md-6 mb-3">
+                      <label className="sub-judul fw-bold mb-2">
+                        Nama Rekening Bride
+                      </label>
+                      <input
+                        type="text"
+                        name="bride_name_bank"
+                        value={form.bride_name_bank || ""}
+                        onChange={handleChange}
+                        className="form-control"
+                      />
+                    </div>
+                  </div>
                 )}
+
+                <button type="submit" className="btn-simpan">
+                  Simpan
+                </button>
               </div>
-              <button type="submit" className="btn-simpan">
-                Simpan
-              </button>
-            </div>
-          )}
-        </form>
-      </div>
+            )}
+
+            {step === 4 && (
+              <div>
+                <div className="col-md-6 d-flex justify-content-start mt-4 mb-2">
+                  <ToggleSwitch
+                    label="Cerita Cinta"
+                    value={toggles.use_story}
+                    onChange={setToggle("use_story")}
+                  />
+                </div>
+
+                {!toggles.use_story && (
+                  <p className="text-muted fst-italic mb-4">
+                    Tidak Menggunakan Cerita Cinta
+                  </p>
+                )}
+
+                {toggles.use_story && (
+                  <>
+                    <DndContext
+                      collisionDetection={closestCenter}
+                      onDragEnd={(event) => {
+                        const { active, over } = event;
+                        if (!over) return;
+
+                        if (active.id !== over.id) {
+                          const oldIndex = stories.findIndex(
+                            (s) => (s.id || s.tempId) === active.id,
+                          );
+
+                          const newIndex = stories.findIndex(
+                            (s) => (s.id || s.tempId) === over.id,
+                          );
+
+                          setStories(arrayMove(stories, oldIndex, newIndex));
+                        }
+                      }}
+                    >
+                      <SortableContext
+                        items={stories.map((s) => s.id || s.tempId)}
+                        strategy={verticalListSortingStrategy}
+                      >
+                        {stories.map((story, index) => (
+                          <SortableStory
+                            key={story.id || story.tempId}
+                            story={story}
+                            index={index}
+                            stories={stories}
+                            setStories={setStories}
+                            removeStoryCard={removeStoryCard}
+                          />
+                        ))}
+                      </SortableContext>
+                    </DndContext>
+
+                    <div className="btn-wrapper mb-3">
+                      <button
+                        type="button"
+                        className="btn-addStory me-3"
+                        onClick={addStoryCard}
+                      >
+                        + Add Story
+                      </button>
+
+                      <button
+                        type="button"
+                        className="btn-addStory"
+                        onClick={handleSaveStoryOnly}
+                      >
+                        {stories.length === 1
+                          ? "Simpan Cerita"
+                          : "Simpan Semua Cerita"}
+                      </button>
+                    </div>
+                  </>
+                )}
+
+                <button type="submit" className="btn-simpan">
+                  Simpan
+                </button>
+              </div>
+            )}
+
+            {step === 5 && (
+              <div>
+                <div className="col-md-4 mb-3">
+                  <label className="sub-judul fw-bold mb-2 required">
+                    Nama Couple
+                  </label>
+                  <input
+                    type="text"
+                    name="couple_name"
+                    value={form.couple_name}
+                    onChange={handleChange}
+                    className="form-control"
+                    required
+                  />
+                </div>
+                <div className="d-flex justify-content-start mt-4 mb-2">
+                  <ToggleSwitch
+                    label="Logo"
+                    value={toggles.show_logo}
+                    onChange={setToggle("show_logo")}
+                  />
+                </div>
+                {!toggles.show_logo && (
+                  <p className="text-muted fst-italic mb-4">
+                    Tidak Menggunakan Logo Cover
+                  </p>
+                )}
+
+                {toggles.show_logo && (
+                  <div className="mb-3">
+                    <UploadFoto
+                      name="logo_img"
+                      label={null}
+                      width={120}
+                      height={120}
+                      defaultImage={
+                        form?.logo_img
+                          ? `${import.meta.env.VITE_API_URL}${form.logo_img}`
+                          : null
+                      }
+                      onChange={(file) => handleFileChange(file, "logo_img")}
+                    />
+                  </div>
+                )}
+
+                <div className="mb-3">
+                  <label className="Judul fw-bold mb-1">
+                    Foto Cover Mobile
+                  </label>
+                  <div className="d-flex justify-content-start mb-2">
+                    <ToggleSwitch
+                      label="Gunakan Foto Gallery"
+                      labelClass="sub-judul"
+                      value={toggles.cover_mobile}
+                      onChange={setToggle("cover_mobile")}
+                    />
+                  </div>
+                  {toggles.cover_mobile && (
+                    <UploadFoto
+                      name="cover_mobile_img"
+                      label={null}
+                      width={130}
+                      height={160}
+                      defaultImage={
+                        form?.cover_mobile_img
+                          ? `${import.meta.env.VITE_API_URL}${form.cover_mobile_img}`
+                          : null
+                      }
+                      onChange={(file) =>
+                        handleFileChange(file, "cover_mobile_img")
+                      }
+                    />
+                  )}
+                </div>
+
+                <div className="mb-3">
+                  <label className="Judul fw-bold mb-1">
+                    Foto Cover Desktop
+                  </label>
+                  <div className="d-flex justify-content-start mb-2">
+                    <ToggleSwitch
+                      label="Gunakan Foto Gallery"
+                      labelClass="sub-judul"
+                      value={toggles.cover_desktop}
+                      onChange={setToggle("cover_desktop")}
+                    />
+                  </div>
+                  {toggles.cover_desktop && (
+                    <UploadFoto
+                      name="cover_desktop_img"
+                      label={null}
+                      width={160}
+                      height={130}
+                      defaultImage={
+                        form?.cover_desktop_img
+                          ? `${import.meta.env.VITE_API_URL}${form.cover_desktop_img}`
+                          : null
+                      }
+                      onChange={(file) =>
+                        handleFileChange(file, "cover_desktop_img")
+                      }
+                    />
+                  )}
+                </div>
+                <button type="submit" className="btn-simpan">
+                  Simpan
+                </button>
+              </div>
+            )}
+          </form>
+        </div>
+      </AdminLayout>
+
       <Footer />
     </div>
   );

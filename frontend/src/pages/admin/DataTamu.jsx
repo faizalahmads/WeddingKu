@@ -4,7 +4,7 @@ import ExcelJS from "exceljs";
 import { Link, useNavigate } from "react-router-dom";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "../../assets/css/App.css";
-import Navbar from "../../components/Navbar";
+import AdminLayout from "../../components/AdminLayout";
 import Footer from "../../components/Footer";
 import ModalTambahTamu from "../../components/modals/ModalTambahTamu";
 import ModalImportTamu from "../../components/modals/ModalImportTamu";
@@ -273,147 +273,147 @@ const DataTamu = () => {
 
   return (
     <div className="d-flex flex-column min-vh-100 bg-latar">
-      <Navbar role="admin" />
+      <AdminLayout role="admin">
+        <div className="container mt-5">
+          <div className="mb-3">
+            <div className="d-flex justify-content-between mb-2">
+              <button
+                className="btn btn-success fw-semibold"
+                onClick={() => setShowModal(true)}
+              >
+                Tambah Tamu
+              </button>
 
-      <div className="container mt-5">
-        <div className="mb-3">
-          <div className="d-flex justify-content-between mb-2">
-            <button
-              className="btn btn-success fw-semibold"
-              onClick={() => setShowModal(true)}
-            >
-              Tambah Tamu
-            </button>
+              {/* ✅ Tombol Import XLSX */}
+              <div>
+                <input
+                  type="file"
+                  accept=".xlsx,.xls"
+                  id="import-xlsx"
+                  style={{ display: "none" }}
+                  onChange={handleImportXLSX}
+                />
+                <button
+                  className="btn btn-primary me-2 fw-semibold"
+                  onClick={() => document.getElementById("import-xlsx").click()}
+                >
+                  Import XLSX
+                </button>
 
-            {/* ✅ Tombol Import XLSX */}
-            <div>
+                {/* ✅ Tombol Download Template XLSX */}
+                <button
+                  className="btn btn-outline-secondary fw-semibold"
+                  onClick={handleDownloadTemplate}
+                >
+                  Download Template XLSX
+                </button>
+              </div>
+            </div>
+
+            {/* Search bar full width */}
+            <div className="w-100">
               <input
-                type="file"
-                accept=".xlsx,.xls"
-                id="import-xlsx"
-                style={{ display: "none" }}
-                onChange={handleImportXLSX}
+                type="text"
+                className="form-control"
+                placeholder="Cari Nama Tamu"
+                value={search}
+                onChange={(e) => setSearch(e.target.value)}
               />
-              <button
-                className="btn btn-primary me-2 fw-semibold"
-                onClick={() => document.getElementById("import-xlsx").click()}
-              >
-                Import XLSX
-              </button>
-
-              {/* ✅ Tombol Download Template XLSX */}
-              <button
-                className="btn btn-outline-secondary fw-semibold"
-                onClick={handleDownloadTemplate}
-              >
-                Download Template XLSX
-              </button>
             </div>
           </div>
 
-          {/* Search bar full width */}
-          <div className="w-100">
-            <input
-              type="text"
-              className="form-control"
-              placeholder="Cari Nama Tamu"
-              value={search}
-              onChange={(e) => setSearch(e.target.value)}
-            />
-          </div>
-        </div>
-
-        {/* 📊 Tabel Data Tamu */}
-        <div className="table-responsive shadow-sm">
-          <table className="table align-middle table-bordered text-center fixed-table">
-            <thead className="table-light">
-              <tr>
-                <th style={{ width: "7%" }}>No</th>
-                <th style={{ width: "38%" }}>Nama Tamu</th>
-                <th style={{ width: "20%" }}>Kategori Tamu</th>
-                <th style={{ width: "15%" }}>CPP/CPW</th>
-                <th style={{ width: "20%" }}>Action</th>
-              </tr>
-            </thead>
-            <tbody>
-              {currentTamu.length > 0 ? (
-                currentTamu.map((item, index) => (
-                  <tr key={item.id}>
-                    <td data-label="No">{indexOfFirst + index + 1}</td>
-                    <td data-label="Nama Tamu" className="text-truncate">
-                      {item.name}
-                    </td>
-                    <td data-label="Kategori Tamu">{item.category}</td>
-                    <td data-label="CPP/CPW">{item.type}</td>
-                    <td data-label="Action" className="Action flex-wrap">
-                      <div className="d-flex justify-content-center gap-2">
-                        <button
-                          className="btn btn-sm me-2"
-                          onClick={() => handleDeleteClick(item.id)}
-                        >
-                          <img src={TrashIcon} alt="hapus" />
-                        </button>
-                        <button
-                          className="btn btn-sm me-2"
-                          onClick={() => handleEditClick(item)}
-                        >
-                          <img src={EditIcon} alt="edit" />
-                        </button>
-                        <a
-                          href={`${import.meta.env.VITE_APP_URL}/undangan/${item.groom_name}-${item.bride_name}?to=${item.name}/${item.code}`}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="btn btn-sm"
-                        >
-                          <img src={EyeIcon} alt="lihat" />
-                        </a>
-                      </div>
+          {/* 📊 Tabel Data Tamu */}
+          <div className="table-responsive shadow-sm">
+            <table className="table align-middle table-bordered text-center fixed-table">
+              <thead className="table-light">
+                <tr>
+                  <th style={{ width: "7%" }}>No</th>
+                  <th style={{ width: "38%" }}>Nama Tamu</th>
+                  <th style={{ width: "20%" }}>Kategori Tamu</th>
+                  <th style={{ width: "15%" }}>CPP/CPW</th>
+                  <th style={{ width: "20%" }}>Action</th>
+                </tr>
+              </thead>
+              <tbody>
+                {currentTamu.length > 0 ? (
+                  currentTamu.map((item, index) => (
+                    <tr key={item.id}>
+                      <td data-label="No">{indexOfFirst + index + 1}</td>
+                      <td data-label="Nama Tamu" className="text-truncate">
+                        {item.name}
+                      </td>
+                      <td data-label="Kategori Tamu">{item.category}</td>
+                      <td data-label="CPP/CPW">{item.type}</td>
+                      <td data-label="Action" className="Action flex-wrap">
+                        <div className="d-flex justify-content-center gap-2">
+                          <button
+                            className="btn btn-sm me-2"
+                            onClick={() => handleDeleteClick(item.id)}
+                          >
+                            <img src={TrashIcon} alt="hapus" />
+                          </button>
+                          <button
+                            className="btn btn-sm me-2"
+                            onClick={() => handleEditClick(item)}
+                          >
+                            <img src={EditIcon} alt="edit" />
+                          </button>
+                          <a
+                            href={`${import.meta.env.VITE_APP_URL}/undangan/${item.groom_name}-${item.bride_name}?to=${item.name}/${item.code}`}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="btn btn-sm"
+                          >
+                            <img src={EyeIcon} alt="lihat" />
+                          </a>
+                        </div>
+                      </td>
+                    </tr>
+                  ))
+                ) : (
+                  <tr>
+                    <td colSpan="5" className="text-center text-muted">
+                      Tidak ada data tamu
                     </td>
                   </tr>
-                ))
-              ) : (
-                <tr>
-                  <td colSpan="5" className="text-center text-muted">
-                    Tidak ada data tamu
-                  </td>
-                </tr>
-              )}
-            </tbody>
-          </table>
-        </div>
+                )}
+              </tbody>
+            </table>
+          </div>
 
-        {/* 📌 Total data & pagination */}
-        <div className="d-flex justify-content-between align-items-center mt-2">
-          <span className="text-muted small">
-            Total data: {filteredTamu.length}
-          </span>
-          <Pagination
-            totalPages={totalPages}
-            currentPage={currentPage}
-            onPageChange={handlePageChange}
+          {/* 📌 Total data & pagination */}
+          <div className="d-flex justify-content-between align-items-center mt-2">
+            <span className="text-muted small">
+              Total data: {filteredTamu.length}
+            </span>
+            <Pagination
+              totalPages={totalPages}
+              currentPage={currentPage}
+              onPageChange={handlePageChange}
+            />
+          </div>
+
+          {/* 📌 Modal Tambah Tamu */}
+          <ModalTambahTamu
+            show={showModal}
+            handleClose={() => {
+              setShowModal(false);
+              setIsEdit(false);
+              setDataEdit(null);
+            }}
+            handleSubmit={handleTambahTamu}
+            isEdit={isEdit}
+            dataEdit={dataEdit}
+          />
+
+          <ModalImportTamu
+            show={showXlsxModal}
+            handleClose={() => setShowXlsxModal(false)}
+            xlsxPreview={xlsxPreview}
+            handleImportXLSX={handleConfirmImport}
           />
         </div>
-
-        {/* 📌 Modal Tambah Tamu */}
-        <ModalTambahTamu
-          show={showModal}
-          handleClose={() => {
-            setShowModal(false);
-            setIsEdit(false);
-            setDataEdit(null);
-          }}
-          handleSubmit={handleTambahTamu}
-          isEdit={isEdit}
-          dataEdit={dataEdit}
-        />
-
-        <ModalImportTamu
-          show={showXlsxModal}
-          handleClose={() => setShowXlsxModal(false)}
-          xlsxPreview={xlsxPreview}
-          handleImportXLSX={handleConfirmImport}
-        />
-      </div>
+      </AdminLayout>
 
       <Footer />
     </div>

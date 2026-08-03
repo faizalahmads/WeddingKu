@@ -4,7 +4,7 @@ import { useSearchParams } from "react-router-dom";
 import axios from "axios";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "../../assets/css/Scanner.css";
-import Navbar from "../../components/Navbar";
+import AdminLayout from "../../components/AdminLayout";
 import ModalCheckinTamu from "../../components/modals/ModalCheckinTamu";
 
 const CheckinScanner = () => {
@@ -189,57 +189,59 @@ const CheckinScanner = () => {
 
   return (
     <div className="scanner-wrapper">
-      <Navbar role="penerima_tamu" />
-
-      {/* CONTENT */}
-      <div className="container text-center scanner-content">
-        <div className="text-start total-hadir">Total Hadir: {totalHadir}</div>
-
-        <h1 className="scan-title">SCAN QR</h1>
-
-        {/* Scanner Placeholder */}
-        <div className="scanner-box">
-          <div id="reader" ref={qrRef}></div>
-        </div>
-
-        {/* Search Manual */}
-        <input
-          type="text"
-          className="form-control search-input"
-          placeholder="Cari Nama Tamu"
-          value={search}
-          onChange={(e) => handleSearch(e.target.value)}
-        />
-
-        {results.length > 0 && (
-          <div className="list-group mt-3 text-start">
-            {results.map((guest) => (
-              <button
-                key={guest.id}
-                className={`list-group-item list-group-item-action d-flex justify-content-between align-items-center ${
-                  guest.is_checked_in ? "list-group-item-success" : ""
-                }`}
-                disabled={guest.is_checked_in}
-                onClick={() => setSelectedGuest(guest)}
-              >
-                <span>{guest.name}</span>
-                {Number(guest.is_checked_in) === 1 ? (
-                  <span className="badge bg-success">Sudah Hadir</span>
-                ) : (
-                  <span className="badge bg-danger">Belum Hadir</span>
-                )}
-              </button>
-            ))}
+      <AdminLayout role="penerima-tamu">
+        {/* CONTENT */}
+        <div className="container text-center scanner-content">
+          <div className="text-start total-hadir">
+            Total Hadir: {totalHadir}
           </div>
-        )}
 
-        <ModalCheckinTamu
-          show={!!selectedGuest}
-          guest={selectedGuest}
-          onClose={() => setSelectedGuest(null)}
-          onCheckin={handleManualCheckin}
-        />
-      </div>
+          <h1 className="scan-title">SCAN QR</h1>
+
+          {/* Scanner Placeholder */}
+          <div className="scanner-box">
+            <div id="reader" ref={qrRef}></div>
+          </div>
+
+          {/* Search Manual */}
+          <input
+            type="text"
+            className="form-control search-input"
+            placeholder="Cari Nama Tamu"
+            value={search}
+            onChange={(e) => handleSearch(e.target.value)}
+          />
+
+          {results.length > 0 && (
+            <div className="list-group mt-3 text-start">
+              {results.map((guest) => (
+                <button
+                  key={guest.id}
+                  className={`list-group-item list-group-item-action d-flex justify-content-between align-items-center ${
+                    guest.is_checked_in ? "list-group-item-success" : ""
+                  }`}
+                  disabled={guest.is_checked_in}
+                  onClick={() => setSelectedGuest(guest)}
+                >
+                  <span>{guest.name}</span>
+                  {Number(guest.is_checked_in) === 1 ? (
+                    <span className="badge bg-success">Sudah Hadir</span>
+                  ) : (
+                    <span className="badge bg-danger">Belum Hadir</span>
+                  )}
+                </button>
+              ))}
+            </div>
+          )}
+
+          <ModalCheckinTamu
+            show={!!selectedGuest}
+            guest={selectedGuest}
+            onClose={() => setSelectedGuest(null)}
+            onCheckin={handleManualCheckin}
+          />
+        </div>
+      </AdminLayout>
 
       <footer className="scanner-footer">Powered by WeKu</footer>
     </div>
