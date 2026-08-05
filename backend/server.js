@@ -57,4 +57,11 @@ app.get(
   },
 );
 
+app.get("/", (req, res) => {
+  res.status(200).json({
+    success: true,
+    message: "WeddingKu Backend is running 🚀",
+  });
+});
+
 console.log("Server path:", __dirname);
