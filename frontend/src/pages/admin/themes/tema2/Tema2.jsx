@@ -8,7 +8,7 @@ import WeddingSong from "../../../../assets/audio/Thank God I Found You  Cover b
 import { FaMusic, FaWhatsapp } from "react-icons/fa";
 import InstagramIcon from "../../../../assets/icons/istagram.svg";
 import TiktokIcon from "../../../../assets/icons/tiktok.png";
-import WaIcon from "../../../../assets/icons/whatsapp.png";
+import WaIcon from "../../../../assets/icons/Whatsapp.png";
 import ClockIcon from "../../../../assets/images/clock-brown.png";
 import MailIcon from "../../../../assets/images/icon-mail.png";
 import MailRsvp from "../../../../assets/images/mail-rsvp.png";
