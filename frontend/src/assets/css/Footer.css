@@ -1,41 +1,31 @@
-.footer {
+.weku-footer {
   width: 100%;
-  font-size: 0.9rem;
-  letter-spacing: 0.3px;
-  transition: background-color 0.3s ease;
+  margin: 0 auto;
 }
 
-/* === WARNA SESUAI ROLE === */
-
-/* Super Admin → biru tua profesional */
-.footer-super-admin {
-  background-color: #02225a; /* sama seperti navbar super admin */
-  color: #ffffff;
+.weku-logo-footer {
+  color: #eb2f59;
+  font-size: 20px;
+  font-family: "Platypi", serif;
+  font-weight: 700;
 }
 
-/* Admin → pink lembut elegan */
-.footer-admin {
-  background-color: #FFE0DC; /* sama seperti navbar admin */
-  color: #0A0A0A;
+.weku-copyright {
+  color: #44474d;
+  font-size: 14px;
+  font-family: "Inter", sans-serif;
+  font-weight: 400;
+  line-height: 22.4px;
 }
 
-/* Penerima Tamu → hijau segar & hangat */
-.footer-tamu {
-  background-color: #7cc674; /* sama seperti navbar penerima tamu */
-  color: #ffffff;
+.weku-link {
+  color: #44474d;
+  font-size: 14px;
+  font-family: "Inter", sans-serif;
+  font-weight: 400;
+  line-height: 22.4px;
 }
 
-/* Default (kalau role belum ada) */
-.footer-default {
-  background-color: #333333;
-  color: #ffffff;
-}
-
-/* Tambahan */
-.footer p {
-  margin: 0;
-}
-
-.footer span {
-  color: #0A0A0A;
+.weku-link:hover {
+  color: #eb2f59;
 }

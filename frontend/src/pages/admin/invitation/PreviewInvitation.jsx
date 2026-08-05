@@ -1,6 +1,6 @@
 import React from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import Navbar from "../../../components/Navbar";
+import AdminLayout from "../../components/AdminLayout";
 
 const themes = [
   {
@@ -27,39 +27,40 @@ const PreviewInvitation = () => {
 
   return (
     <div className="vh-100 vw-100 d-flex flex-column">
-      <Navbar role="admin" />
-      <div
-        className="flex-grow-1 d-flex justify-content-center align-items-center"
-        style={{
-          backgroundImage: `url(${theme.preview_image})`,
-          backgroundSize: "cover",
-          backgroundPosition: "center",
-          width: "100%",
-        }}
-      >
+      <AdminLayout role="admin">
         <div
-          className="text-center text-white p-4"
-          style={{ backgroundColor: "rgba(0,0,0,0.5)", borderRadius: "12px" }}
+          className="flex-grow-1 d-flex justify-content-center align-items-center"
+          style={{
+            backgroundImage: `url(${theme.preview_image})`,
+            backgroundSize: "cover",
+            backgroundPosition: "center",
+            width: "100%",
+          }}
         >
-          <h1>{theme.name}</h1>
-          <p>{theme.description}</p>
-          <button
-            className="btn btn-secondary me-2"
-            onClick={() => navigate(-1)}
+          <div
+            className="text-center text-white p-4"
+            style={{ backgroundColor: "rgba(0,0,0,0.5)", borderRadius: "12px" }}
           >
-            Kembali
-          </button>
-          <button
-            className="btn btn-success"
-            onClick={() => {
-              localStorage.setItem("selectedTheme", theme.id);
-              navigate("/admin/manage-invite");
-            }}
-          >
-            Pilih Tema Ini
-          </button>
+            <h1>{theme.name}</h1>
+            <p>{theme.description}</p>
+            <button
+              className="btn btn-secondary me-2"
+              onClick={() => navigate(-1)}
+            >
+              Kembali
+            </button>
+            <button
+              className="btn btn-success"
+              onClick={() => {
+                localStorage.setItem("selectedTheme", theme.id);
+                navigate("/admin/manage-invite");
+              }}
+            >
+              Pilih Tema Ini
+            </button>
+          </div>
         </div>
-      </div>
+      </AdminLayout>
     </div>
   );
 };
