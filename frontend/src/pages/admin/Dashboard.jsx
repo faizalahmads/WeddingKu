@@ -23,6 +23,7 @@ ChartJS.register(ArcElement, Tooltip, Legend);
 const Dashboard = () => {
   const navigate = useNavigate();
 
+  // ===== BE: state & fetch data (diambil dari kode lama) =====
   const [totalTamu, setTotalTamu] = useState({
     CPP: 0,
     CPW: 0,
@@ -87,10 +88,18 @@ const Dashboard = () => {
     cutout: "50%",
   };
 
+  // 🔹 Kategori tamu (VIP & Reguler) dari data BE
   const kategoriTamu = [
-    { name: "VIP", count: totalTamu.VIP, max: 100 },
-    { name: "Reguler", count: totalTamu.Reguler, max: 100 },
+    { name: "VIP", count: totalTamu.VIP, max: 10 },
+    { name: "Reguler", count: totalTamu.Reguler, max: 10 },
   ];
+
+  // 🔹 Hitung persentase RSVP (contoh: confirmed dari total, fallback 0 jika total 0)
+  const confirmedCount = totalTamu.CPP + totalTamu.CPW; // sesuaikan dengan field asli jika BE punya field "confirmed"
+  const responseRate =
+    totalTamu.total > 0
+      ? Math.round((confirmedCount / totalTamu.total) * 100)
+      : 0;
 
   const reviews = [
     { name: "Suyarti", comment: "Semoga Samawa" },
@@ -124,7 +133,7 @@ const Dashboard = () => {
                     <IoPeopleOutline size={18} />
                   </div>
                   <p className="stat-label mb-1">TOTAL GUESTS</p>
-                  <h3 className="stat-value mb-1">150</h3>
+                  <h3 className="stat-value mb-1">{totalTamu.total}</h3>
                   <p className="stat-sub mb-0">People Invited</p>
                 </div>
               </div>
@@ -137,14 +146,14 @@ const Dashboard = () => {
                     <IoCheckmarkCircleOutline size={18} />
                   </div>
                   <p className="stat-label mb-1">CONFIRMED RSVP</p>
-                  <h3 className="stat-value mb-1">120</h3>
+                  <h3 className="stat-value mb-1">{confirmedCount}</h3>
                   <div className="progress stat-progress mb-1">
                     <div
                       className="progress-bar bg-dark"
-                      style={{ width: "80%" }}
+                      style={{ width: `${responseRate}%` }}
                     />
                   </div>
-                  <p className="stat-sub mb-0">80% Response Rate</p>
+                  <p className="stat-sub mb-0">{responseRate}% Response Rate</p>
                 </div>
               </div>
             </div>
@@ -203,27 +212,32 @@ const Dashboard = () => {
                 <div className="card-body">
                   <p className="stat-label mb-3">CATEGORY GUEST</p>
 
-                  <div className="category-row mb-2">
-                    <span>VIP</span>
-                    <span className="category-value">0/10</span>
-                  </div>
-                  <div className="progress category-progress mb-3">
-                    <div
-                      className="progress-bar bg-dark"
-                      style={{ width: "0%" }}
-                    />
-                  </div>
-
-                  <div className="category-row mb-2">
-                    <span>Reguler</span>
-                    <span className="category-value">0/10</span>
-                  </div>
-                  <div className="progress category-progress">
-                    <div
-                      className="progress-bar bg-dark"
-                      style={{ width: "0%" }}
-                    />
-                  </div>
+                  {kategoriTamu.map((item, index) => {
+                    const percentage =
+                      item.max > 0
+                        ? Math.min((item.count / item.max) * 100, 100)
+                        : 0;
+                    return (
+                      <div key={index}>
+                        <div className="category-row mb-2">
+                          <span>{item.name}</span>
+                          <span className="category-value">
+                            {item.count}/{item.max}
+                          </span>
+                        </div>
+                        <div
+                          className={`progress category-progress ${
+                            index !== kategoriTamu.length - 1 ? "mb-3" : ""
+                          }`}
+                        >
+                          <div
+                            className="progress-bar bg-dark"
+                            style={{ width: `${percentage}%` }}
+                          />
+                        </div>
+                      </div>
+                    );
+                  })}
                 </div>
               </div>
             </div>
@@ -235,7 +249,7 @@ const Dashboard = () => {
                     <IoPersonAddOutline size={18} />
                   </div>
                   <p className="stat-label mb-1">ADDITIONAL GUEST</p>
-                  <h3 className="stat-value mb-1">10</h3>
+                  <h3 className="stat-value mb-1">{totalTamu.TamuTambahan}</h3>
                   <p className="stat-sub mb-0">People Additional</p>
                 </div>
               </div>
@@ -326,14 +340,14 @@ const Dashboard = () => {
                         className="legend-dot"
                         style={{ background: "#1F2937" }}
                       />
-                      Confirmed (120)
+                      Confirmed ({confirmedCount})
                     </div>
                     <div className="legend-item">
                       <span
                         className="legend-dot"
                         style={{ background: "#9CA3AF" }}
                       />
-                      Pending (30)
+                      Pending ({Math.max(totalTamu.total - confirmedCount, 0)})
                     </div>
                   </div>
                 </div>
