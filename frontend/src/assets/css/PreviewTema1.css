@@ -977,7 +977,7 @@
   color: #ffffff;
   font-family: "TAN - MON CHERI";
   font-weight: 400;
-  font-size: clamp(28px, 8.9vw, 88px); /* 220/2479 ≈ 8.9% dari lebar */
+  font-size: 34px;
   word-wrap: break-word;
   line-height: 1.1;
 }
@@ -1002,7 +1002,7 @@
   color: #ffffff;
   font-family: "TAN - MON CHERI";
   font-weight: 400;
-  font-size: clamp(24px, 8.07vw, 80px); /* 200/2479 ≈ 8.07% dari lebar */
+  font-size: 31px;
   word-wrap: break-word;
   line-height: 1.1;
 }
@@ -1050,7 +1050,7 @@
   color: #590000;
   font-family: "Awesome Lathusca";
   font-weight: 400;
-  font-size: clamp(28px, 7.26vw, 72px); /* 180/2479 ≈ 7.26% */
+  font-size: 28px;
   line-height: 1.1;
   word-wrap: break-word;
 }
@@ -1060,7 +1060,7 @@
   color: #590000;
   font-family: "IBM Plex Mono";
   font-weight: 400;
-  font-size: clamp(14px, 2.82vw, 28px); /* 70/2479 ≈ 2.82% */
+  font-size: 14px;
   line-height: 1.5;
   word-wrap: break-word;
 }
