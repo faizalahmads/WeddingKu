@@ -14,7 +14,7 @@ const smoothEase = [0.25, 0.1, 0.25, 1];
 const WeddingCardSection = ({ isSlide2, onQRClick }) => {
   return (
     <motion.section
-      className="section-2"
+      className="section2"
       initial={{ opacity: 0, y: 100 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.8, ease: smoothEase }}

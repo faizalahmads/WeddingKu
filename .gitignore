@@ -6,28 +6,20 @@ node_modules/
 .pnp
 .pnp.js
 
-# =========================
-# Testing
-# =========================
-coverage/
+# testing
+/coverage
 
-# =========================
-# Production / Build
-# =========================
-build/
-dist/
-dist-ssr/
+# production
+/build
 
-# =========================
-# Environment Variables
-# =========================
-.env
-.env.*
-!.env.example
+# misc
+.DS_Store
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
 
-# =========================
-# Database
-# =========================
+# DB
 invitation_db.sql
 
 # =========================

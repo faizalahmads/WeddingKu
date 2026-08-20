@@ -1,10 +1,8 @@
 import { motion } from "framer-motion";
 
-import BgAtasKiri from "../../../../../assets/images/tema1/section3/bunga-atas-kiri.svg";
-import BgAtasKanan from "../../../../../assets/images/tema1/section3/bunga-atas-kanan.svg";
-import BgBawahKiri from "../../../../../assets/images/tema1/section3/bunga-bawah-kiri.svg";
-import BgBawahKanan from "../../../../../assets/images/tema1/section3/bunga-bawah-kanan.svg";
-import BgLetter from "../../../../../assets/images/tema1/section3/bg-letter.svg";
+import BgLetter from "../../../../../assets/images/tema3/bgLetter.svg";
+// import MusicPlayerBar from "../../../../../../src/components/MusicPlayerBar";
+// import BgMusic from "../../../../../assets/audio/Thank God I Found You  Cover by BuDaKhelxKat (Lyrics).mp3";
 
 const smoothEase = [0.25, 0.1, 0.25, 1];
 
@@ -50,7 +48,6 @@ const titleVariant = {
   },
 };
 
-// Teks ayat -> fade-up lebih lambat & lebih lembut (bagian terpenting)
 const quoteVariant = {
   hidden: { opacity: 0, y: 20 },
   visible: {
@@ -63,52 +60,37 @@ const quoteVariant = {
 const AyatSection = () => {
   return (
     <motion.section
-      className="section-3"
+      className="section3"
       variants={containerVariants}
       initial="hidden"
       whileInView="visible"
       viewport={{ once: false, amount: 0.3 }}
     >
-      <motion.img
-        src={BgAtasKiri}
-        className="garis-atas-kiri"
-        alt=""
-        variants={cornerFlower}
-      />
-      <motion.img
-        src={BgAtasKanan}
-        className="garis-atas-kanan"
-        alt=""
-        variants={cornerFlower}
-      />
-      <motion.img
-        src={BgBawahKiri}
-        className="garis-bawah-kiri"
-        alt=""
-        variants={cornerFlower}
-      />
-      <motion.img
-        src={BgBawahKanan}
-        className="garis-bawah-kanan"
-        alt=""
-        variants={cornerFlower}
-      />
+      <div className="letter-wrapper">
+        <motion.img
+          src={BgLetter}
+          className="bg-letter"
+          alt=""
+          variants={frameVariant}
+        />
 
-      <motion.img
-        src={BgLetter}
-        className="bg-letter"
-        alt=""
-        variants={frameVariant}
-      />
+        <div className="letter-text">
+          <motion.span variants={quoteVariant}>
+            "Dan di antara tanda-tanda (kebesaran)-Nya ialah Dia menciptakan
+            pasangan-pasangan untukmu dari jenismu sendiri, agar kamu cenderung
+            dan merasa tenteram kepadanya, dan Dia menjadikan di antaramu rasa
+            kasih dan sayang..."
+          </motion.span>
 
-      <motion.span variants={titleVariant}>QS. Ar-Rum ayat 21</motion.span>
-      <br />
-      <motion.span variants={quoteVariant}>
-        "Dan di antara tanda-tanda (kebesaran)-Nya ialah Dia menciptakan
-        pasangan-pasangan untukmu dari jenismu sendiri, agar kamu cenderung dan
-        merasa tenteram kepadanya, dan Dia menjadikan di antaramu rasa kasih dan
-        sayang..."
-      </motion.span>
+          <motion.span className="quote-title" variants={titleVariant}>
+            QS. Ar-Rum ayat 21
+          </motion.span>
+        </div>
+      </div>
+
+      {/* <div className="music-player-wrapper">
+        <MusicPlayerBar src={BgMusic} autoPlay={open} />
+      </div> */}
     </motion.section>
   );
 };

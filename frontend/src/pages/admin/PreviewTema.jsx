@@ -1,6 +1,7 @@
 import { useParams } from "react-router-dom";
 import PreviewTema1 from "../admin/themes/tema1/PreviewTema1";
 import PreviewTema2 from "../admin/themes/tema2/PreviewTema2";
+import PreviewTema3 from "../admin/themes/tema3/PreviewTema3";
 
 const PreviewTema = () => {
   const { id } = useParams();
@@ -10,6 +11,8 @@ const PreviewTema = () => {
       return <PreviewTema1 />;
     case "2":
       return <PreviewTema2 />;
+    case "3":
+      return <PreviewTema3 />;
     default:
       return <div>Tema tidak ditemukan</div>;
   }
