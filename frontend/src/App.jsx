@@ -102,10 +102,11 @@ function AppContent() {
           <Route path="/undangan/:slug" element={<Tema2 />} />
           <Route path="/:slug" element={<Tema2 />} />
           <Route path="/admin/checkin" element={<Checkin />} />
-          <Route path="/preview/:id" element={<PreviewTema />} />
           <Route path="/preview-undangan/:id" element={<PreviewTema />} />
           <Route path="/invite/:code" element={<InviteWrapper />} />
         </Route>
+
+        <Route path="/preview/:id" element={<PreviewTema />} />
 
         <Route path="*" element={<NotFound />} />
       </Routes>
