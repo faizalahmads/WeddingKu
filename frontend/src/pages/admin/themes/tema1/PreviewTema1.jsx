@@ -45,6 +45,31 @@ const PreviewTema1 = () => {
     }, 2000);
   };
 
+  const handleShareWhatsApp = () => {
+    const link = `${import.meta.env.VITE_APP_URL}/${invite.groom_name}-${invite.bride_name}?to=${invite.guest_name}/${invite.guest_code}`;
+    const message = `
+Kepada Yth.
+Bapak/Ibu/Saudara/i
+
+Dengan penuh sukacita, kami mengundang Anda ke hari bahagia kami:
+
+💑 ${invite.groom_name} & ${invite.bride_name}
+📅 ${new Date(invite.wedding_date).toLocaleDateString("id-ID", {
+      day: "numeric",
+      month: "long",
+      year: "numeric",
+    })}
+📍 ${invite.location}
+
+Klik link berikut untuk melihat undangan:
+${link}
+
+Terima kasih 💖
+    `;
+    const encodedMessage = encodeURIComponent(message);
+    window.open(`https://wa.me/?text=${encodedMessage}`, "_blank");
+  };
+
   return (
     <div className="desktop-layout">
       <GallerySide />

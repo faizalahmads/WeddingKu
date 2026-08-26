@@ -19,7 +19,16 @@ import { motion } from "framer-motion";
 import Bunga1 from "../../../../assets/images/bunga1.png";
 import Bunga2 from "../../../../assets/images/bunga2.png";
 
+import QRButton from "../tema1/components/QRButton.jsx";
+import MusicPlayer from "../tema1/components/MusicPlayer.jsx";
+
+import QRModal from "../tema1/components/QRModal.jsx";
+import BgMusic from "../../../../assets/audio/Thank God I Found You  Cover by BuDaKhelxKat (Lyrics).mp3";
+
+
 const Tema2 = () => {
+  const [showQR, setShowQR] = useState(false);
+
   const [invite, setInvite] = useState(null);
   const queryParams = new URLSearchParams(location.search);
   const toParam = queryParams.get("to");
@@ -873,28 +882,21 @@ Terima kasih 💖
           </div>
         </div>
       </section>
-      <audio ref={audioRef} src={WeddingSong} loop preload="auto" />
 
-      <div
-        className={`music-icon ${isPlaying ? "playing" : ""}`}
-        onClick={toggleMusic}
-      >
-        <FaMusic />
-      </div>
+      {open && <QRButton onClick={() => setShowQR(true)} />}
+      {open && <MusicPlayer shouldPlay={open} src={BgMusic} />}
 
-      {/* Tombol Bagikan hanya tampil jika URL mengandung '/undangan/' */}
-      {isUndanganLink && (
-        <div className="whatsapp-float-container">
-          <span className="whatsapp-label">Bagikan Undangan</span>
-          <button
-            onClick={handleShareWhatsApp}
-            className="whatsapp-float-btn btn-share-wa"
-            title="Bagikan via WhatsApp"
-          >
-            <FaWhatsapp size={28} />
-          </button>
-        </div>
-      )}
+      <QRModal
+        show={showQR}
+        onClose={() => setShowQR(false)}
+        qrValue={invite?.guest_code}
+        guestName={
+          invite?.guest_name ? `${invite.guest_name}` : "Tamu Undangan"
+        }
+        guestRole={
+          invite?.guest_category === "VIP" ? "Executive VIP Invitation" : ""
+        }
+      />
     </div>
   );
 };
