@@ -217,6 +217,39 @@
   overflow: hidden;
 }
 
+.section4 {
+  position: relative;
+  width: 100%;
+  min-height: 100dvh;
+  background-image: url('../../assets/images/tema3/bg-merah.png');
+  background-size: 100% auto;
+  background-repeat: repeat-y;
+  display: flex;
+  justify-content: center;
+  overflow: hidden;
+}
+
+.section5 {
+  position: relative;
+
+  width: 100%;
+  min-height: 100dvh;
+
+  padding: 10px 30px 150px;
+
+  box-sizing: border-box;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  overflow: hidden;
+  z-index: 1;
+  background-image: url('../../assets/images/tema3/bg-merah.png');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+
 .judul {
   margin-bottom: 4%;
   text-align: center;
@@ -652,14 +685,20 @@ span .deskripsi-ayat {
 }
 
 .letter-wrapper {
-  position: relative;
+  position: absolute;
   width: 100%;
-  top: 370px;
   max-width: 700px;
+
+  top: 50%;
+  left: 50%;
+
+  transform: translate(-50%, -50%);
+
   display: flex;
   justify-content: center;
   align-items: center;
-  margin: 0 auto;
+
+  margin: 0;
 }
 
 .bg-letter {
@@ -686,7 +725,7 @@ span .deskripsi-ayat {
 .letter-text span {
   color: #000;
   font-weight: 400;
-  font-size: 12px;
+  font-size: 14px;
   font-family: 'Droid', sans-serif;
   width: 100%;
   text-align: center;
@@ -1366,4 +1405,466 @@ span .deskripsi-ayat {
 
 .mpb-play-btn:active {
   transform: scale(0.94);
+}
+
+.cover-section {
+  position: relative;
+  width: 100%;
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  overflow: hidden;
+
+  background:
+    radial-gradient(
+      circle at 30% 20%,
+      rgba(255, 255, 255, 0.04),
+      transparent 30%
+    ),
+    radial-gradient(
+      circle at 70% 80%,
+      rgba(0, 0, 0, 0.15),
+      transparent 40%
+    ),
+    #65090f;
+}
+
+
+/* Texture tambahan */
+.cover-section::before {
+  content: "";
+
+  position: absolute;
+  inset: 0;
+
+  opacity: 0.25;
+
+  background-image:
+    url("https://www.transparenttextures.com/patterns/fabric-of-squares.png");
+
+  pointer-events: none;
+}
+
+
+/* Container */
+.cover-card {
+  position: relative;
+
+  width: min(90%, 700px);
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  z-index: 1;
+}
+
+
+/* Foto */
+.cover-image {
+  position: relative;
+
+  width: 100%;
+  max-width: 500px;
+
+  aspect-ratio: 3 / 4;
+
+  overflow: hidden;
+
+  background: #222;
+}
+
+
+/* Foto utama */
+.cover-image > img {
+  position: absolute;
+
+  width: 100%;
+  height: 100%;
+
+  object-fit: cover;
+
+  object-position: center;
+
+  filter: grayscale(100%);
+}
+
+
+/* =========================
+   TITLE
+========================= */
+
+.cover-title {
+  position: absolute;
+  top: 7%;
+  left: 5%;
+  width: 90%;
+  color: #000;
+  pointer-events: none;
+}
+
+
+/* THE */
+.the {
+  display: block;
+  margin-left: 12%;
+  font-size: clamp(18px, 5vw, 34px);
+  font-weight: 400;
+  font-family: 'Tan Mon Cheri';
+  letter-spacing: 2px;
+  line-height: 1;
+}
+
+
+/* Container BRIDE GROOM */
+.title-main {
+  position: relative;
+  width: 100%;
+  margin-top: 5px;
+  line-height: 0.72;
+  font-family: 'Tan Mon Cheri';
+}
+
+
+/* BRIDE */
+.bride {
+  position: relative;
+  display: block;
+  margin-left: 9%;
+  margin-top: 20px;
+  font-size: 60px;
+  font-weight: 400;
+  letter-spacing: 16px;
+  transform: scaleX(0.9);
+  transform-origin: left center;
+}
+
+
+/* GROOM */
+.groom {
+  position: relative;
+  display: block;
+  margin-left: 2%;
+  margin-top: -1px;
+  font-size: 60px;
+  font-weight: 400;
+  letter-spacing: 10px;
+  transform: scaleX(0.9);
+  transform-origin: left center;
+}
+
+/* =========================
+   NAMA
+========================= */
+
+.couple-name {
+  position: absolute;
+  bottom: 7%;
+  left: 50%;
+  width: 55%;
+  height: 180px;
+  transform: translateX(-50%);
+  color: white;
+  font-family: 'Revive 80 Signature', cursive;
+  text-shadow:
+    0 1px 2px rgba(0, 0, 0, 0.4);
+  z-index: 10;
+}
+
+/* name bride */
+.name-bride {
+  position: absolute;
+  left: 18%;
+  top: 95px;
+  font-size: 80px;
+  font-weight: 400;
+  line-height: 0.8;
+  transform: rotate(-8deg);
+}
+
+/* & */
+.name-and {
+  position: absolute;
+  left: 49%;
+  top: 85px;
+  font-size: 60px;
+  font-weight: 300;
+  transform: rotate(-10deg);
+}
+
+/* name groom */
+.name-groom {
+  position: absolute;
+  right: 3%;
+  top: 130px;
+  font-size: 80px;
+  font-weight: 400;
+  line-height: 0.8;
+  transform: rotate(-8deg);
+}
+
+
+/* =========================
+   MOBILE
+========================= */
+
+@media (max-width: 576px) {
+
+  .cover-section {
+    min-height: 100svh;
+
+    padding: 12px;
+  }
+
+  .cover-card {
+    width: 100%;
+  }
+
+  .cover-image {
+    width: 92%;
+
+    max-width: 360px;
+  }
+
+  .the {
+    margin-left: 12%;
+
+    font-size: 22px;
+  }
+
+  .bride,
+  .groom {
+    font-size: 60px;
+  }
+
+  .and {
+    font-size: 60px;
+  }
+
+  .couple-name {
+    bottom: 2%;
+    gap: 5px;
+  }
+
+  .name-bride,
+  .name-groom {
+    font-size: 52px;
+  }
+}
+
+
+/* =========================
+   VERY SMALL MOBILE
+========================= */
+
+@media (max-width: 375px) {
+
+  .cover-image {
+    width: 94%;
+  }
+
+  .the {
+    font-size: 18px;
+  }
+
+  .bride,
+  .groom {
+    font-size: 62px;
+
+    letter-spacing: -4px;
+  }
+
+  .and {
+    font-size: 40px;
+  }
+
+  .name-bride,
+  .name-groom {
+    font-size: 36px;
+  }
+}
+
+/* ========================================
+   BASMALAH
+======================================== */
+
+.section5-basmalah {
+  display: block;
+  width: min(70%, 520px);
+  height: auto;
+  margin-top: 40px;
+  margin-bottom: 35px;
+}
+
+
+/* ========================================
+   INTRO
+======================================== */
+
+.section5-intro {
+  margin: 0;
+  width: 100%;
+  max-width: 700px;
+  color: #ffffff;
+  text-align: center;
+  font-family: "Quattrocento";
+  font-size: 12px;
+  line-height: 1.45;
+  letter-spacing: 1px;
+}
+
+
+/* ========================================
+   COUPLE
+======================================== */
+
+.section5-couple {
+  width: 100%;
+  display: grid;
+  align-items: center;
+  margin-top: 20px;
+}
+
+
+/* BRIDE
+======================================== */
+
+.section5-bride {
+  grid-template-columns: 40% 60%;
+}
+
+
+/* GROOM
+======================================== */
+
+.section5-groom {
+  grid-template-columns: 60% 40%;
+  margin-top: 20px;
+}
+
+
+/* ========================================
+   PHOTO WRAPPER
+======================================== */
+
+.section5-photo-wrapper {
+  position: relative;
+  width: min(260px, 100%);
+  aspect-ratio: 0.72;
+  margin: 0 auto;
+}
+
+
+/* ========================================
+   PHOTO
+======================================== */
+
+.section5-photo {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 80%;
+  height: 82%;
+  object-fit: cover;
+  transform: translate(-50%, -50%);
+  border-radius: 40% 40% 45% 45%;
+  z-index: 10;
+}
+
+
+/* ========================================
+   FRAME
+======================================== */
+
+.section5-frame {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  z-index: 2;
+  pointer-events: none;
+}
+
+
+/* ========================================
+   INFO
+======================================== */
+
+.section5-info {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+
+/* ========================================
+   NAMA MEMPELAI
+======================================== */
+
+.section5-name {
+  margin-bottom: 5px;
+  color: #ffffff;
+  font-family: "Sloop";
+  font-size: 24px;
+  line-height: 0.9;
+  letter-spacing: 4%;
+}
+
+
+/* ========================================
+   ORANG TUA
+======================================== */
+
+.section5-parent {
+  margin: 0;
+  color: #ffffff;
+  font-family: "Quattrocento";
+  font-size: 12px;
+  line-height: 1.25;
+}
+
+
+/* ========================================
+   AMPERSAND
+======================================== */
+
+.section5-and {
+  color: #ffffff;
+  font-family: "Amoresa";
+  font-size: 50px;
+  font-weight: 400;
+  line-height: 0.7;
+  margin-top: 20px;
+  text-align: center;
+}
+
+
+/* ========================================
+   FLOWER
+======================================== */
+
+.section5-flower {
+  position: absolute;
+  height: auto;
+  z-index: 4;
+  pointer-events: none;
+}
+
+
+/* BUNGA KIRI */
+
+.section5-flower-left {
+  left: -30px;
+  bottom: 20px;
+  width: 180px;
+}
+
+
+/* BUNGA KANAN */
+.section5-flower-right {
+  right: -44px;
+  bottom: -18px;
+  width: 180px;
 }

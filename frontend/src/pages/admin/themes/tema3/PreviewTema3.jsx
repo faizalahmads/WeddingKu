@@ -5,6 +5,8 @@ import CatinSide from "../tema1/components/CatinSectionTema1.jsx";
 import EnvelopeSection from "../tema1/components/EnvelopeSectionTema1.jsx";
 import WeddingCardSection from "../tema1/components/WeddingCardSectionTema1.jsx";
 import AyatSection from "../tema1/components/AyatSectionTema1.jsx";
+import InfoCation from "../tema3/components/InfoCatinTema3.jsx";
+import DetailCatin from "../tema3/components/DetailCatinTema3.jsx";
 
 
 
@@ -62,6 +64,10 @@ const PreviewTema3 = () => {
         )}
 
         {open && <AyatSection />}
+
+        {open && <InfoCation />}
+
+        {open && <DetailCatin />}
       </div>
     </div>
   );

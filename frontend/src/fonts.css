@@ -12,3 +12,18 @@
   font-family: 'Awesome Lathusca';
   src: url('./assets/fonts/Awesome-Lathusca.TTF') format('opentype');
 }
+
+@font-face {
+  font-family: 'Tan Mon Cheri';
+  src: url('./assets/fonts/TAN-MON-CHERI.TTF') format('opentype');
+}
+
+@font-face {
+  font-family: 'Revive 80 Signature';
+  src: url('./assets/fonts/81E0C4B2-FF2D-44F0-A7B7-7481EFCF941D1632.32B7BEB9-6275-41E7-B567-04BF934.TTF') format('opentype');
+}
+
+@font-face {
+  font-family: 'Sloop';
+  src: url('./assets/fonts/SLOOP-SCRIPTTHREE.TTF') format('opentype');
+}

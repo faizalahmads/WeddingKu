@@ -133,10 +133,6 @@ html {
     font-size: 0.9rem;
     padding: 0.7rem;
   }
-
-  .text-end {
-    text-align: left !important;
-  }
 }
 
 /* 📱 Super kecil (≤ 400px) */
