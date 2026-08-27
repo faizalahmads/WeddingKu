@@ -12,6 +12,7 @@ const CheckinScanner = () => {
   const token = searchParams.get("token");
   const [autoTriggered, setAutoTriggered] = useState(false);
 
+  const scannerRef = useRef(null);
   const [valid, setValid] = useState(null);
   const [totalHadir, setTotalHadir] = useState(0);
   const [search, setSearch] = useState("");
@@ -57,7 +58,6 @@ const CheckinScanner = () => {
   const qrRef = useRef(null);
 
   const handleManualCheckin = async (guest) => {
-
     if (guest.is_checked_in) {
       alert("Tamu sudah hadir");
       return;
@@ -79,6 +79,11 @@ const CheckinScanner = () => {
 
       setSelectedGuest(null);
 
+      // Jalankan scanner kembali
+      try {
+        scannerRef.current?.resume();
+      } catch {}
+
       window.history.replaceState(
         {},
         document.title,
@@ -94,29 +99,61 @@ const CheckinScanner = () => {
   };
 
   useEffect(() => {
-    if (!valid || !invitationId || !token || !code || autoTriggered) return;
+    if (!valid || !invitationId || scannerRef.current) return;
 
-    const fetchGuestDetail = async () => {
-      try {
-        const res = await axios.get(
-          `${import.meta.env.VITE_API_URL}/api/checkin/guest-detail`,
-          {
-            params: {
-              token,
-              guest_code: code,
+    const scanner = new Html5QrcodeScanner(
+      "reader",
+      {
+        fps: 10,
+        qrbox: 250,
+      },
+      false,
+    );
+
+    scannerRef.current = scanner;
+
+    scanner.render(
+      async (decodedText) => {
+        try {
+          // Stop scanner sementara setelah QR berhasil dibaca
+          await scanner.pause(true);
+
+          const res = await axios.get(
+            `${import.meta.env.VITE_API_URL}/api/checkin/guest-detail`,
+            {
+              params: {
+                token,
+                guest_code: decodedText,
+              },
             },
-          },
-        );
+          );
 
-        setSelectedGuest(res.data.data);
-        setAutoTriggered(true);
-      } catch (err) {
-        alert(err.response?.data?.message || "Tamu tidak ditemukan");
-      }
+          setSelectedGuest(res.data.data);
+        } catch (err) {
+          alert(err.response?.data?.message || "Tamu tidak ditemukan");
+
+          // Jalankan scanner kembali
+          try {
+            scanner.resume();
+          } catch {}
+        }
+      },
+      () => {},
+    );
+
+    return () => {
+      scanner.clear().catch(() => {});
+      scannerRef.current = null;
     };
+  }, [valid, invitationId, token]);
 
-    fetchGuestDetail();
-  }, [valid, invitationId, token, code, autoTriggered]);
+  const handleCloseModal = () => {
+    setSelectedGuest(null);
+
+    try {
+      scannerRef.current?.resume();
+    } catch {}
+  };
 
   const handleSearch = async (value) => {
     setSearch(value);
@@ -237,7 +274,7 @@ const CheckinScanner = () => {
           <ModalCheckinTamu
             show={!!selectedGuest}
             guest={selectedGuest}
-            onClose={() => setSelectedGuest(null)}
+            onClose={handleCloseModal}
             onCheckin={handleManualCheckin}
           />
         </div>
