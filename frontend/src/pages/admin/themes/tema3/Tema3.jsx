@@ -9,15 +9,25 @@ import InfoCation from "../tema3/components/InfoCatinTema3.jsx";
 import SaveTheDate from "../tema3/components/DateCatinTema3.jsx";
 import DetailCatin from "../tema3/components/DetailCatinTema3.jsx";
 
-
-
 import { useSectionScrollLock } from "../tema1/hooks/useSectionScrollLock";
 import "../../../../assets/css/PreviewTema3.css";
 
+import QRButton from "../tema1/components/QRButton.jsx";
+import MusicPlayer from "../tema1/components/MusicPlayer.jsx";
+
+import QRModal from "../tema1/components/QRModal.jsx";
+import BgMusic from "../../../../assets/audio/Thank God I Found You  Cover by BuDaKhelxKat (Lyrics).mp3";
 
 
 
-const PreviewTema3 = () => {
+
+const Tema3 = () => {
+  const [invite, setInvite] = useState(null);
+  const queryParams = new URLSearchParams(location.search);
+  const toParam = queryParams.get("to");
+  const [name, code] = toParam ? toParam.split("/") : [];
+
+  const [showQR, setShowQR] = useState(false);
   const [open, setOpen] = useState(false);
   const [showLetter, setShowLetter] = useState(false);
   const { isSlide2 } = useSectionScrollLock();
@@ -44,6 +54,25 @@ const PreviewTema3 = () => {
       });
     }, 2000);
   };
+
+  useEffect(() => {
+    const fetchInvite = async () => {
+      try {
+        setLoading(true);
+        const res = await axios.get(
+          `${import.meta.env.VITE_API_URL}/api/undangan/${name}/${code}`,
+        );
+        setInvite(res.data);
+      } catch (err) {
+        console.error(err);
+        setError("Undangan tidak ditemukan");
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    if (name && code) fetchInvite();
+  }, [name, code]);
 
   return (
     <div className="desktopLayout">
@@ -72,8 +101,23 @@ const PreviewTema3 = () => {
 
         {open && <SaveTheDate />}
       </div>
+
+      {open && <QRButton onClick={() => setShowQR(true)} />}
+      {open && <MusicPlayer shouldPlay={open} src={BgMusic} />}
+
+      <QRModal
+        show={showQR}
+        onClose={() => setShowQR(false)}
+        qrValue={invite?.guest_code}
+        guestName={
+          invite?.guest_name ? `${invite.guest_name}` : "Tamu Undangan"
+        }
+        guestRole={
+          invite?.guest_category === "VIP" ? "Executive VIP Invitation" : ""
+        }
+      />
     </div>
   );
 };
 
-export default PreviewTema3;
+export default Tema3;

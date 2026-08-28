@@ -231,14 +231,10 @@
 
 .section5 {
   position: relative;
-
   width: 100%;
   min-height: 100dvh;
-
   padding: 10px 30px 150px;
-
   box-sizing: border-box;
-
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -248,6 +244,45 @@
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
+}
+
+.section6 {
+  position: relative;
+  width: 100%;
+  min-height: 100dvh;
+
+  background-image: url('../../assets/images/tema3/bg-section6.png');
+  background-size: 100% 100%;
+  background-position: center;
+  background-repeat: no-repeat;
+
+  display: flex;
+  justify-content: center;
+
+  overflow: hidden;
+}
+
+/* Background kedua */
+.section6::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+
+  background-image: url('../../assets/images/tema3/bg-hijau.png');
+  background-size: 100% 100%;
+  background-position: center;
+  background-repeat: no-repeat;
+
+  opacity: 0.7;
+
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* Isi section */
+.section6 > * {
+  position: relative;
+  z-index: 1;
 }
 
 .judul {
@@ -964,13 +999,6 @@ span .deskripsi-ayat {
   .garis-bawah-kanan {
     width: 60px;
   }
-}
-
-/* ===== Container utama ===== */
-.save-the-date-section {
-  width: 100%;
-  aspect-ratio: 2479 / 5365; /* menjaga proporsi asli desain */
-  background: #590000;
 }
 
 /* ===== Judul "SAVE THE DATE" ===== */
@@ -1867,4 +1895,259 @@ span .deskripsi-ayat {
   right: -44px;
   bottom: -18px;
   width: 180px;
+}
+
+/* =====================================================
+   MAIN CANVAS
+===================================================== */
+
+.save-date-wrapper {
+  position: relative;
+  width: 100%;
+  max-width: 2479px;
+  aspect-ratio: 2479 / 5365;
+  overflow: hidden;
+}
+
+
+/* =====================================================
+   FLOWER
+===================================================== */
+
+.save-date-flower {
+  position: absolute;
+
+  width: 43.16%;
+
+  left: 66.96%;
+  top: 4.17%;
+
+  z-index: 5;
+
+  object-fit: contain;
+}
+
+
+/* =====================================================
+   SAVE
+===================================================== */
+
+.save-text-3 {
+  position: absolute;
+  top: 9.82%;
+  color: white;
+  font-family: "Slight", cursive;
+  font-size: 50px;
+  font-weight: 400;
+  line-height: 1;
+  transform: rotate(-13deg);
+  transform-origin: top left;
+  z-index: 4;
+  white-space: nowrap;
+}
+
+
+/* =====================================================
+   THE
+===================================================== */
+
+.the-text {
+  position: absolute;
+  left: 22%;
+  top: 14.65%;
+  color: white;
+  font-family: "Slight", cursive;
+  font-size: 25px;
+  line-height: 1;
+  transform: rotate(-20deg);
+  transform-origin: top left;
+  z-index: 4;
+  white-space: nowrap;
+}
+
+
+/* =====================================================
+   DATE
+===================================================== */
+
+.date-text {
+  position: absolute;
+  left: 5%;
+  top: 23%;
+  color: white;
+  font-family: "Slight", cursive;
+  font-size: 50px;
+  line-height: 1;
+  transform: rotate(-22deg);
+  transform-origin: top left;
+  z-index: 4;
+  white-space: nowrap;
+}
+
+
+/* =====================================================
+   MONTH
+===================================================== */
+
+.month-text {
+  position: absolute;
+  left: 26.37%;
+  top: 39.13%;
+  color: white;
+  font-family: "Quattrocento", serif;
+  font-size: 2rem;
+  font-weight: 700;
+  line-height: 1;
+  z-index: 5;
+  white-space: nowrap;
+}
+
+
+/* =====================================================
+   EVENT WRAPPER
+===================================================== */
+
+.event-wrapper {
+  position: absolute;
+  left: 2.78%;
+  top: 44%;
+  width: 94.44%;
+  display: grid;
+  grid-template-columns:
+    1fr
+    auto
+    1fr;
+  align-items: center;
+  column-gap: 4%;
+  z-index: 5;
+}
+
+
+/* =====================================================
+   EVENT COLUMN
+===================================================== */
+
+.event-column {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+}
+
+
+/* =====================================================
+   EVENT LINE
+===================================================== */
+
+.event-line {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
+
+/* =====================================================
+   EVENT NAME
+===================================================== */
+
+.event-name {
+  margin-top: 4px;
+  width: 100%;
+  color: white;
+  font-family: "SloopScriptPro", cursive;
+  font-size: 2.5rem;
+  font-weight: 400;
+  line-height: 1;
+  white-space: nowrap;
+}
+
+
+/* =====================================================
+   AKAD
+===================================================== */
+
+.akad-column {
+  text-align: right;
+}
+
+.akad-column .event-name {
+  text-align: right;
+  transform: translateX(-7%);
+}
+
+
+/* =====================================================
+   RESEPSI
+===================================================== */
+
+.resepsi-column {
+  text-align: left;
+}
+
+.resepsi-column .event-name {
+  text-align: left;
+}
+
+
+/* =====================================================
+   EVENT TIME
+===================================================== */
+
+.event-time {
+  width: 100%;
+  color: white;
+  font-family: "Quattrocento", serif;
+  font-size: 1rem;
+  font-weight: 600;
+  line-height: 1.1;
+  white-space: nowrap;
+  margin-bottom: 2px;
+}
+
+
+/* =====================================================
+   EVENT DAY
+===================================================== */
+
+.event-day {
+  color: white;
+  font-family: "Quattrocento", serif;
+  font-size: 4rem;
+  font-weight: 700;
+  line-height: 1;
+  white-space: nowrap;
+}
+
+
+/* =====================================================
+   YEAR
+===================================================== */
+
+.year-text {
+  position: absolute;
+  left: 39%;
+  top: 52.95%;
+  color: white;
+  font-family: "Quattrocento";
+  font-size: 2.5rem;
+  font-weight: 400;
+  line-height: 1;
+  z-index: 5;
+  white-space: nowrap;
+}
+
+
+/* =====================================================
+   BUILDING
+===================================================== */
+
+.save-date-building {
+  position: absolute;
+  width: 94.72%;
+  left: 2.5%;
+  top: 71.68%;
+  height: auto;
+  z-index: 5;
+  object-fit: contain;
 }

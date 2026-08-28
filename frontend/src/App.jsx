@@ -7,6 +7,7 @@ import '@fontsource/pt-sans-caption';
 import '@fontsource/playfair-display-sc';
 import './fonts.css';
 
+import HomeRedirect from "./components/HomeRedirect.jsx";
 import ProtectedRoute from "./components/ProtectedRoute.jsx";
 import InvitePage from "./pages/InvitePage.jsx";
 import Login from "./pages/Login.jsx";
@@ -20,6 +21,8 @@ import UndanganManagement from "./pages/admin/UndanganManagement.jsx";
 import EditInvite from "./pages/admin/EditInvite.jsx";
 import PreviewTema from "./pages/admin/PreviewTema.jsx";
 import Tema2 from "../src/pages/admin/themes/tema2/Tema2.jsx";
+import Tema3 from "./pages/admin/themes/tema3/Tema3.jsx";
+
 import Checkin from "./pages/admin/Checkin.jsx";
 import CheckinScanner from "./pages/penerima-tamu/CheckinScanner.jsx";
 import BukuTamu from "./pages/penerima-tamu/BukuTamu.jsx";
@@ -29,6 +32,7 @@ import ToastWrapper from "./components/ToastContainer.jsx";
 import NotFound from "./pages/errors/NotFound.jsx";
 import NetworkError from "./pages/errors/NetworkError.jsx";
 import { toast } from "react-toastify";
+import PageTitle from "./components/PageTitle.jsx";
 
 function InviteWrapper() {
   const { code } = useParams();
@@ -74,7 +78,9 @@ function AppContent() {
   return (
     <>
       <ToastWrapper />
+      <PageTitle />
       <Routes>
+        <Route path="/" element={<HomeRedirect />} />
         {/* Halaman publik */}
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
@@ -99,8 +105,8 @@ function AppContent() {
             element={<UndanganManagement />}
           />
           <Route path="/admin/edit-invite/:id" element={<EditInvite />} />
-          <Route path="/undangan/:slug" element={<Tema2 />} />
-          <Route path="/:slug" element={<Tema2 />} />
+          <Route path="/undangan/:slug" element={<Tema3 />} />
+          <Route path="/:slug" element={<Tema3 />} />
           <Route path="/admin/checkin" element={<Checkin />} />
           <Route path="/preview-undangan/:id" element={<PreviewTema />} />
           <Route path="/invite/:code" element={<InviteWrapper />} />
