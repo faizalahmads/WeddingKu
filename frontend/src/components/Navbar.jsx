@@ -39,8 +39,16 @@ const Navbar = ({ role, onToggleSidebar }) => {
       { to: "/dashboard/pengaturan", label: "Pengaturan" },
     ],
     penerima_tamu: [
-      { to: `/checkin${location.search}`, label: "Check-in" },
-      { to: `/buku-tamu${location.search}`, label: "Buku Tamu" },
+      {
+        to: `/checkin${location.search}`,
+        activePath: "/checkin",
+        label: "Check-in",
+      },
+      {
+        to: `/buku-tamu${location.search}`,
+        activePath: "/buku-tamu",
+        label: "Buku Tamu",
+      },
     ],
   };
 
@@ -68,7 +76,7 @@ const Navbar = ({ role, onToggleSidebar }) => {
             key={tab.to}
             to={tab.to}
             className={`nav-tab-item ${
-              isActive(tab.to, tab.extra) ? "active" : ""
+              isActive(tab.activePath || tab.to, tab.extra) ? "active" : ""
             }`}
           >
             {tab.label}
@@ -77,13 +85,15 @@ const Navbar = ({ role, onToggleSidebar }) => {
       </nav>
 
       <div className="navbar-avatar">
-        <button
-          className="btn btn-link text-decoration-none fw-bold p-0"
-          onClick={handleLogout}
-          type="button"
-        >
-          Logout
-        </button>
+        {role !== "penerima_tamu" && (
+          <button
+            className="btn btn-link text-decoration-none fw-bold p-0"
+            onClick={handleLogout}
+            type="button"
+          >
+            Logout
+          </button>
+        )}
       </div>
     </header>
   );

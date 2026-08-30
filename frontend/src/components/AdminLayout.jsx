@@ -31,9 +31,8 @@ const AdminLayout = ({ children, role }) => {
       <Navbar role={role} onToggleSidebar={toggleSidebar} />
 
       <div className="admin-body">
-        <Sidebar isOpen={sidebarOpen} />
+        <Sidebar isOpen={sidebarOpen} role={role} />
 
-        {/* Backdrop hanya relevan saat sidebar overlay terbuka (mobile) */}
         {sidebarOpen && (
           <div className="sidebar-backdrop" onClick={toggleSidebar} />
         )}

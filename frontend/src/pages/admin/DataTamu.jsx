@@ -8,10 +8,12 @@ import AdminLayout from "../../components/AdminLayout";
 import Footer from "../../components/Footer";
 import ModalTambahTamu from "../../components/modals/ModalTambahTamu";
 import ModalImportTamu from "../../components/modals/ModalImportTamu";
+import QRModal from "../../pages/admin/themes/tema1/components/QRModal";
 import Pagination from "../../components/Pagination";
 import TrashIcon from "../../assets/icons/trash-red.svg";
 import EditIcon from "../../assets/icons/edit-green.svg";
 import EyeIcon from "../../assets/icons/eye-blue.svg";
+import QRIcon from "../../assets/icons/qr-icon.svg";
 import Swal from "sweetalert2";
 import Papa from "papaparse";
 
@@ -19,6 +21,9 @@ const DataTamu = () => {
   const [isEdit, setIsEdit] = useState(false);
   const [dataEdit, setDataEdit] = useState(null);
   const [tamu, setTamu] = useState([]);
+
+  const [showQR, setShowQR] = useState(false);
+  const [selectedGuest, setSelectedGuest] = useState(null);
   
   const [search, setSearch] = useState("");
     useEffect(() => {
@@ -84,6 +89,11 @@ const DataTamu = () => {
     setDataEdit(item);
     setIsEdit(true);
     setShowModal(true);
+  };
+
+  const handleQRClick = (item) => {
+    setSelectedGuest(item);
+    setShowQR(true);
   };
 
   // ✅ Simpan Tambah/Edit
@@ -347,17 +357,24 @@ const DataTamu = () => {
                       <td data-label="Action" className="Action flex-wrap">
                         <div className="d-flex justify-content-center gap-2">
                           <button
-                            className="btn btn-sm me-2"
+                            className="btn btn-sm"
                             onClick={() => handleDeleteClick(item.id)}
                           >
                             <img src={TrashIcon} alt="hapus" />
                           </button>
                           <button
-                            className="btn btn-sm me-2"
+                            className="btn btn-sm"
                             onClick={() => handleEditClick(item)}
                           >
                             <img src={EditIcon} alt="edit" />
                           </button>
+                          <button
+                            className="btn btn-sm"
+                            onClick={() => handleQRClick(item)}
+                          >
+                            <img src={QRIcon} alt="QR" />
+                          </button>
+
                           <a
                             href={`${import.meta.env.VITE_APP_URL}/undangan/${item.groom_name}-${item.bride_name}?to=${item.name}/${item.code}`}
                             target="_blank"
@@ -414,6 +431,40 @@ const DataTamu = () => {
           />
         </div>
       </AdminLayout>
+
+      <ModalTambahTamu
+        show={showModal}
+        handleClose={() => {
+          setShowModal(false);
+          setIsEdit(false);
+          setDataEdit(null);
+        }}
+        handleSubmit={handleTambahTamu}
+        isEdit={isEdit}
+        dataEdit={dataEdit}
+      />
+
+      <ModalImportTamu
+        show={showXlsxModal}
+        handleClose={() => setShowXlsxModal(false)}
+        xlsxPreview={xlsxPreview}
+        handleImportXLSX={handleConfirmImport}
+      />
+
+      {selectedGuest && (
+        <QRModal
+          show={showQR}
+          onClose={() => {
+            setShowQR(false);
+            setSelectedGuest(null);
+          }}
+          qrValue={selectedGuest.code}
+          guestName={selectedGuest.name}
+          guestRole={
+            selectedGuest.category === "VIP" ? "Executive VIP Invitation" : ""
+          }
+        />
+      )}
 
       <Footer />
     </div>

@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import axios from "axios";
 
 import GallerySide from "../tema1/components/GallerySideTema1";
 import CatinSide from "../tema1/components/CatinSectionTema1.jsx";
@@ -23,6 +24,8 @@ import BgMusic from "../../../../assets/audio/Thank God I Found You  Cover by Bu
 
 const Tema3 = () => {
   const [invite, setInvite] = useState(null);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
   const queryParams = new URLSearchParams(location.search);
   const toParam = queryParams.get("to");
   const [name, code] = toParam ? toParam.split("/") : [];
@@ -84,6 +87,9 @@ const Tema3 = () => {
           showLetter={showLetter}
           isSlide2={isSlide2}
           onOpen={handleOpen}
+          guestName={
+            invite?.guest_name ? `${invite.guest_name}` : "Tamu Undangan"
+          }
         />
 
         {open && (

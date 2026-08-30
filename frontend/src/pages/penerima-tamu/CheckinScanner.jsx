@@ -226,7 +226,7 @@ const CheckinScanner = () => {
 
   return (
     <div className="scanner-wrapper">
-      <AdminLayout role="penerima-tamu">
+      <AdminLayout role="penerima_tamu">
         {/* CONTENT */}
         <div className="container text-center scanner-content">
           <div className="text-start total-hadir">

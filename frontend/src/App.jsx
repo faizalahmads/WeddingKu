@@ -105,12 +105,13 @@ function AppContent() {
             element={<UndanganManagement />}
           />
           <Route path="/admin/edit-invite/:id" element={<EditInvite />} />
-          <Route path="/undangan/:slug" element={<Tema3 />} />
-          <Route path="/:slug" element={<Tema3 />} />
-          <Route path="/admin/checkin" element={<Checkin />} />
           <Route path="/preview-undangan/:id" element={<PreviewTema />} />
           <Route path="/invite/:code" element={<InviteWrapper />} />
         </Route>
+
+        <Route path="/undangan/:slug" element={<Tema3 />} />
+        <Route path="/:slug" element={<Tema3 />} />
+        <Route path="/admin/checkin" element={<Checkin />} />
 
         <Route path="/preview/:id" element={<PreviewTema />} />
 

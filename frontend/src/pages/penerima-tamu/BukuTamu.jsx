@@ -141,7 +141,7 @@ const BukuTamu = () => {
 
   return (
     <div className="bg-light min-vh-100">
-      <AdminLayout role="penerima-tamu">
+      <AdminLayout role="penerima_tamu">
         <div className="container py-4">
           <div className="d-flex justify-content-between align-items-center mb-3">
             <h5 className="fw-bold mb-0">Buku Tamu</h5>

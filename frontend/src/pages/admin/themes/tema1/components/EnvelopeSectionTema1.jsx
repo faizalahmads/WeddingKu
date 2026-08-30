@@ -7,7 +7,7 @@ import SealImage from "../../../../../assets/images/tema1/seal.svg";
 import Flap from "../../../../../assets/images/tema1/flap.svg";
 import Card from "../../../../../assets/images/tema1/card.svg";
 
-const EnvelopeSection = ({ open, showLetter, isSlide2, onOpen }) => {
+const EnvelopeSection = ({ open, showLetter, isSlide2, onOpen, guestName }) => {
   return (
     <motion.section
       className="section-1"
@@ -120,7 +120,7 @@ const EnvelopeSection = ({ open, showLetter, isSlide2, onOpen }) => {
         <br />
         <span className="text">Bapak/Ibu/Saudara/i</span>
         <br />
-        <span className="nama-tamu">Juleha & Saprudin</span>
+        <span className="nama-tamu">{guestName} & Partner</span>
       </motion.div>
     </motion.section>
   );
