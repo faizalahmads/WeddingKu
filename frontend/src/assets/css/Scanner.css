@@ -16,11 +16,31 @@
 }
 
 .total-hadir {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  width: 180px;
+  height: 4 8px;
+  background: #f7f6f6;
+  border: 2px solid #ded9d0;
+  border-radius: 20px;
+  font-size: 18px;
   font-weight: 500;
+  color: #000;
   margin-bottom: 20px;
+  box-sizing: border-box;
+}
+
+.total-hadir-icon {
+  width: 18px;
+  height: 18px;
+  color: #8a6200;
 }
 
 .scan-title {
+  font-family: "Playfair Display";
+  color: #031632;
   font-size: 42px;
   font-weight: 800;
   margin-bottom: 30px;
@@ -40,30 +60,235 @@
   position: relative;
 }
 
+/* =========================
+   SEARCH TAMU
+========================= */
+
 .search-wrapper {
-  max-width: 400px;
+  width: 100%;
+  max-width: 600px;
   margin: 0 auto;
 }
 
-.search-input {
-  border-radius: 20px;
-  padding: 10px 20px;
+/* SEARCH BOX */
+
+.search-box {
+  position: relative;
+  display: flex;
+  align-items: center;
+  width: 100%;
+  height: 54px;
+  background: #ffffff;
+  border: 1.5px solid #d8d8d8;
+  border-radius: 16px;
+  transition: all 0.2s ease;
 }
 
-.scanner-footer {
-  text-align: center;
-  padding: 15px;
-  background: #f2f2f2;
+.search-box:focus-within {
+  border-color: #8a6200;
+  box-shadow: 0 0 0 3px rgba(138, 98, 0, 0.1);
+}
+
+.search-icon {
+  position: absolute;
+  left: 18px;
+  width: 21px;
+  height: 21px;
+  color: #777;
+  pointer-events: none;
+}
+
+.search-input {
+  width: 100%;
+  height: 100%;
+  border: none !important;
+  outline: none !important;
+  background: transparent !important;
+  padding: 0 50px 0 50px;
+  font-size: 16px;
+  color: #222;
+  box-shadow: none !important;
+}
+
+.search-input::placeholder {
+  color: #999;
+}
+
+/* CLEAR BUTTON */
+
+.search-clear {
+  position: absolute;
+  right: 12px;
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: none;
+  border-radius: 50%;
+  background: #f1eee8;
+  color: #777;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.search-clear:hover {
+  background: #e7e1d6;
+  color: #333;
+}
+
+.search-clear svg {
+  width: 17px;
+  height: 17px;
+}
+
+/* =========================
+   GUEST RESULTS
+========================= */
+
+.guest-results {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-top: 12px;
+}
+
+/* ITEM TAMU */
+
+.guest-result-item {
+  width: 100%;
+  min-height: 58px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 14px;
+  background: #ffffff;
+  border: 1px solid #e1e1e1;
+  border-radius: 12px;
+  text-align: left;
+  cursor: pointer;
+  transition:
+    transform 0.15s ease,
+    box-shadow 0.15s ease,
+    border-color 0.15s ease;
+}
+
+.guest-result-item:hover:not(:disabled) {
+  border-color: #cfc8ba;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
+  transform: translateY(-1px);
+}
+
+.guest-result-item:active:not(:disabled) {
+  transform: scale(0.99);
+}
+
+/* INFO TAMU */
+
+.guest-result-info {
+  display: flex;
+  align-items: center;
+  min-width: 0;
+  gap: 12px;
+}
+
+.guest-result-icon {
+  width: 36px;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  border-radius: 10px;
+  background: #f5f2eb;
+  color: #8a6200;
+}
+
+.guest-result-icon svg {
+  width: 19px;
+  height: 19px;
+}
+
+.guest-result-text {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+
+.guest-result-name {
+  font-size: 15px;
+  font-weight: 500;
+  color: #333;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.guest-result-status-label {
+  font-size: 11px;
+  color: #999;
+}
+
+/* STATUS */
+
+.guest-status {
+  flex-shrink: 0;
+  padding: 5px 10px;
+  border-radius: 7px;
+  font-size: 11px;
+  font-weight: 600;
+}
+
+.guest-status.hadir {
+  color: #247a45;
+  background: #e9f7ee;
+}
+
+.guest-status.belum-hadir {
+  color: #b42318;
+  background: #fdecec;
+}
+
+/* TAMU SUDAH HADIR */
+
+.guest-result-item.checked-in {
+  cursor: not-allowed;
+  opacity: 0.75;
+  background: #fafafa;
 }
 
 /* RESPONSIVE */
 @media (max-width: 768px) {
-  .scan-title {
-    font-size: 28px;
+  .search-wrapper {
+    max-width: 100%;
   }
 
-  .scanner-frame {
-    width: 220px;
-    height: 220px;
+  .search-box {
+    height: 50px;
+    border-radius: 14px;
+  }
+
+  .search-input {
+    font-size: 15px;
+  }
+
+  .guest-result-item {
+    min-height: 54px;
+    padding: 8px 10px;
+  }
+
+  .guest-result-icon {
+    width: 34px;
+    height: 34px;
+  }
+
+  .guest-result-name {
+    font-size: 14px;
+  }
+
+  .guest-status {
+    font-size: 10px;
+    padding: 5px 8px;
   }
 }

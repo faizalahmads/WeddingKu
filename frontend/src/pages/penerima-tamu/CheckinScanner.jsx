@@ -4,6 +4,13 @@ import { useSearchParams } from "react-router-dom";
 import axios from "axios";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "../../assets/css/Scanner.css";
+import {
+  IoPersonAddOutline,
+  IoSearchOutline,
+  IoCloseOutline,
+  IoPersonOutline,
+} from "react-icons/io5";
+
 import AdminLayout from "../../components/AdminLayout";
 import ModalCheckinTamu from "../../components/modals/ModalCheckinTamu";
 
@@ -16,6 +23,9 @@ const CheckinScanner = () => {
   const [valid, setValid] = useState(null);
   const [totalHadir, setTotalHadir] = useState(0);
   const [search, setSearch] = useState("");
+  const [checkingIn, setCheckingIn] = useState(false);
+  const [checkinSuccess, setCheckinSuccess] = useState(false);
+  const [showSouvenir, setShowSouvenir] = useState(false);
   const [results, setResults] = useState([]);
   const [selectedGuest, setSelectedGuest] = useState(null);
   const [invitationId, setInvitationId] = useState(null);
@@ -58,43 +68,78 @@ const CheckinScanner = () => {
   const qrRef = useRef(null);
 
   const handleManualCheckin = async (guest) => {
-    if (guest.is_checked_in) {
-      alert("Tamu sudah hadir");
+    const checkedIn = Number(guest.is_checked_in) === 1;
+
+    if (checkedIn) {
       return;
     }
 
-    const confirmCheckin = window.confirm(
-      `${guest.name} belum hadir. Lanjutkan check-in?`,
-    );
-
-    if (!confirmCheckin) return;
-
     try {
+      setCheckingIn(true);
+      setCheckinSuccess(false);
+
       await axios.post(`${import.meta.env.VITE_API_URL}/api/checkin/scan`, {
-        token: token,
+        token,
         guest_code: guest.code,
       });
 
-      alert("Check-in berhasil!");
-
-      setSelectedGuest(null);
-
-      // Jalankan scanner kembali
-      try {
-        scannerRef.current?.resume();
-      } catch {}
-
-      window.history.replaceState(
-        {},
-        document.title,
-        `/checkin?token=${token}`,
+      // =========================
+      // UPDATE DATA SEARCH
+      // =========================
+      setResults((prevResults) =>
+        prevResults.map((item) =>
+          item.id === guest.id
+            ? {
+                ...item,
+                is_checked_in: 1,
+              }
+            : item,
+        ),
       );
 
+      // =========================
+      // UPDATE SELECTED GUEST
+      // =========================
+      setSelectedGuest((prev) =>
+        prev
+          ? {
+              ...prev,
+              is_checked_in: 1,
+            }
+          : prev,
+      );
+
+      // =========================
+      // UPDATE TOTAL HADIR
+      // =========================
       if (invitationId) {
-        fetchTotal(invitationId);
+        await fetchTotal(invitationId);
       }
+
+      // =========================
+      // TAMPILKAN SUCCESS
+      // =========================
+      setCheckinSuccess(true);
+
+      // =========================
+      // TUTUP MODAL
+      // =========================
+      setTimeout(() => {
+        setSelectedGuest(null);
+        setCheckinSuccess(false);
+
+        try {
+          scannerRef.current?.resume();
+        } catch (err) {
+          console.log(err);
+        }
+      }, 1200);
     } catch (err) {
+      console.error("Check-in error:", err);
+
       alert(err.response?.data?.message || "Gagal check-in");
+    } finally {
+      setCheckingIn(false);
     }
   };
 
@@ -180,41 +225,6 @@ const CheckinScanner = () => {
     }
   };
 
-  useEffect(() => {
-    if (!valid || !invitationId) return;
-
-    const scanner = new Html5QrcodeScanner(
-      "reader",
-      { fps: 10, qrbox: 250 },
-      false,
-    );
-
-    scanner.render(
-      async (decodedText) => {
-        try {
-          const res = await axios.get(
-            `${import.meta.env.VITE_API_URL}/api/checkin/guest-detail`,
-            {
-              params: {
-                token,
-                guest_code: decodedText,
-              },
-            },
-          );
-
-          setSelectedGuest(res.data.data);
-        } catch (err) {
-          alert(err.response?.data?.message || "Tamu tidak ditemukan");
-        }
-      },
-      () => {},
-    );
-
-    return () => {
-      scanner.clear().catch(() => {});
-    };
-  }, [valid, invitationId]);
-
   if (valid === null) return <div className="text-center mt-5">Loading...</div>;
 
   if (!valid)
@@ -229,11 +239,12 @@ const CheckinScanner = () => {
       <AdminLayout role="penerima_tamu">
         {/* CONTENT */}
         <div className="container text-center scanner-content">
-          <div className="text-start total-hadir">
-            Total Hadir: {totalHadir}
+          <div className="total-hadir">
+            <IoPersonAddOutline className="total-hadir-icon" />
+            <span>Total Hadir: {totalHadir}</span>
           </div>
 
-          <h1 className="scan-title">SCAN QR</h1>
+          <h1 className="scan-title">Scan Guest QR Code</h1>
 
           {/* Scanner Placeholder */}
           <div className="scanner-box">
@@ -241,41 +252,82 @@ const CheckinScanner = () => {
           </div>
 
           {/* Search Manual */}
-          <input
-            type="text"
-            className="form-control search-input"
-            placeholder="Cari Nama Tamu"
-            value={search}
-            onChange={(e) => handleSearch(e.target.value)}
-          />
+          <div className="search-wrapper">
+            <div className="search-box">
+              <IoSearchOutline className="search-icon" />
 
-          {results.length > 0 && (
-            <div className="list-group mt-3 text-start">
-              {results.map((guest) => (
+              <input
+                type="text"
+                className="search-input"
+                placeholder="Cari Nama Tamu"
+                value={search}
+                onChange={(e) => handleSearch(e.target.value)}
+              />
+
+              {search && (
                 <button
-                  key={guest.id}
-                  className={`list-group-item list-group-item-action d-flex justify-content-between align-items-center ${
-                    guest.is_checked_in ? "list-group-item-success" : ""
-                  }`}
-                  disabled={guest.is_checked_in}
-                  onClick={() => setSelectedGuest(guest)}
+                  type="button"
+                  className="search-clear"
+                  onClick={() => handleSearch("")}
                 >
-                  <span>{guest.name}</span>
-                  {Number(guest.is_checked_in) === 1 ? (
-                    <span className="badge bg-success">Sudah Hadir</span>
-                  ) : (
-                    <span className="badge bg-danger">Belum Hadir</span>
-                  )}
+                  <IoCloseOutline />
                 </button>
-              ))}
+              )}
             </div>
-          )}
+
+            {results.length > 0 && (
+              <div className="guest-results">
+                {results.map((guest) => {
+                  const checkedIn = Number(guest.is_checked_in) === 1;
+
+                  return (
+                    <button
+                      key={guest.id}
+                      type="button"
+                      className={`guest-result-item ${
+                        checkedIn ? "checked-in" : ""
+                      }`}
+                      disabled={checkedIn}
+                      onClick={() => setSelectedGuest(guest)}
+                    >
+                      <div className="guest-result-info">
+                        <div className="guest-result-icon">
+                          <IoPersonOutline />
+                        </div>
+
+                        <div className="guest-result-text">
+                          <span className="guest-result-name">
+                            {guest.name}
+                          </span>
+
+                          <span className="guest-result-status-label">
+                            Status Kehadiran
+                          </span>
+                        </div>
+                      </div>
+
+                      <span
+                        className={`guest-status ${
+                          checkedIn ? "hadir" : "belum-hadir"
+                        }`}
+                      >
+                        {checkedIn ? "Sudah Hadir" : "Belum Hadir"}
+                      </span>
+                    </button>
+                  );
+                })}
+              </div>
+            )}
+          </div>
 
           <ModalCheckinTamu
             show={!!selectedGuest}
             guest={selectedGuest}
             onClose={handleCloseModal}
             onCheckin={handleManualCheckin}
+            checkingIn={checkingIn}
+            checkinSuccess={checkinSuccess}
+            showSouvenir={showSouvenir}
           />
         </div>
       </AdminLayout>

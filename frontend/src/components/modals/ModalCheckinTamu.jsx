@@ -1,61 +1,127 @@
-import React from "react";
-import "bootstrap/dist/css/bootstrap.min.css";
+import {
+  IoCloseOutline,
+  IoPersonOutline,
+  IoCheckmarkCircleOutline,
+  IoGiftOutline,
+} from "react-icons/io5";
 
-const ModalCheckinTamu = ({ show, guest, onClose, onCheckin }) => {
+import "../../assets/css/ModalCheckinTamu.css";
+
+const ModalCheckinTamu = ({
+  show,
+  guest,
+  onClose,
+  onCheckin,
+  checkingIn,
+  checkinSuccess,
+}) => {
   if (!show || !guest) return null;
 
+  const checkedIn = Number(guest.is_checked_in) === 1;
+
+  // Sesuaikan dengan nama field dari API/database
+  const souvenir =
+    guest.souvenir || guest.souvenir_name || guest.souvenir_type || "Tidak ada";
+
   return (
-    <div
-      className="modal show d-block"
-      tabIndex="-1"
-      style={{ backgroundColor: "rgba(0,0,0,0.5)" }}
-    >
-      <div className="modal-dialog modal-dialog-centered">
-        <div className="modal-content rounded-4 shadow">
-          {/* HEADER */}
-          <div className="modal-header border-0 pb-0">
-            <h5 className="modal-title fw-bold">Detail Tamu</h5>
-            <button
-              type="button"
-              className="btn-close"
-              onClick={onClose}
-            ></button>
+    <div className="checkin-modal-overlay" onClick={onClose}>
+      <div className="checkin-modal" onClick={(e) => e.stopPropagation()}>
+        {/* HEADER */}
+        <div className="checkin-modal-header">
+          <div>
+            <h3>Detail Tamu</h3>
           </div>
 
-          {/* BODY */}
-          <div className="modal-body pt-2">
-            <div className="p-3 bg-light rounded-3">
-              <p className="mb-1 text-muted small">Nama</p>
-              <h5 className="fw-semibold">{guest.name}</h5>
+          <button type="button" className="checkin-close-btn" onClick={onClose}>
+            <IoCloseOutline />
+          </button>
+        </div>
 
-              <hr className="my-3" />
+        {/* GUEST PROFILE */}
+        <div className="guest-profile">
+          <div className="guest-avatar">
+            <IoPersonOutline />
+          </div>
 
-              <p className="mb-1 text-muted small">Kategori</p>
-              <h6 className="fw-medium">{guest.category || "-"}</h6>
+          <h2>{guest.name}</h2>
 
-              <hr className="my-3" />
+          <p>Tamu Undangan</p>
+        </div>
 
-              <p className="mb-1 text-muted small">Status</p>
-              {guest.is_checked_in ? (
-                <span className="badge bg-success fs-6">Sudah Hadir</span>
+        {/* INFORMATION */}
+        <div className="guest-detail-card">
+          {/* KATEGORI */}
+          <div className="guest-detail-row">
+            <div className="guest-detail-label">Kategori</div>
+
+            <div className="guest-detail-value">
+              {guest.category || guest.guest_category || "Regular"}
+            </div>
+          </div>
+
+          {/* STATUS */}
+          <div className="guest-detail-row">
+            <div className="guest-detail-label">Status Kehadiran</div>
+
+            <div>
+              {checkedIn ? (
+                <span className="guest-status-badge hadir">
+                  <IoCheckmarkCircleOutline />
+                  Sudah Hadir
+                </span>
               ) : (
-                <span className="badge bg-danger fs-6">Belum Hadir</span>
+                <span className="guest-status-badge belum">Belum Hadir</span>
               )}
             </div>
           </div>
 
-          {/* FOOTER */}
-          <div className="modal-footer border-0">
-            {!guest.is_checked_in && (
-              <button
-                className="btn btn-danger w-100 rounded-3 fw-semibold"
-                onClick={() => onCheckin(guest)}
-              >
-                Check-in
-              </button>
-            )}
+          {/* SOUVENIR */}
+          <div className="guest-detail-row souvenir-row">
+            <div className="guest-detail-label">Souvenir</div>
+
+            <div className="souvenir-value">
+              <IoGiftOutline className="souvenir-icon" />
+              <span>{souvenir}</span>
+            </div>
           </div>
         </div>
+
+        {/* ACTION */}
+        {checkinSuccess ? (
+          <div className="checkin-success">
+            <div className="success-icon">
+              <IoCheckmarkCircleOutline />
+            </div>
+
+            <h4>Check-in Berhasil!</h4>
+
+            <p>{guest.name} berhasil melakukan check-in.</p>
+          </div>
+        ) : !checkedIn ? (
+          <button
+            type="button"
+            className="checkin-action-btn"
+            onClick={() => onCheckin(guest)}
+            disabled={checkingIn}
+          >
+            {checkingIn ? (
+              <>
+                <span className="checkin-spinner"></span>
+                Memproses...
+              </>
+            ) : (
+              <>
+                <IoCheckmarkCircleOutline />
+                Check-in Tamu
+              </>
+            )}
+          </button>
+        ) : (
+          <button type="button" className="checkin-action-btn already" disabled>
+            <IoCheckmarkCircleOutline />
+            Tamu Sudah Check-in
+          </button>
+        )}
       </div>
     </div>
   );
