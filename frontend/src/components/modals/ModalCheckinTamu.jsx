@@ -19,9 +19,10 @@ const ModalCheckinTamu = ({
 
   const checkedIn = Number(guest.is_checked_in) === 1;
 
-  // Sesuaikan dengan nama field dari API/database
-  const souvenir =
-    guest.souvenir || guest.souvenir_name || guest.souvenir_type || "Tidak ada";
+  const souvenir = guest.souvenir || "Tidak ada";
+
+  const category = guest.category || guest.guest_category || "Reguler";
+  const isVIP = category.toLowerCase() === "vip";
 
   return (
     <div className="checkin-modal-overlay" onClick={onClose}>
@@ -50,14 +51,13 @@ const ModalCheckinTamu = ({
 
         {/* INFORMATION */}
         <div className="guest-detail-card">
-          {/* KATEGORI */}
-          <div className="guest-detail-row">
-            <div className="guest-detail-label">Kategori</div>
-
-            <div className="guest-detail-value">
-              {guest.category || guest.guest_category || "Regular"}
+          {/* KATEGORI — hanya tampil kalau VIP */}
+          {isVIP && (
+            <div className="guest-detail-row">
+              <div className="guest-detail-label">Kategori</div>
+              <div className="guest-detail-value">{category}</div>
             </div>
-          </div>
+          )}
 
           {/* STATUS */}
           <div className="guest-detail-row">

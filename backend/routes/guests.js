@@ -26,10 +26,28 @@ router.get("/guests/:adminId", async (req, res) => {
   const { adminId } = req.params;
   const sql = `
     SELECT 
-      g.id, g.name, g.type, g.category, g.code, g.admin_id,
-      i.groom_name, i.bride_name
+      g.id,
+      g.name,
+      g.type,
+      g.category,
+      g.code,
+      g.admin_id,
+      g.invitation_id,
+      g.souvenir,
+      g.no_hp,
+      g.is_checked_in,
+      g.checked_in_at,
+
+      i.groom_name,
+      i.bride_name,
+      i.wedding_date,
+      i.location
+
     FROM guests g
-    LEFT JOIN invitations i ON g.invitation_id = i.id
+
+    LEFT JOIN invitations i 
+      ON g.invitation_id = i.id
+
     WHERE g.admin_id = ?
   `;
 
@@ -92,7 +110,11 @@ router.post("/guests/import-xlsx", async (req, res) => {
       return {
         name: g.name?.trim(),
         category: VALID_CATEGORY.includes(category) ? category : "Reguler",
+
         type: VALID_TYPE.includes(type) ? type : "CPP",
+
+        souvenir: g.souvenir?.trim() || null,
+        no_hp: g.no_hp?.toString().trim() || null,
       };
     });
 
@@ -104,11 +126,26 @@ router.post("/guests/import-xlsx", async (req, res) => {
       generateUniqueCode(),
       admin_id,
       invitation_id,
+      g.souvenir,
+      g.no_hp,
     ]);
 
     await db.query(
-      `INSERT INTO guests (name, category, type, code, admin_id, invitation_id) VALUES ?`,
-      [values]
+      `
+      INSERT INTO guests
+      (
+        name,
+        category,
+        type,
+        code,
+        admin_id,
+        invitation_id,
+        souvenir,
+        no_hp
+      )
+      VALUES ?
+      `,
+      [values],
     );
 
     res.status(201).json({ message: "Import XLSX berhasil ✅" });
@@ -122,7 +159,7 @@ router.post("/guests/import-xlsx", async (req, res) => {
 // POST: Tambah tamu baru (kode unik cepat + retry aman)
 // ========================
 router.post("/guests", async (req, res) => {
-  const { name, type, category, admin_id } = req.body;
+  const { name, type, category, admin_id, souvenir, no_hp } = req.body;
 
   if (!name || !type || !category || !admin_id) {
     return res.status(400).json({ error: "Semua field wajib diisi" });
@@ -144,11 +181,30 @@ router.post("/guests", async (req, res) => {
     try {
       const [result] = await db.query(
         `
-        INSERT INTO guests (name, type, category, code, admin_id, invitation_id)
-        VALUES (?, ?, ?, ?, ?, ?)
+        INSERT INTO guests
+        (
+          name,
+          type,
+          category,
+          code,
+          admin_id,
+          invitation_id,
+          souvenir,
+          no_hp
+        )
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?)
         `,
-        [name, type, category, code, admin_id, invitation_id]
-      );
+              [
+                name,
+                type,
+                category,
+                code,
+                admin_id,
+                invitation_id,
+                souvenir || null,
+                no_hp || null,
+              ],
+            );
 
       return res.status(201).json({
         message: "Tamu berhasil ditambahkan dengan kode unik",
@@ -247,6 +303,74 @@ router.get("/guests/summary/:adminId", async (req, res) => {
      } catch (err) {
     console.error("Database error:", err);
     res.status(500).json({ error: "Database query error" });
+  }
+});
+
+
+// ========================
+// PUT: Edit tamu
+// ========================
+router.put("/guests/:id", async (req, res) => {
+  const { id } = req.params;
+
+  const {
+    name,
+    type,
+    category,
+    souvenir,
+    no_hp,
+  } = req.body;
+
+  if (!name || !type || !category) {
+    return res.status(400).json({
+      error: "Nama, tipe, dan kategori wajib diisi",
+    });
+  }
+
+  try {
+    const [result] = await db.query(
+      `
+      UPDATE guests
+      SET
+        name = ?,
+        type = ?,
+        category = ?,
+        souvenir = ?,
+        no_hp = ?
+      WHERE id = ?
+      `,
+      [
+        name,
+        type,
+        category,
+        souvenir || null,
+        no_hp || null,
+        id,
+      ]
+    );
+
+    if (result.affectedRows === 0) {
+      return res.status(404).json({
+        error: "Data tamu tidak ditemukan",
+      });
+    }
+
+    return res.json({
+      message: "Data tamu berhasil diubah",
+      id,
+      name,
+      type,
+      category,
+      souvenir: souvenir || null,
+      no_hp: no_hp || null,
+    });
+
+  } catch (err) {
+    console.error("Gagal edit tamu:", err);
+
+    return res.status(500).json({
+      error: "Gagal edit data tamu",
+    });
   }
 });
 

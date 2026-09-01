@@ -287,7 +287,6 @@ const CheckinScanner = () => {
                       className={`guest-result-item ${
                         checkedIn ? "checked-in" : ""
                       }`}
-                      disabled={checkedIn}
                       onClick={() => setSelectedGuest(guest)}
                     >
                       <div className="guest-result-info">

@@ -14,6 +14,7 @@ import TrashIcon from "../../assets/icons/trash-red.svg";
 import EditIcon from "../../assets/icons/edit-green.svg";
 import EyeIcon from "../../assets/icons/eye-blue.svg";
 import QRIcon from "../../assets/icons/qr-icon.svg";
+import WAIcon from "../../assets/icons/wa-icon.svg";
 import Swal from "sweetalert2";
 import Papa from "papaparse";
 
@@ -94,6 +95,72 @@ const DataTamu = () => {
   const handleQRClick = (item) => {
     setSelectedGuest(item);
     setShowQR(true);
+  };
+
+  const handleShareWhatsApp = (guest) => {
+    const guestName = guest.name || "Bapak/Ibu/Saudara/i";
+
+    // =========================
+    // Format nomor WhatsApp
+    // =========================
+    let phone = guest.no_hp ? guest.no_hp.toString().replace(/\D/g, "") : "";
+
+    // 0812xxxx → 62812xxxx
+    if (phone.startsWith("0")) {
+      phone = "62" + phone.substring(1);
+    }
+
+    // =========================
+    // Format tanggal
+    // =========================
+    const weddingDate = guest.wedding_date
+      ? new Date(guest.wedding_date).toLocaleDateString("id-ID", {
+          weekday: "long",
+          day: "2-digit",
+          month: "long",
+          year: "numeric",
+        })
+      : "-";
+
+    // =========================
+    // Link undangan personal
+    // =========================
+    const invitationUrl = `${import.meta.env.VITE_APP_URL}/undangan/${guest.groom_name}-${guest.bride_name}?to=${encodeURIComponent(
+      guest.name,
+    )}/${guest.code}`;
+
+    // =========================
+    // Pesan WhatsApp
+    // =========================
+    const message = `Yth.
+Bapak/Ibu/Saudara/i
+${guestName}
+
+Assalamu'alaikum Warahmatullahi Wabarakatuh
+
+Dengan memohon rahmat dan ridho Allah SWT, serta tanpa mengurangi rasa hormat, kami bermaksud mengundang Bapak/Ibu/Saudara/i untuk menghadiri acara pernikahan kami.  
+
+Mohon dapat menunjukkan QR Code Reservasi saat memasuki area acara.
+
+Untuk informasi lengkap mengenai acara, silahkan kunjungi link dibawah ini :
+
+${invitationUrl}
+
+Mohon maaf bila terdapat kesalahan dalam penulisan nama dan gelar. Suatu kebahagiaan bagi kami apabila Bapak/Ibu berkenan untuk hadir dan memberikan doa restu.
+
+Wassalamu'alaikum Warahmatullahi Wabarakatuh.
+
+Salam Hangat,
+${guest.bride_name || "-"} & ${guest.groom_name || "-"} `;
+
+    // =========================
+    // Buka WhatsApp
+    // =========================
+    const whatsappUrl = phone
+      ? `https://wa.me/${phone}?text=${encodeURIComponent(message)}`
+      : `https://wa.me/?text=${encodeURIComponent(message)}`;
+
+    window.open(whatsappUrl, "_blank");
   };
 
   // ✅ Simpan Tambah/Edit
@@ -355,34 +422,56 @@ const DataTamu = () => {
                       <td data-label="Kategori Tamu">{item.category}</td>
                       <td data-label="CPP/CPW">{item.type}</td>
                       <td data-label="Action" className="Action flex-wrap">
-                        <div className="d-flex justify-content-center gap-2">
+                        <div className="d-flex justify-content-center gap-1">
+                          {/* Hapus */}
                           <button
                             className="btn btn-sm"
                             onClick={() => handleDeleteClick(item.id)}
+                            title="Hapus"
                           >
                             <img src={TrashIcon} alt="hapus" />
                           </button>
+
+                          {/* Edit */}
                           <button
                             className="btn btn-sm"
                             onClick={() => handleEditClick(item)}
+                            title="Edit"
                           >
                             <img src={EditIcon} alt="edit" />
                           </button>
+
+                          {/* QR */}
                           <button
                             className="btn btn-sm"
                             onClick={() => handleQRClick(item)}
+                            title="QR Code"
                           >
                             <img src={QRIcon} alt="QR" />
                           </button>
 
+                          {/* Lihat */}
                           <a
-                            href={`${import.meta.env.VITE_APP_URL}/undangan/${item.groom_name}-${item.bride_name}?to=${item.name}/${item.code}`}
+                            href={`${import.meta.env.VITE_APP_URL}/undangan/${item.groom_name}-${item.bride_name}?to=${encodeURIComponent(
+                              item.name,
+                            )}/${item.code}`}
                             target="_blank"
                             rel="noopener noreferrer"
                             className="btn btn-sm"
+                            title="Lihat Undangan"
                           >
                             <img src={EyeIcon} alt="lihat" />
                           </a>
+
+                          {/* WhatsApp */}
+                          <button
+                            type="button"
+                            className="btn btn-sm btn-whatsapp"
+                            onClick={() => handleShareWhatsApp(item)}
+                            title="Share via WhatsApp"
+                          >
+                            <img src={WAIcon} alt="lihat" />
+                          </button>
                         </div>
                       </td>
                     </tr>

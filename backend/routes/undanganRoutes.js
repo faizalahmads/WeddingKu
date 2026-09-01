@@ -8,30 +8,6 @@ const fs = require("fs");
 const path = require("path");
 
 // ========================
-// POST: Pilih Tema Undangan
-// ========================
-router.post("/invitations", async (req, res) => {
-  const { admin_id, theme_id } = req.body;
-  if (!admin_id || !theme_id)
-    return res.status(400).json({ success: false, message: "Missing data" });
-
-  try {
-    const code = Math.random().toString(36).substring(2, 8).toUpperCase();
-    const unique_code = Date.now().toString(36).toUpperCase();
-
-    const [result] = await db.query(
-      `INSERT INTO invitations (admin_id, theme_id, code, unique_code, current_step) VALUES (?,?,?,?,?)`,
-      [admin_id, theme_id, code, unique_code, "draft", 1],
-    );
-
-    return res.json({ success: true, invitation_id: result.insertId });
-  } catch (err) {
-    console.error(err);
-    return res.status(500).json({ success: false, message: "Server error" });
-  }
-});
-
-// ========================
 // GET: invitation by admin
 // ========================
 router.get("/invitations/admin/:adminId", async (req, res) => {
@@ -95,20 +71,42 @@ router.put("/invitations/:id/form", async (req, res) => {
 // POST: Tambah undangan
 // ========================
 router.post("/undangan", verifyToken, async (req, res) => {
-  const admin_id = req.user.id;
-  const { theme_id } = req.body;
+  try {
+    const admin_id = req.user.id;
+    const { theme_id } = req.body;
 
-  const code = Math.random().toString(36).substring(2, 8).toUpperCase();
-  const unique_code = Date.now().toString(36).toUpperCase();
+    if (!theme_id) {
+      return res.status(400).json({
+        success: false,
+        message: "theme_id wajib diisi",
+      });
+    }
 
-  const [result] = await db.query(
-    `INSERT INTO invitations 
-     (admin_id, theme_id, code, unique_code, current_step) 
-     VALUES (?, ?, ?, ?, ?)`,
-    [admin_id, theme_id, code, unique_code, 1],
-  );
+    const code = Math.random().toString(36).substring(2, 8).toUpperCase();
 
-  res.json({ id: result.insertId });
+    const unique_code = Date.now().toString(36).toUpperCase();
+
+    const [result] = await db.query(
+      `INSERT INTO invitations
+       (admin_id, theme_id, code, unique_code, current_step)
+       VALUES (?, ?, ?, ?, ?)`,
+      [admin_id, theme_id, code, unique_code, 1],
+    );
+
+    return res.status(201).json({
+      success: true,
+      id: result.insertId,
+      message: "Undangan berhasil dibuat",
+    });
+  } catch (err) {
+    console.error("❌ Gagal membuat undangan:", err);
+
+    return res.status(500).json({
+      success: false,
+      message: "Gagal membuat undangan",
+      detail: err.message,
+    });
+  }
 });
 
 // ========================
@@ -127,8 +125,6 @@ router.put(
   async (req, res) => {
     const { id } = req.params;
     const adminId = req.user.id;
-
-    const { groom_bank_id, bride_bank_id } = req.body;
 
     try {
       // 1️⃣ Ambil data lama dulu
@@ -190,20 +186,37 @@ router.put(
         cover_desktop,
       } = req.body;
 
+      const groomBankId =
+        groom_bank_id && Number(groom_bank_id) > 0
+          ? Number(groom_bank_id)
+          : null;
+
+      const brideBankId =
+        bride_bank_id && Number(bride_bank_id) > 0
+          ? Number(bride_bank_id)
+          : null;
+
+          console.log("🏦 groom_bank_id:", groom_bank_id);
+          console.log("🏦 bride_bank_id:", bride_bank_id);
+
       const updateFields = {
         couple_name,
         groom_name,
         groom_parent,
         groom_sosmed,
-        groom_bank_id,
+
+        groom_bank_id: groomBankId,
         groom_norek,
         groom_name_bank,
+
         bride_name,
         bride_parent,
         bride_sosmed,
-        bride_bank_id,
+
+        bride_bank_id: brideBankId,
         bride_norek,
         bride_name_bank,
+
         akad_date,
         resepsi_date,
         wedding_date,
@@ -215,7 +228,6 @@ router.put(
         theme_id,
         current_step,
 
-        // ✅ BOOLEAN AMAN
         show_groom_parent: Number(show_groom_parent) === 1 ? 1 : 0,
         show_bride_parent: Number(show_bride_parent) === 1 ? 1 : 0,
         same_date: Number(same_date) === 1 ? 1 : 0,
@@ -278,8 +290,13 @@ router.put(
 
       res.json({ message: "Undangan berhasil diupdate" });
     } catch (err) {
-      console.error("Gagal update:", err);
-      res.status(500).json({ error: "Gagal update undangan" });
+      console.error("❌ Gagal update undangan:", err);
+
+      res.status(500).json({
+        success: false,
+        error: "Gagal update undangan",
+        detail: err.message,
+      });
     }
   },
 );

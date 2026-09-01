@@ -382,13 +382,13 @@ router.get("/search", async (req, res) => {
     const invitationId = tokenRows[0].invitation_id;
 
     const [guests] = await db.query(
-      `SELECT id, name, code, category, is_checked_in 
+      `SELECT id, name, code, category, souvenir, is_checked_in 
        FROM guests
        WHERE invitation_id = ?
        AND name LIKE ?
        ORDER BY name ASC
        LIMIT 10`,
-      [invitationId, `%${name}%`]
+      [invitationId, `%${name}%`],
     );
 
     res.json({
@@ -459,10 +459,10 @@ router.get("/guest-detail", async (req, res) => {
     const invitationId = tokenRows[0].invitation_id;
 
     const [guestRows] = await db.query(
-      `SELECT id, name, code, category, is_checked_in
+      `SELECT id, name, code, category, souvenir, is_checked_in
        FROM guests
        WHERE code = ? AND invitation_id = ?`,
-      [guest_code, invitationId]
+      [guest_code, invitationId],
     );
 
     if (guestRows.length === 0) {

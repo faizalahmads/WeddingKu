@@ -494,48 +494,29 @@ const ManageInvite = () => {
   };
 
   const handleCreateInvitation = async () => {
-    const formData = new FormData();
-    formData.append("couple_name", form.couple_name);
-    formData.append("groom_name", form.groom_name);
-    formData.append("groom_img", form.groom_img);
-    formData.append("groom_parent", form.groom_parent);
-    formData.append("bride_name", form.bride_name);
-    formData.append("bride_img", form.bride_img);
-    formData.append("cover_mobile_img", form.cover_mobile_img);
-    formData.append("bride_parent", form.bride_parent);
-    formData.append("akad_date", form.akad_date);
-    formData.append("resepsi_date", form.resepsi_date);
-    formData.append("wedding_date", form.wedding_date);
-    formData.append("deskripsi_kasih", form.deskripsi_kasih);
-    formData.append("location", form.location);
-    formData.append('detail_location', form.detail_location);
-    formData.append("maps_link", form.maps_link);
-    formData.append("theme_id", form.theme_id);
-
-    images.forEach((img) => {
-      formData.append("images", img);
-    });
-
     try {
-      const res = await axios.post(
+      const response = await axios.post(
         `${import.meta.env.VITE_API_URL}/api/undangan`,
-        formData,
+        {
+          theme_id: selectedThemeId,
+        },
         {
           headers: {
-            "Content-Type": "multipart/form-data",
             Authorization: `Bearer ${localStorage.getItem("token")}`,
           },
         },
       );
 
-      const invitationId = res.data.id;
+      console.log("✅ Undangan baru:", response.data);
 
-      await uploadGallery(invitationId);
+      const newInvitationId = response.data.invitation_id;
 
-      navigate(`/admin/manage-invite/${invitationId}`);
-    } catch (err) {
-      console.error(err);
-      alert("Gagal membuat undangan");
+      navigate(`/admin/manage-invite/${newInvitationId}`);
+    } catch (error) {
+      console.error(
+        "❌ Gagal membuat undangan:",
+        error.response?.data || error,
+      );
     }
   };
 
