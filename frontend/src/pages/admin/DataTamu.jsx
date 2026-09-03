@@ -125,7 +125,7 @@ const DataTamu = () => {
     // =========================
     // Link undangan personal
     // =========================
-    const invitationUrl = `${import.meta.env.VITE_APP_URL}/${guest.bride_name}-${guest.groom_name}?to=${encodeURIComponent(
+    const invitationUrl = `${import.meta.env.VITE_APP_URL}/undangan/${guest.bride_name}-${guest.groom_name}?to=${encodeURIComponent(
       guest.name,
     )}/${guest.code}`;
 

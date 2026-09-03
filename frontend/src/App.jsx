@@ -110,7 +110,6 @@ function AppContent() {
         </Route>
 
         <Route path="/undangan/:slug" element={<Tema3 />} />
-        <Route path="/:slug" element={<Tema3 />} />
         <Route path="/admin/checkin" element={<Checkin />} />
 
         <Route path="/preview/:id" element={<PreviewTema />} />
