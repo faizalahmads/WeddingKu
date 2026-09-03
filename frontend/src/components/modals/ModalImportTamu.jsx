@@ -104,6 +104,8 @@ const ModalImportTamu = ({ show, handleClose, xlsxPreview, handleImportXLSX }) =
                             <th>Nama</th>
                             <th>Kategori</th>
                             <th>CPP/CPW</th>
+                            <th>Souvenir</th>
+                            <th>No HP</th>
                           </tr>
                         </thead>
                         <tbody>
@@ -113,13 +115,16 @@ const ModalImportTamu = ({ show, handleClose, xlsxPreview, handleImportXLSX }) =
                               <td>{row.name}</td>
                               <td>{row.category}</td>
                               <td>{row.type}</td>
+                              <td>{row.souvenir}</td>
+                              <td>{row.no_hp}</td>
                             </tr>
                           ))}
                         </tbody>
                       </table>
                       {xlsxPreview.length > 10 && (
                         <p className="text-muted small text-center">
-                          Menampilkan 10 data pertama dari {xlsxPreview.length} data.
+                          Menampilkan 10 data pertama dari {xlsxPreview.length}{" "}
+                          data.
                         </p>
                       )}
                     </div>

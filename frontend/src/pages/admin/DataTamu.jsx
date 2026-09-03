@@ -181,6 +181,8 @@ ${guest.bride_name || "-"} & ${guest.groom_name || "-"} `;
         category: data.kategori,
         type: data.cppCpw,
         admin_id: adminId,
+        souvenir: data.souvenir,
+        no_hp: data.nomorTelepon,
       }),
     })
       .then((res) => {
@@ -191,7 +193,9 @@ ${guest.bride_name || "-"} & ${guest.groom_name || "-"} `;
         Swal.fire({
           icon: "success",
           title: "Berhasil!",
-          text: isEdit ? "Data tamu berhasil diperbarui." : "Data tamu berhasil ditambahkan.",
+          text: isEdit
+            ? "Data tamu berhasil diperbarui."
+            : "Data tamu berhasil ditambahkan.",
           timer: 1500,
           showConfirmButton: false,
         });
@@ -295,10 +299,12 @@ ${guest.bride_name || "-"} & ${guest.groom_name || "-"} `;
     const workbook = new ExcelJS.Workbook();
     const worksheet = workbook.addWorksheet("Tamu");
 
-    worksheet.addRow(["name", "category", "type"]);
+    // 👇 tambahkan kolom souvenir & no_hp
+    worksheet.addRow(["name", "category", "type", "souvenir", "no_hp"]);
 
     const categoryOptions = ["VIP", "Reguler"];
     const typeOptions = ["CPP", "CPW"];
+    const souvenirOptions = ["Gelas", "Dompet", "Tidak Ada"];
 
     for (let i = 2; i <= 100; i++) {
       worksheet.getCell(`B${i}`).dataValidation = {
@@ -309,17 +315,37 @@ ${guest.bride_name || "-"} & ${guest.groom_name || "-"} `;
         errorTitle: "Kategori tidak valid",
         error: "Pilih dari daftar yang tersedia",
       };
+
       worksheet.getCell(`C${i}`).dataValidation = {
         type: "list",
         allowBlank: true,
         formulae: [`"${typeOptions.join(",")}"`],
       };
+
+      // 👇 validasi dropdown untuk souvenir
+      worksheet.getCell(`D${i}`).dataValidation = {
+        type: "list",
+        allowBlank: true,
+        formulae: [`"${souvenirOptions.join(",")}"`],
+      };
+
+      // 👇 no_hp dibiarkan bebas (teks), tapi paksa format text
+      // supaya nomor HP yang diawali angka 0 tidak hilang saat dibuka di Excel
+      worksheet.getCell(`E${i}`).numFmt = "@";
     }
+
+    // opsional tapi disarankan: atur lebar kolom biar rapi
+    worksheet.columns = [
+      { width: 25 }, // name
+      { width: 15 }, // category
+      { width: 10 }, // type
+      { width: 15 }, // souvenir
+      { width: 18 }, // no_hp
+    ];
 
     const buffer = await workbook.xlsx.writeBuffer();
     const blob = new Blob([buffer], {
-      type:
-        "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+      type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
     });
     const link = document.createElement("a");
     link.href = URL.createObjectURL(blob);

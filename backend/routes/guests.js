@@ -201,8 +201,8 @@ router.post("/guests", async (req, res) => {
                 code,
                 admin_id,
                 invitation_id,
-                souvenir || null,
-                no_hp || null,
+                souvenir,
+                no_hp,
               ],
             );
 
@@ -213,6 +213,8 @@ router.post("/guests", async (req, res) => {
         type,
         category,
         code,
+        souvenir,
+        no_hp,
       });
     } catch (err) {
       if (err.code === "ER_DUP_ENTRY") {
@@ -220,10 +222,19 @@ router.post("/guests", async (req, res) => {
         code = generateUniqueCode();
         const [resultRetry] = await db.query(
           `
-          INSERT INTO guests (name, type, category, code, admin_id, invitation_id)
-          VALUES (?, ?, ?, ?, ?, ?)
+          INSERT INTO guests (name, type, category, code, admin_id, invitation_id, souvenir, no_hp)
+          VALUES (?, ?, ?, ?, ?, ?, ?, ?)
           `,
-          [name, type, category, code, admin_id, invitation_id]
+          [
+            name,
+            type,
+            category,
+            code,
+            admin_id,
+            invitation_id,
+            souvenir || null,
+            no_hp || null,
+          ],
         );
 
         return res.status(201).json({
@@ -233,6 +244,8 @@ router.post("/guests", async (req, res) => {
           type,
           category,
           code,
+          souvenir,
+          no_hp,
         });
       }
 
