@@ -443,3 +443,30 @@ button {
   100% { transform: scale(1); opacity: 1; }
 }
 
+.guest-qr-card {
+  position: relative;
+
+  /* supaya hasil screenshot tidak mengikuti animasi */
+  opacity: 1 !important;
+  transform: none !important;
+
+  /* ukuran hasil download */
+  width: 420px;
+  min-height: 520px;
+
+  background: #ffffff;
+}
+
+.selected-action-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  padding: 12px 16px;
+
+  background: #f8f9fa;
+
+  border: 1px solid #dee2e6;
+
+  border-radius: 8px;
+}

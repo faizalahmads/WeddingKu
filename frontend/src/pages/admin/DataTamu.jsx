@@ -1,6 +1,10 @@
 import React, { useState, useEffect } from "react";
 import * as XLSX from "xlsx";
 import ExcelJS from "exceljs";
+import JSZip from "jszip";
+import html2canvas from "html2canvas";
+import { createRoot } from "react-dom/client";
+import GuestQRCard from "./components/GuestQRCard";
 import { Link, useNavigate } from "react-router-dom";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "../../assets/css/App.css";
@@ -25,6 +29,7 @@ const DataTamu = () => {
 
   const [showQR, setShowQR] = useState(false);
   const [selectedGuest, setSelectedGuest] = useState(null);
+  const [selectedGuests, setSelectedGuests] = useState([]);
   
   const [search, setSearch] = useState("");
     useEffect(() => {
@@ -55,6 +60,335 @@ const DataTamu = () => {
     item.name.toLowerCase().includes(search.toLowerCase())
   );
 
+  const handleSelectGuest = (id) => {
+    setSelectedGuests((prev) => {
+      if (prev.includes(id)) {
+        return prev.filter((guestId) => guestId !== id);
+      }
+
+      return [...prev, id];
+    });
+  };
+
+  const handleSelectAll = () => {
+    const currentPageIds = tamu.map((guest) => guest.id);
+
+    const allSelected = currentPageIds.every((id) =>
+      selectedGuests.includes(id),
+    );
+
+    if (allSelected) {
+      setSelectedGuests((prev) =>
+        prev.filter((id) => !currentPageIds.includes(id)),
+      );
+    } else {
+      setSelectedGuests((prev) => [...new Set([...prev, ...currentPageIds])]);
+    }
+  };
+
+
+  const handleDeleteSelected = async () => {
+    if (selectedGuests.length === 0) {
+      Swal.fire({
+        icon: "info",
+        title: "Belum Ada Tamu Dipilih",
+        text: "Silakan pilih tamu yang ingin dihapus.",
+      });
+      return;
+    }
+
+    const result = await Swal.fire({
+      title: "Hapus Tamu Terpilih?",
+      html: `
+      Sebanyak <b>${selectedGuests.length}</b> tamu akan dihapus.
+      <br><br>
+      Data yang sudah dihapus tidak dapat dikembalikan.
+    `,
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#d33",
+      cancelButtonColor: "#6c757d",
+      confirmButtonText: "Ya, Hapus",
+      cancelButtonText: "Batal",
+    });
+
+    if (!result.isConfirmed) return;
+
+    try {
+      Swal.fire({
+        title: "Menghapus...",
+        text: "Sedang menghapus tamu terpilih.",
+        allowOutsideClick: false,
+        didOpen: () => {
+          Swal.showLoading();
+        },
+      });
+
+      // Hapus satu per satu ke backend
+      await Promise.all(
+        selectedGuests.map(async (id) => {
+          const response = await fetch(
+            `${import.meta.env.VITE_API_URL}/api/guests/${id}`,
+            {
+              method: "DELETE",
+            },
+          );
+
+          if (!response.ok) {
+            throw new Error(`Gagal menghapus tamu ID ${id}`);
+          }
+        }),
+      );
+
+      // Hapus dari state frontend
+      setTamu((prev) =>
+        prev.filter((guest) => !selectedGuests.includes(guest.id)),
+      );
+
+      const deletedCount = selectedGuests.length;
+
+      // Kosongkan checkbox
+      setSelectedGuests([]);
+
+      Swal.fire({
+        icon: "success",
+        title: "Berhasil!",
+        text: `${deletedCount} tamu berhasil dihapus.`,
+        timer: 2000,
+        showConfirmButton: false,
+      });
+    } catch (error) {
+      console.error("Gagal menghapus tamu:", error);
+
+      Swal.fire({
+        icon: "error",
+        title: "Gagal!",
+        text: "Terjadi kesalahan saat menghapus tamu.",
+      });
+    }
+  };
+
+  const handleDownloadSelectedQR = async () => {
+    if (selectedGuests.length === 0) {
+      Swal.fire({
+        icon: "info",
+        title: "Belum Ada Tamu Dipilih",
+        text: "Silakan pilih tamu yang ingin didownload.",
+      });
+      return;
+    }
+
+    const selectedData = tamu.filter((guest) =>
+      selectedGuests.includes(guest.id),
+    );
+
+    const result = await Swal.fire({
+      title: "Download QR?",
+      html: `
+      Sebanyak <b>${selectedData.length}</b> Guest Entry Pass
+      akan dibuat menjadi file ZIP.
+    `,
+      icon: "question",
+      showCancelButton: true,
+      confirmButtonText: "Ya, Download",
+      cancelButtonText: "Batal",
+    });
+
+    if (!result.isConfirmed) return;
+
+    let container = null;
+
+    try {
+      Swal.fire({
+        title: "Membuat QR...",
+        html: "Menyiapkan Guest Entry Pass...",
+        allowOutsideClick: false,
+        didOpen: () => {
+          Swal.showLoading();
+        },
+      });
+
+      const zip = new JSZip();
+
+      // ===============================
+      // CONTAINER TERSEMBUNYI
+      // ===============================
+
+      container = document.createElement("div");
+
+      container.style.position = "fixed";
+      container.style.left = "-10000px";
+      container.style.top = "0";
+      container.style.width = "420px";
+      container.style.background = "#ffffff";
+
+      document.body.appendChild(container);
+
+      let successCount = 0;
+
+      // ===============================
+      // LOOP TAMU YANG DIPILIH
+      // ===============================
+
+      for (let i = 0; i < selectedData.length; i++) {
+        const guest = selectedData[i];
+
+        if (!guest.code) {
+          console.warn(`${guest.name} tidak memiliki kode QR`);
+          continue;
+        }
+
+        const guestContainer = document.createElement("div");
+
+        guestContainer.style.width = "420px";
+        guestContainer.style.background = "#ffffff";
+
+        container.appendChild(guestContainer);
+
+        // ===============================
+        // RENDER CARD
+        // ===============================
+
+        const root = createRoot(guestContainer);
+
+        root.render(
+          <GuestQRCard
+            guestName={guest.name}
+            guestRole={
+              guest.category === "VIP" ? "Executive VIP Invitation" : ""
+            }
+            qrValue={guest.code}
+          />,
+        );
+
+        // Tunggu React render
+        await new Promise((resolve) => setTimeout(resolve, 500));
+
+        // Tunggu semua image selesai
+        const images = guestContainer.querySelectorAll("img");
+
+        await Promise.all(
+          [...images].map(
+            (img) =>
+              new Promise((resolve) => {
+                if (img.complete) {
+                  resolve();
+                } else {
+                  img.onload = resolve;
+                  img.onerror = resolve;
+                }
+              }),
+          ),
+        );
+
+        // ===============================
+        // HTML → PNG
+        // ===============================
+
+        const canvas = await html2canvas(guestContainer, {
+          scale: 3,
+          useCORS: true,
+          backgroundColor: "#ffffff",
+          width: 420,
+        });
+
+        const blob = await new Promise((resolve) => {
+          canvas.toBlob(resolve, "image/png");
+        });
+
+        if (blob) {
+          const cleanName = (guest.name || "Tamu")
+            .replace(/[<>:"/\\|?*]/g, "")
+            .replace(/\s+/g, "-")
+            .trim();
+
+          const cleanCode = guest.code.replace(/[<>:"/\\|?*]/g, "").trim();
+
+          const fileName =
+            `${String(successCount + 1).padStart(2, "0")}` +
+            `-${cleanName}-${cleanCode}.png`;
+
+          zip.file(fileName, blob);
+
+          successCount++;
+        }
+
+        root.unmount();
+        guestContainer.remove();
+
+        Swal.update({
+          html: `
+          Memproses
+          <b>${i + 1}</b>
+          dari
+          <b>${selectedData.length}</b>
+          Guest Entry Pass...
+        `,
+        });
+      }
+
+      // ===============================
+      // HAPUS CONTAINER
+      // ===============================
+
+      container.remove();
+      container = null;
+
+      // ===============================
+      // GENERATE ZIP
+      // ===============================
+
+      const zipBlob = await zip.generateAsync({
+        type: "blob",
+        compression: "DEFLATE",
+        compressionOptions: {
+          level: 6,
+        },
+      });
+
+      // ===============================
+      // DOWNLOAD
+      // ===============================
+
+      const url = URL.createObjectURL(zipBlob);
+
+      const link = document.createElement("a");
+
+      link.href = url;
+      link.download = "Guest-Entry-Pass-Terpilih.zip";
+
+      document.body.appendChild(link);
+
+      link.click();
+
+      document.body.removeChild(link);
+
+      URL.revokeObjectURL(url);
+
+      Swal.fire({
+        icon: "success",
+        title: "Berhasil!",
+        html: `
+        <b>${successCount}</b>
+        Guest Entry Pass berhasil didownload.
+      `,
+        timer: 2000,
+        showConfirmButton: false,
+      });
+    } catch (error) {
+      console.error("Gagal membuat ZIP:", error);
+
+      if (container) {
+        container.remove();
+      }
+
+      Swal.fire({
+        icon: "error",
+        title: "Gagal!",
+        text: "Terjadi kesalahan saat membuat Guest Entry Pass.",
+      });
+    }
+  };
   
   // 🧹 Hapus tamu
   const handleDeleteClick = (id) => {
@@ -425,11 +759,48 @@ ${guest.bride_name || "-"} & ${guest.groom_name || "-"} `;
             </div>
           </div>
 
+          {selectedGuests.length > 0 && (
+            <div className="selected-action-bar mb-3">
+              <div>
+                <strong>{selectedGuests.length}</strong> tamu dipilih
+              </div>
+
+              <div className="d-flex gap-2">
+                <button
+                  className="btn btn-danger"
+                  onClick={handleDeleteSelected}
+                >
+                  <i className="bi bi-trash me-1"></i>
+                  Hapus
+                </button>
+
+                <button
+                  className="btn btn-dark"
+                  onClick={handleDownloadSelectedQR}
+                >
+                  <i className="bi bi-qr-code me-1"></i>
+                  Download QR
+                </button>
+              </div>
+            </div>
+          )}
+
           {/* 📊 Tabel Data Tamu */}
           <div className="table-responsive shadow-sm">
             <table className="table align-middle table-bordered text-center fixed-table">
               <thead className="table-light">
                 <tr>
+                  <th style={{ width: "50px" }}>
+                    <input
+                      type="checkbox"
+                      checked={
+                        tamu.length > 0 &&
+                        tamu.every((guest) => selectedGuests.includes(guest.id))
+                      }
+                      onChange={handleSelectAll}
+                    />
+                  </th>
+
                   <th style={{ width: "7%" }}>No</th>
                   <th style={{ width: "38%" }}>Nama Tamu</th>
                   <th style={{ width: "20%" }}>Kategori Tamu</th>
@@ -441,6 +812,14 @@ ${guest.bride_name || "-"} & ${guest.groom_name || "-"} `;
                 {currentTamu.length > 0 ? (
                   currentTamu.map((item, index) => (
                     <tr key={item.id}>
+                      <td>
+                        <input
+                          type="checkbox"
+                          checked={selectedGuests.includes(item.id)}
+                          onChange={() => handleSelectGuest(item.id)}
+                        />
+                      </td>
+
                       <td data-label="No">{indexOfFirst + index + 1}</td>
                       <td data-label="Nama Tamu" className="text-truncate">
                         {item.name}
@@ -524,26 +903,6 @@ ${guest.bride_name || "-"} & ${guest.groom_name || "-"} `;
               onPageChange={handlePageChange}
             />
           </div>
-
-          {/* 📌 Modal Tambah Tamu */}
-          <ModalTambahTamu
-            show={showModal}
-            handleClose={() => {
-              setShowModal(false);
-              setIsEdit(false);
-              setDataEdit(null);
-            }}
-            handleSubmit={handleTambahTamu}
-            isEdit={isEdit}
-            dataEdit={dataEdit}
-          />
-
-          <ModalImportTamu
-            show={showXlsxModal}
-            handleClose={() => setShowXlsxModal(false)}
-            xlsxPreview={xlsxPreview}
-            handleImportXLSX={handleConfirmImport}
-          />
         </div>
       </AdminLayout>
 
