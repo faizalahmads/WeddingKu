@@ -11,6 +11,8 @@ import UrlAbu from "../../assets/icons/url-abu.svg";
 const Checkin = () => {
   const [showGenerateModal, setShowGenerateModal] = useState(false);
   const [showDeactivateModal, setShowDeactivateModal] = useState(false);
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [showDeleteExpiredModal, setShowDeleteExpiredModal] = useState(false);
   const [selectedLinkId, setSelectedLinkId] = useState(null);
   const [links, setLinks] = useState([]);
   const invitationId = 1;
@@ -78,6 +80,43 @@ const Checkin = () => {
     }
   };
 
+  const deleteExpiredLinks = async () => {
+    try {
+      await axios.delete(
+        `${import.meta.env.VITE_API_URL}/api/checkin/links-expired/${invitationId}`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        },
+      );
+
+      await fetchLinks();
+    } catch (err) {
+      console.error("Gagal menghapus link expired:", err);
+      alert("Gagal menghapus link expired");
+    }
+  };
+
+  const deleteHistory = async (id) => {
+    try {
+      await axios.delete(
+        `${import.meta.env.VITE_API_URL}/api/checkin/links/${id}`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        },
+      );
+
+      // refresh daftar history
+      await fetchLinks();
+    } catch (err) {
+      console.error("Gagal menghapus history check-in:", err);
+      alert("Gagal menghapus history check-in");
+    }
+  };
+
   return (
     <div className="d-flex flex-column min-vh-100 bg-light">
       <AdminLayout role="admin">
@@ -88,6 +127,13 @@ const Checkin = () => {
               onClick={() => setShowGenerateModal(true)}
             >
               Generate Link <img src={Url} alt="url" className="ms-2" />
+            </button>
+
+            <button
+              className="btn btn-outline-danger px-4 py-2 ms-2 fw-semibold"
+              onClick={() => setShowDeleteExpiredModal(true)}
+            >
+              Hapus Semua Expired
             </button>
           </div>
 
@@ -129,66 +175,67 @@ const Checkin = () => {
                     </p>
 
                     {/* Tombol hanya muncul jika benar-benar aktif */}
-                    {isActive && (
-                      <div className="d-flex gap-3">
-                        {/* SALIN LINK */}
-                        <button
-                          className="btn btn-link text-primary fw-semibold p-0"
-                          onClick={() => {
-                            const textArea = document.createElement("textarea");
-                            textArea.value = item.link;
-                            document.body.appendChild(textArea);
-                            textArea.select();
-                            document.execCommand("copy");
-                            document.body.removeChild(textArea);
-                            alert("Link berhasil disalin!");
-                          }}
-                        >
-                          Salin Link
-                        </button>
+                    <div className="d-flex align-items-center gap-3">
+                      {isActive && (
+                        <>
+                          {/* SALIN LINK */}
+                          <button
+                            className="btn btn-link text-primary fw-semibold p-0"
+                            onClick={() => {
+                              navigator.clipboard.writeText(item.link);
+                              alert("Link berhasil disalin!");
+                            }}
+                          >
+                            Salin Link
+                          </button>
 
-                        {/* 🔥 SALIN TOKEN */}
-                        <button
-                          className="btn btn-link text-success fw-semibold p-0"
-                          onClick={() => {
-                            try {
-                              const url = new URL(item.link);
-                              const token = url.searchParams.get("token");
+                          {/* SALIN TOKEN */}
+                          <button
+                            className="btn btn-link text-success fw-semibold p-0"
+                            onClick={() => {
+                              try {
+                                const url = new URL(item.link);
+                                const linkToken = url.searchParams.get("token");
 
-                              if (!token) {
-                                alert("Token tidak ditemukan");
-                                return;
+                                if (!linkToken) {
+                                  alert("Token tidak ditemukan");
+                                  return;
+                                }
+
+                                navigator.clipboard.writeText(linkToken);
+                                alert("Token berhasil disalin!");
+                              } catch (err) {
+                                alert("Gagal mengambil token");
                               }
+                            }}
+                          >
+                            Salin Token
+                          </button>
 
-                              const textArea =
-                                document.createElement("textarea");
-                              textArea.value = token;
-                              document.body.appendChild(textArea);
-                              textArea.select();
-                              document.execCommand("copy");
-                              document.body.removeChild(textArea);
+                          {/* NONAKTIFKAN */}
+                          <button
+                            className="btn btn-link text-danger fw-semibold p-0"
+                            onClick={() => {
+                              setSelectedLinkId(item.id);
+                              setShowDeactivateModal(true);
+                            }}
+                          >
+                            Nonaktifkan
+                          </button>
+                        </>
+                      )}
 
-                              alert("Token berhasil disalin!");
-                            } catch (err) {
-                              alert("Gagal mengambil token");
-                            }
-                          }}
-                        >
-                          Salin Token
-                        </button>
-
-                        {/* NONAKTIFKAN */}
-                        <button
-                          className="btn btn-link text-danger fw-semibold p-0"
-                          onClick={() => {
-                            setSelectedLinkId(item.id);
-                            setShowDeactivateModal(true);
-                          }}
-                        >
-                          Nonaktifkan
-                        </button>
-                      </div>
-                    )}
+                      {/* HAPUS */}
+                      <button
+                        className="btn btn-link text-danger fw-semibold p-0"
+                        onClick={() => {
+                          setSelectedLinkId(item.id);
+                          setShowDeleteModal(true);
+                        }}
+                      >
+                        Hapus
+                      </button>
+                    </div>
                   </div>
                 </div>
               );
@@ -222,6 +269,38 @@ const Checkin = () => {
             onClose={() => setShowDeactivateModal(false)}
           />
         </div>
+
+        <ModalConfirm
+          show={showDeleteModal}
+          title="Hapus History Check-in"
+          message="Apakah Anda yakin ingin menghapus history link check-in ini? Data yang sudah dihapus tidak dapat dikembalikan."
+          confirmText="Hapus"
+          showExpiry={false}
+          onConfirm={async () => {
+            setShowDeleteModal(false);
+
+            await deleteHistory(selectedLinkId);
+
+            setSelectedLinkId(null);
+          }}
+          onClose={() => {
+            setShowDeleteModal(false);
+            setSelectedLinkId(null);
+          }}
+        />
+
+        <ModalConfirm
+          show={showDeleteExpiredModal}
+          title="Hapus Semua Link Expired"
+          message="Apakah Anda yakin ingin menghapus semua link check-in yang sudah expired? Data yang dihapus tidak dapat dikembalikan."
+          confirmText="Hapus Semua"
+          showExpiry={false}
+          onConfirm={async () => {
+            setShowDeleteExpiredModal(false);
+            await deleteExpiredLinks();
+          }}
+          onClose={() => setShowDeleteExpiredModal(false)}
+        />
       </AdminLayout>
 
       <Footer />

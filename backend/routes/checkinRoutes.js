@@ -129,6 +129,96 @@ router.put("/deactivate/:id", verifyToken, async (req, res) => {
   }
 });
 
+router.delete("/links/:id", verifyToken, async (req, res) => {
+  try {
+    const { id } = req.params;
+    const adminId = req.user.id;
+
+    // Pastikan link check-in memang milik admin yang login
+    const [rows] = await db.query(
+      `SELECT ct.id
+       FROM checkin_tokens ct
+       JOIN invitations i ON i.id = ct.invitation_id
+       WHERE ct.id = ?
+       AND i.admin_id = ?`,
+      [id, adminId],
+    );
+
+    if (rows.length === 0) {
+      return res.status(404).json({
+        success: false,
+        message: "History check-in tidak ditemukan",
+      });
+    }
+
+    // Hapus history
+    await db.query(
+      `DELETE FROM checkin_tokens
+       WHERE id = ?`,
+      [id],
+    );
+
+    res.json({
+      success: true,
+      message: "History check-in berhasil dihapus",
+    });
+  } catch (err) {
+    console.error("Delete history check-in error:", err);
+
+    res.status(500).json({
+      success: false,
+      message: "Server error",
+    });
+  }
+});
+
+router.delete(
+  "/links-expired/:invitation_id",
+  verifyToken,
+  async (req, res) => {
+    try {
+      const { invitation_id } = req.params;
+      const adminId = req.user.id;
+
+      // pastikan invitation milik admin
+      const [invitation] = await db.query(
+        `SELECT id
+         FROM invitations
+         WHERE id = ?
+         AND admin_id = ?`,
+        [invitation_id, adminId],
+      );
+
+      if (invitation.length === 0) {
+        return res.status(403).json({
+          success: false,
+          message: "Akses ditolak",
+        });
+      }
+
+      const [result] = await db.query(
+        `DELETE FROM checkin_tokens
+         WHERE invitation_id = ?
+         AND expired_at < NOW()`,
+        [invitation_id],
+      );
+
+      res.json({
+        success: true,
+        message: "Link expired berhasil dihapus",
+        deleted: result.affectedRows,
+      });
+    } catch (err) {
+      console.error("Delete expired links error:", err);
+
+      res.status(500).json({
+        success: false,
+        message: "Server error",
+      });
+    }
+  },
+);
+
 // ========================
 // GET: Link FE
 // ========================

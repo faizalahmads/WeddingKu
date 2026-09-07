@@ -9,6 +9,8 @@ import AyatSection from "../tema1/components/AyatSectionTema1.jsx";
 import InfoCation from "../tema3/components/InfoCatinTema3.jsx";
 import SaveTheDate from "../tema3/components/DateCatinTema3.jsx";
 import DetailCatin from "../tema3/components/DetailCatinTema3.jsx";
+import DetailAcara from "../tema3/components/DetailAcaraTema3.jsx";
+import WeddingGift from "../tema3/components/WeddingGiftTema3.jsx";
 
 import { useSectionScrollLock } from "../tema1/hooks/useSectionScrollLock";
 import "../../../../assets/css/PreviewTema3.css";
@@ -18,9 +20,6 @@ import MusicPlayer from "../tema1/components/MusicPlayer.jsx";
 
 import QRModal from "../tema1/components/QRModal.jsx";
 import BgMusic from "../../../../assets/audio/Thank God I Found You  Cover by BuDaKhelxKat (Lyrics).mp3";
-
-
-
 
 const Tema3 = () => {
   const [invite, setInvite] = useState(null);
@@ -106,6 +105,10 @@ const Tema3 = () => {
         {open && <DetailCatin />}
 
         {open && <SaveTheDate />}
+
+        {open && <DetailAcara />}
+
+        {open && <WeddingGift invite={invite} />}
       </div>
 
       {open && <QRButton onClick={() => setShowQR(true)} />}
