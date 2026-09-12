@@ -117,6 +117,57 @@ const Checkin = () => {
     }
   };
 
+  const copyToClipboard = async (text, successMessage) => {
+    if (!text) {
+      alert("Tidak ada data yang bisa disalin");
+      return;
+    }
+
+    try {
+      // Clipboard API modern
+      if (navigator.clipboard && window.isSecureContext) {
+        await navigator.clipboard.writeText(text);
+      } else {
+        // Fallback untuk browser yang tidak mendukung clipboard API
+        const textarea = document.createElement("textarea");
+
+        textarea.value = text;
+        textarea.style.position = "fixed";
+        textarea.style.left = "-999999px";
+        textarea.style.top = "-999999px";
+
+        document.body.appendChild(textarea);
+
+        textarea.focus();
+        textarea.select();
+
+        const successful = document.execCommand("copy");
+
+        document.body.removeChild(textarea);
+
+        if (!successful) {
+          throw new Error("Copy gagal");
+        }
+      }
+
+      alert(successMessage);
+    } catch (err) {
+      console.error("Gagal copy:", err);
+      alert("Gagal menyalin. Silakan copy secara manual.");
+    }
+  };
+
+  const getTokenFromLink = (link) => {
+    try {
+      const url = new URL(link, window.location.origin);
+
+      return url.searchParams.get("token") || "-";
+    } catch (err) {
+      console.error("Gagal membaca token:", err);
+      return "-";
+    }
+  };
+
   return (
     <div className="d-flex flex-column min-vh-100 bg-light">
       <AdminLayout role="admin">
@@ -154,8 +205,7 @@ const Checkin = () => {
                     </div>
 
                     <p className="mt-2 text-muted small">
-                      Token:{" "}
-                      <b>{new URL(item.link).searchParams.get("token")}</b>
+                      Token: <b>{getTokenFromLink(item.link)}</b>
                     </p>
 
                     {/* Badge */}
@@ -180,33 +230,34 @@ const Checkin = () => {
                         <>
                           {/* SALIN LINK */}
                           <button
+                            type="button"
                             className="btn btn-link text-primary fw-semibold p-0"
-                            onClick={() => {
-                              navigator.clipboard.writeText(item.link);
-                              alert("Link berhasil disalin!");
-                            }}
+                            onClick={() =>
+                              copyToClipboard(
+                                item.link,
+                                "Link berhasil disalin!",
+                              )
+                            }
                           >
                             Salin Link
                           </button>
 
                           {/* SALIN TOKEN */}
                           <button
+                            type="button"
                             className="btn btn-link text-success fw-semibold p-0"
                             onClick={() => {
-                              try {
-                                const url = new URL(item.link);
-                                const linkToken = url.searchParams.get("token");
+                              const linkToken = getTokenFromLink(item.link);
 
-                                if (!linkToken) {
-                                  alert("Token tidak ditemukan");
-                                  return;
-                                }
-
-                                navigator.clipboard.writeText(linkToken);
-                                alert("Token berhasil disalin!");
-                              } catch (err) {
-                                alert("Gagal mengambil token");
+                              if (!linkToken || linkToken === "-") {
+                                alert("Token tidak ditemukan");
+                                return;
                               }
+
+                              copyToClipboard(
+                                linkToken,
+                                "Token berhasil disalin!",
+                              );
                             }}
                           >
                             Salin Token

@@ -317,6 +317,54 @@
   overflow: hidden;
 }
 
+.section9 {
+  position: relative;
+  width: 100%;
+  min-height: 100dvh;
+
+  background-image: url('../../assets/images/tema3/bg-merah.png');
+  background-size: 100% 100%;
+  background-position: center;
+  background-repeat: no-repeat;
+
+  display: flex;
+  justify-content: center;
+
+  overflow: hidden;
+}
+
+.section10 {
+  position: relative;
+  width: 100%;
+  min-height: 100dvh;
+
+  background-image: url('../../assets/images/tema3/bg-hijau.png');
+  background-size: 100% 100%;
+  background-position: center;
+  background-repeat: no-repeat;
+
+  display: flex;
+  justify-content: center;
+
+  overflow: hidden;
+}
+
+.section11 {
+  position: relative;
+  width: 100%;
+  min-height: 100dvh;
+
+  background-image: url('../../assets/images/tema3/hordeng.png');
+  background-size: 100% 100%;
+  background-position: center;
+  background-repeat: no-repeat;
+
+  display: flex;
+  justify-content: center;
+
+  overflow: hidden;
+}
+
 .judul {
   margin-bottom: 4%;
   text-align: center;
@@ -333,7 +381,7 @@
 .judul .nama-pengantin {
   color: #FFF6E7;
   font-family: Marck Script;
-  font-size: 2.5em;
+  font-size: 3em;
   font-weight: 400;
 }
 
@@ -623,7 +671,6 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 4px;
 }
 
 .judul-text-wrapper .t-judul {
@@ -635,21 +682,21 @@
 .judul-text-wrapper .t-dan {
   font-family: Marck Script;
   margin-top: -5%;
-  font-size: 1.5em;
+  font-size: 1.8em;
   color: #590000;
 }
 
 .judul-text-wrapper .t-nama-cpw {
   font-family: Marck Script;
   margin-top: 5%;
-  font-size: 1.5em;
+  font-size: 1.8em;
   color: #590000;
 }
 
 .judul-text-wrapper .t-nama-cpp {
   font-family: Marck Script;
   margin-top: -5%;
-  font-size: 1.5em;
+  font-size: 1.8em;
   color: #590000;
 }
 
@@ -657,11 +704,12 @@
   position: relative;
   width: 230px;
   Perspective: 1000px;
+  margin-top: 20%;
 }
 
 .tanggal-text-wrapper {
   position: absolute;
-  top: 53%;
+  top: 59%;
   left: 58%;
   transform: translate(-50%, -50%);
   z-index: 2;
@@ -703,11 +751,16 @@
   position: relative;
   width: 180px;
   perspective: 1000px;
+  margin-top: 20%;
+}
+
+.qr-code {
+  margin-top: 24%;
 }
 
 .qr-wrapper {
   position: absolute;
-  top: 52%;
+  top: 59%;
   left: 78.5%;
   transform: translate(-50%, -50%);
   z-index: 2;
@@ -1768,7 +1821,7 @@ span .deskripsi-ayat {
   width: min(70%, 520px);
   height: auto;
   margin-top: 40px;
-  margin-bottom: 35px;
+  margin-bottom: 15px;
 }
 
 
@@ -1814,7 +1867,6 @@ span .deskripsi-ayat {
 
 .section5-groom {
   grid-template-columns: 60% 40%;
-  margin-top: 20px;
 }
 
 
@@ -1910,7 +1962,7 @@ span .deskripsi-ayat {
   font-size: 50px;
   font-weight: 400;
   line-height: 0.7;
-  margin-top: 20px;
+  margin-top: 10px;
   text-align: center;
 }
 
@@ -1931,7 +1983,7 @@ span .deskripsi-ayat {
 
 .section5-flower-left {
   left: -30px;
-  bottom: 20px;
+  bottom: 60px;
   width: 180px;
 }
 
@@ -1939,7 +1991,7 @@ span .deskripsi-ayat {
 /* BUNGA KANAN */
 .section5-flower-right {
   right: -44px;
-  bottom: -18px;
+  bottom: -20px;
   width: 180px;
 }
 
@@ -1962,14 +2014,10 @@ span .deskripsi-ayat {
 
 .save-date-flower {
   position: absolute;
-
-  width: 43.16%;
-
-  left: 66.96%;
-  top: 4.17%;
-
+  width: 54%;
+  left: 60%;
+  top: 2%;
   z-index: 5;
-
   object-fit: contain;
 }
 
@@ -1983,7 +2031,7 @@ span .deskripsi-ayat {
   top: 9.82%;
   color: white;
   font-family: "Slight", cursive;
-  font-size: 50px;
+  font-size: 3.5em;
   font-weight: 400;
   line-height: 1;
   transform: rotate(-13deg);
@@ -2000,10 +2048,10 @@ span .deskripsi-ayat {
 .the-text {
   position: absolute;
   left: 22%;
-  top: 14.65%;
+  top: 17%;
   color: white;
   font-family: "Slight", cursive;
-  font-size: 25px;
+  font-size: 1.8em;
   line-height: 1;
   transform: rotate(-20deg);
   transform-origin: top left;
@@ -2019,10 +2067,10 @@ span .deskripsi-ayat {
 .date-text {
   position: absolute;
   left: 5%;
-  top: 23%;
+  top: 27%;
   color: white;
   font-family: "Slight", cursive;
-  font-size: 50px;
+  font-size: 3.5em;
   line-height: 1;
   transform: rotate(-22deg);
   transform-origin: top left;
@@ -2038,11 +2086,28 @@ span .deskripsi-ayat {
 .month-text {
   position: absolute;
   left: 26.37%;
-  top: 39.13%;
+  top: 38%;
   color: white;
   font-family: "Quattrocento", serif;
   font-size: 2rem;
   font-weight: 700;
+  line-height: 1;
+  z-index: 5;
+  white-space: nowrap;
+}
+
+/* =====================================================
+   YEAR
+===================================================== */
+
+.year-text {
+  position: absolute;
+  left: 39%;
+  top: 53.5%;
+  color: white;
+  font-family: "Quattrocento";
+  font-size: 2.5rem;
+  font-weight: 400;
   line-height: 1;
   z-index: 5;
   white-space: nowrap;
@@ -2144,7 +2209,7 @@ span .deskripsi-ayat {
   width: 100%;
   color: white;
   font-family: "Quattrocento", serif;
-  font-size: 1rem;
+  font-size: 1em;
   font-weight: 600;
   line-height: 1.1;
   white-space: nowrap;
@@ -2162,24 +2227,6 @@ span .deskripsi-ayat {
   font-size: 4rem;
   font-weight: 700;
   line-height: 1;
-  white-space: nowrap;
-}
-
-
-/* =====================================================
-   YEAR
-===================================================== */
-
-.year-text {
-  position: absolute;
-  left: 39%;
-  top: 52.95%;
-  color: white;
-  font-family: "Quattrocento";
-  font-size: 2.5rem;
-  font-weight: 400;
-  line-height: 1;
-  z-index: 5;
   white-space: nowrap;
 }
 
@@ -2548,7 +2595,7 @@ span .deskripsi-ayat {
   margin-right: 50px;
   color: #ffffff;
   font-family: "SloopScriptPro";
-  font-size: 35px;
+  font-size: 3em;
   white-space: nowrap;
 }
 
@@ -2675,7 +2722,6 @@ span .deskripsi-ayat {
   position: relative;
   width: 100%;
   margin-top: 16px;
-  margin-bottom: 40px;
   z-index: 4;
 }
 
@@ -2694,11 +2740,8 @@ span .deskripsi-ayat {
 
 .gift-contact-wrapper {
   position: relative;
-
   width: 100%;
-
-  margin: 0 auto;
-
+  margin: 0 0 20px 0;
   z-index: 4;
 }
 
@@ -2810,6 +2853,11 @@ span .deskripsi-ayat {
   margin-left: -40px;
 }
 
+.gift-contact-icon {
+  font-size: 1.5rem;
+  margin-bottom: 8px;
+}
+
 /* =====================================================
    FLOWER
 ===================================================== */
@@ -2826,7 +2874,7 @@ span .deskripsi-ayat {
 
 .gift-flower-top-left {
   width: 200px;
-  top: 70px;
+  top: 30px;
   left: -53px;
 }
 
@@ -2837,7 +2885,7 @@ span .deskripsi-ayat {
 
 .gift-flower-top-right {
   width: 250px;
-  top: 70px;
+  top: 20px;
   right: -60px;
   transform: scaleX(-1);
 }
@@ -2962,4 +3010,844 @@ span .deskripsi-ayat {
     width: 205px;
   }
 
+}
+
+
+/* ========================================
+   LOVE STORY TEMA 3
+======================================== */
+
+.love-story-section {
+  width: 100%;
+  min-height: 100vh;
+
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+
+  color: #fff;
+
+  padding-top: 70px;
+  padding-bottom: 160px;
+}
+
+/* ========================================
+   TOP VISUAL
+======================================== */
+
+.love-story-visual {
+  width: 100%;
+  max-width: 430px;
+  height: 330px;
+}
+
+/* ========================================
+   POLAROID
+======================================== */
+
+.story-polaroid {
+  position: absolute;
+  background: #f6f1e9;
+  padding: 8px 8px 42px;
+  box-shadow:
+    0 8px 18px rgba(0, 0, 0, 0.16);
+  z-index: 2;
+}
+
+.story-polaroid img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+/* kiri */
+
+.story-polaroid-left {
+  width: 150px;
+  height: 195px;
+  left: 72px;
+  top: 65px;
+  transform: rotate(-10deg);
+}
+
+/* kanan */
+
+.story-polaroid-right {
+  width: 150px;
+  height: 195px;
+  right: 72px;
+  top: 65px;
+  transform: rotate(9deg);
+  z-index: 3;
+}
+
+/* ========================================
+   FLOWER
+======================================== */
+
+.story-flower {
+  position: absolute;
+  width: 180px;
+  height: auto;
+  right: -7px;
+  top: -5px;
+  z-index: 5;
+  pointer-events: none;
+  transform: scaleX(-1);
+}
+
+/* ========================================
+   WAX SEAL
+======================================== */
+
+.story-wax-seal {
+  position: absolute;
+  width: 75px;
+  height: 75px;
+  object-fit: contain;
+  left: 45px;
+  bottom: 30px;
+  z-index: 6;
+}
+
+/* ========================================
+   LOVE STORY TITLE
+======================================== */
+
+.love-story-heading {
+  margin-top: 5px;
+  margin-bottom: 40px;
+}
+
+.love-story-heading h2 {
+  font-family:"SloopScriptPro";
+  font-size: 75px;
+  line-height: 0.9;
+  color: #fff;
+  text-shadow:
+    0 2px 4px rgba(0, 0, 0, 0.08);
+}
+
+/* ========================================
+   CONTENT
+======================================== */
+
+.love-story-content {
+  max-width: 430px;
+  padding-left: 28px;
+  padding-right: 28px;
+  padding-bottom: 40px;
+}
+
+/* ========================================
+   TIMELINE
+======================================== */
+
+.love-story-timeline {
+  padding-left: 42px;
+}
+
+/* garis vertikal */
+
+.love-story-timeline::before {
+  content: "";
+  position: absolute;
+  left: 9px;
+  top: 20px;
+  bottom: 30px;
+  width: 2px;
+  background: rgba(239, 231, 211, 0.7);
+}
+
+/* ========================================
+   STORY ITEM
+======================================== */
+
+.story-item {
+  padding-bottom: 40px;
+}
+
+.story-item:last-child {
+  padding-bottom: 0;
+}
+
+/* ========================================
+   HEART
+======================================== */
+
+.story-heart {
+  position: absolute;
+  left: -49px;
+  top: 9px;
+  width: 34px;
+  height: 34px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: #eee5d1;
+  font-size: 32px;
+  z-index: 3;
+}
+
+/* ========================================
+   TEXT
+======================================== */
+
+.story-text h3 {
+  margin: 0 0 10px 0;
+  font-family:"SloopScriptPro";
+  font-size: 30px;
+  line-height: 1;
+  color: #fff;
+}
+
+.story-text p {
+  font-family:"Quattrocento";
+  font-size: 14px;
+  line-height: 1.4;
+  text-align: justify;
+  color: rgba(255, 255, 255, 0.97);
+}
+
+/* ========================================
+   TABLET
+======================================== */
+
+@media (min-width: 768px) {
+  .love-story-section {
+    padding-top: 90px;
+    padding-bottom: 180px;
+  }
+
+  .love-story-visual {
+    max-width: 500px;
+  }
+
+  .story-polaroid-left {
+    left: 80px;
+    top: 95px;
+  }
+
+  .story-polaroid-right {
+    right: 100px;
+    top: 95px;
+  }
+
+  .story-flower {
+    width: 180px;
+    top: 40px;
+  }
+
+  .story-wax-seal {
+    left: 60px;
+    bottom: -5px;
+  }
+
+  .love-story-content {
+    max-width: 500px;
+  }
+}
+
+/* ========================================
+   SMALL MOBILE
+======================================== */
+
+@media (max-width: 390px) {
+  .love-story-section {
+    padding-top: 55px;
+    padding-bottom: 120px;
+  }
+
+  .love-story-visual {
+    height: 290px;
+  }
+
+  .story-polaroid-left {
+    width: 125px;
+    height: 170px;
+    left: 80px;
+  }
+
+  .story-polaroid-right {
+    width: 125px;
+    height: 170px;
+    right: 80px;
+  }
+
+  .story-flower {
+    width: 155px;
+  }
+
+  .story-wax-seal {
+    width: 60px;
+    height: 60px;
+    left: 55px;
+  }
+
+  .love-story-heading {
+    margin-bottom: 45px;
+  }
+
+  .love-story-heading h2 {
+    font-size: 55px;
+  }
+
+  .love-story-content {
+    padding-left: 22px;
+    padding-right: 22px;
+  }
+
+  .story-text h3 {
+    font-size: 27px;
+  }
+
+  .story-text p {
+    font-size: 13px;
+  }
+}
+
+
+/* =========================================
+   GALLERY TEMA 3
+========================================= */
+
+.gallery-tema3 {
+  width: 100%;
+  min-height: 100vh;
+
+  padding: 70px 0 150px;
+
+  background-size: cover;
+  background-position: center;
+  background-repeat: repeat-y;
+
+  overflow: hidden;
+}
+
+/* PENTING:
+   semua isi dibuat center
+*/
+.gallery-container {
+  width: 100%;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+
+/* =========================================
+   TITLE
+========================================= */
+
+.gallery-title-wrapper {
+  width: 100%;
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  z-index: 10;
+}
+
+.gallery-title {
+  margin: 0;
+  font-family:
+    "SloopScriptPro";
+  font-size: 4.5rem;
+  font-weight: 400;
+  line-height: 0.8;
+  color: #fff;
+  text-align: center;
+}
+
+
+/* =========================================
+   COLLAGE
+========================================= */
+
+.gallery-collage {
+  width: 70%;
+  max-width: 430px;
+  position: relative;
+  z-index: 2;
+
+  margin-left: auto;
+  margin-right: auto;
+}
+
+
+/* =========================================
+   SATU BLOCK GALLERY
+========================================= */
+
+.gallery-block {
+  width: 100%;
+
+  display: grid;
+
+  aspect-ratio: 1706 / 1175;
+
+  gap: 3px;
+
+  margin-bottom: 3px;
+
+  overflow: hidden;
+}
+
+
+/* kecil kiri - besar kanan */
+
+.gallery-block-normal {
+  grid-template-columns:
+    minmax(0, 1fr)
+    minmax(0, 2.016fr);
+}
+
+
+/* besar kiri - kecil kanan */
+
+.gallery-block-reverse {
+  grid-template-columns:
+    minmax(0, 2.016fr)
+    minmax(0, 1fr);
+}
+
+
+/* =========================================
+   2 FOTO KECIL
+========================================= */
+
+.gallery-small-stack {
+  width: 100%;
+  height: 100%;
+
+  display: grid;
+
+  grid-template-rows:
+    minmax(0, 1fr)
+    minmax(0, 1fr);
+
+  gap: 3px;
+
+  overflow: hidden;
+}
+
+
+/* =========================================
+   PHOTO
+========================================= */
+
+.gallery-photo {
+  width: 100%;
+  height: 100%;
+
+  min-width: 0;
+  min-height: 0;
+
+  overflow: hidden;
+
+  position: relative;
+}
+
+.gallery-photo img {
+  width: 100%;
+  height: 100%;
+
+  display: block;
+
+  object-fit: cover;
+  object-position: center;
+}
+
+.gallery-photo-large {
+  width: 100%;
+  height: 100%;
+
+  min-height: 0;
+
+  overflow: hidden;
+}
+
+
+/* =========================================
+   MOBILE
+========================================= */
+
+@media (max-width: 576px) {
+  .gallery-tema3 {
+    padding-top: 60px;
+    padding-bottom: 120px;
+  }
+
+  .gallery-collage {
+    width: 86%;
+    max-width: 390px;
+
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  .gallery-block {
+    gap: 3px;
+    margin-bottom: 3px;
+  }
+
+  .gallery-small-stack {
+    gap: 3px;
+  }
+}
+
+
+/* =========================================
+   SMALL MOBILE
+========================================= */
+
+@media (max-width: 390px) {
+  .gallery-collage {
+    width: 86%;
+    max-width: 390px;
+  }
+
+  .gallery-title {
+    font-size: 4.5rem;
+  }
+}
+
+
+/* =========================================
+   CLOSING SECTION TEMA 3
+========================================= */
+
+.closing-tema3 {
+  width: 100%;
+  overflow: hidden;
+  background: #06160d;
+}
+
+
+/* =========================================
+   MAIN WRAPPER
+   Figma: 2479 x 5365
+========================================= */
+
+.closing-tema3-wrapper {
+  width: 100%;
+  max-width: 463px;
+
+  aspect-ratio: 2479 / 5365;
+
+  position: relative;
+  overflow: hidden;
+
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+
+
+/* =========================================
+   FLOWER TOP
+========================================= */
+
+.closing-flower {
+  position: absolute;
+
+  display: block;
+
+  height: auto;
+
+  pointer-events: none;
+
+  z-index: 2;
+}
+
+
+/* KIRI ATAS
+   Figma:
+   left: -462
+   top: -297
+   width: 1702
+*/
+
+.closing-flower-left {
+  width: 68.66%;
+
+  left: -18.64%;
+  top: -5.54%;
+}
+
+
+/* KANAN ATAS
+   Figma:
+   left: 1203
+   top: -342
+   width: 1701
+*/
+
+.closing-flower-right {
+  width: 68.62%;
+
+  left: 48.53%;
+  top: -6.37%;
+}
+
+
+/* =========================================
+   MAIN FRAME + ENVELOPE
+========================================= */
+
+/*
+Figma:
+left: 201
+top: 773
+width: 2078
+height: 4009
+*/
+
+.closing-main-frame {
+  position: absolute;
+
+  width: 83.82%;
+  height: auto;
+
+  left: 8.11%;
+  top: 14.41%;
+
+  display: block;
+
+  z-index: 3;
+
+  pointer-events: none;
+}
+
+
+/* =========================================
+   CONTENT
+========================================= */
+
+.closing-content {
+  position: absolute;
+
+  left: 0;
+  top: 0;
+
+  width: 100%;
+  height: 100%;
+
+  z-index: 5;
+
+  pointer-events: none;
+}
+
+
+/* =========================================
+   MESSAGE
+========================================= */
+
+/*
+Figma:
+left: 488
+top: 1717
+width: 1430
+*/
+
+.closing-message {
+  position: absolute;
+
+  width: 57.68%;
+
+  left: 50%;
+  top: 31.99%;
+
+  transform: translateX(-50%);
+
+  text-align: center;
+
+  color: #fff;
+
+  font-family:
+    "Quattrocento",
+    Georgia,
+    serif;
+
+  font-size: clamp(
+    0.8rem,
+    3.25vw,
+    1rem
+  );
+
+  font-weight: 400;
+
+  line-height: 1.15;
+}
+
+
+/* =========================================
+   COUPLE NAME
+========================================= */
+
+.closing-couple {
+  position: absolute;
+
+  top: 46%;
+
+  left: 50%;
+
+  transform:
+    translateX(-50%)
+    rotate(-7deg);
+
+  width: 65%;
+
+  text-align: center;
+
+  color: #fff;
+}
+
+
+/* NAMA */
+
+.closing-name {
+  font-family: "SloopScriptPro";
+  font-size: 2rem;
+  font-weight: 400;
+  line-height: 0.92;
+  white-space: nowrap;
+  transform: rotate(-9deg);
+  transform-origin: center;
+}
+
+
+/* SIMBOL & */
+
+.closing-and {
+  font-family:
+    "SloopScriptPro";
+  font-size: 2rem;
+  line-height: 1;
+  transform: rotate(-15deg);
+  margin:
+    20px 0
+    15px;
+}
+
+
+/* =========================================
+   BUNGA KANAN BAWAH
+========================================= */
+
+/*
+Figma:
+left: 1040
+top: 4062
+width: 1647
+*/
+
+.closing-flower-bottom {
+  position: absolute;
+
+  width: 66.44%;
+
+  left: 41.95%;
+  top: 75.71%;
+
+  height: auto;
+
+  display: block;
+
+  z-index: 6;
+
+  pointer-events: none;
+}
+
+
+/* =========================================
+   TABLET / DESKTOP
+========================================= */
+
+@media (min-width: 577px) {
+  .closing-message {
+    font-size: 15px;
+  }
+
+  .closing-name {
+    font-size: 62px;
+  }
+
+  .closing-and {
+    font-size: 50px;
+  }
+}
+
+
+/* =========================================
+   MOBILE
+========================================= */
+
+@media (max-width: 576px) {
+  .closing-tema3-wrapper {
+    width: 100%;
+    max-width: 463px;
+  }
+
+  .closing-message {
+    font-size: clamp(
+      12px,
+      3.15vw,
+      15px
+    );
+
+    line-height: 1.18;
+  }
+
+  .closing-name {
+    font-size: clamp(
+      48px,
+      13vw,
+      60px
+    );
+  }
+
+  .closing-and {
+    font-size: clamp(
+      40px,
+      10vw,
+      50px
+    );
+
+    margin:
+      14px 0
+      12px;
+  }
+}
+
+
+/* =========================================
+   SMALL MOBILE
+========================================= */
+
+@media (max-width: 390px) {
+  .closing-message {
+    width: 61%;
+
+    font-size: 12px;
+  }
+
+  .closing-couple {
+    top: 46.5%;
+  }
+
+  .closing-name {
+    font-size: 48px;
+  }
+
+  .closing-and {
+    font-size: 39px;
+
+    margin:
+      12px 0
+      10px;
+  }
 }

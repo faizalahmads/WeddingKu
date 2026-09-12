@@ -11,6 +11,9 @@ import SaveTheDate from "../tema3/components/DateCatinTema3.jsx";
 import DetailCatin from "../tema3/components/DetailCatinTema3.jsx";
 import DetailAcara from "../tema3/components/DetailAcaraTema3.jsx";
 import WeddingGift from "../tema3/components/WeddingGiftTema3.jsx";
+import LoveStory from "../tema3/components/LoveStoryTema3.jsx";
+import Gallery from "../tema3/components/GalleryTema3.jsx";
+import ClosingSection from "./components/ClosingSectionTema3.jsx";
 
 import { useSectionScrollLock } from "../tema1/hooks/useSectionScrollLock";
 import "../../../../assets/css/PreviewTema3.css";
@@ -108,7 +111,13 @@ const Tema3 = () => {
 
         {open && <DetailAcara />}
 
+        {open && <LoveStory />}
+
+        {open && <Gallery />}
+
         {open && <WeddingGift invite={invite} />}
+
+        {open && <ClosingSection />}
       </div>
 
       {open && <QRButton onClick={() => setShowQR(true)} />}

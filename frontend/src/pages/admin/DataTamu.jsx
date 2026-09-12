@@ -638,7 +638,7 @@ ${guest.bride_name || "-"} & ${guest.groom_name || "-"} `;
 
     const categoryOptions = ["VIP", "Reguler"];
     const typeOptions = ["CPP", "CPW"];
-    const souvenirOptions = ["Gelas", "Dompet", "Tidak Ada"];
+    const souvenirOptions = ["Gelas", "Dompet", "Tumbler Mug", "Tidak Ada"];
 
     for (let i = 2; i <= 100; i++) {
       worksheet.getCell(`B${i}`).dataValidation = {
@@ -802,12 +802,17 @@ ${guest.bride_name || "-"} & ${guest.groom_name || "-"} `;
                   </th>
 
                   <th style={{ width: "7%" }}>No</th>
-                  <th style={{ width: "38%" }}>Nama Tamu</th>
-                  <th style={{ width: "20%" }}>Kategori Tamu</th>
-                  <th style={{ width: "15%" }}>CPP/CPW</th>
+                  <th style={{ width: "30%" }}>Nama Tamu</th>
+                  <th style={{ width: "15%" }}>Kategori Tamu</th>
+                  <th style={{ width: "12%" }}>CPP/CPW</th>
+
+                  {/* SOUVENIR */}
+                  <th style={{ width: "16%" }}>Souvenir</th>
+
                   <th style={{ width: "20%" }}>Action</th>
                 </tr>
               </thead>
+
               <tbody>
                 {currentTamu.length > 0 ? (
                   currentTamu.map((item, index) => (
@@ -821,11 +826,18 @@ ${guest.bride_name || "-"} & ${guest.groom_name || "-"} `;
                       </td>
 
                       <td data-label="No">{indexOfFirst + index + 1}</td>
+
                       <td data-label="Nama Tamu" className="text-truncate">
                         {item.name}
                       </td>
+
                       <td data-label="Kategori Tamu">{item.category}</td>
+
                       <td data-label="CPP/CPW">{item.type}</td>
+
+                      {/* SOUVENIR */}
+                      <td data-label="Souvenir">{item.souvenir || "-"}</td>
+
                       <td data-label="Action" className="Action flex-wrap">
                         <div className="d-flex justify-content-center gap-1">
                           {/* Hapus */}
@@ -857,9 +869,11 @@ ${guest.bride_name || "-"} & ${guest.groom_name || "-"} `;
 
                           {/* Lihat */}
                           <a
-                            href={`${import.meta.env.VITE_APP_URL}/undangan/${item.groom_name}-${item.bride_name}?to=${encodeURIComponent(
-                              item.name,
-                            )}/${item.code}`}
+                            href={`${
+                              import.meta.env.VITE_APP_URL
+                            }/undangan/${item.groom_name}-${
+                              item.bride_name
+                            }?to=${encodeURIComponent(item.name)}/${item.code}`}
                             target="_blank"
                             rel="noopener noreferrer"
                             className="btn btn-sm"
@@ -875,7 +889,7 @@ ${guest.bride_name || "-"} & ${guest.groom_name || "-"} `;
                             onClick={() => handleShareWhatsApp(item)}
                             title="Share via WhatsApp"
                           >
-                            <img src={WAIcon} alt="lihat" />
+                            <img src={WAIcon} alt="WhatsApp" />
                           </button>
                         </div>
                       </td>
@@ -883,7 +897,7 @@ ${guest.bride_name || "-"} & ${guest.groom_name || "-"} `;
                   ))
                 ) : (
                   <tr>
-                    <td colSpan="5" className="text-center text-muted">
+                    <td colSpan="7" className="text-center text-muted">
                       Tidak ada data tamu
                     </td>
                   </tr>

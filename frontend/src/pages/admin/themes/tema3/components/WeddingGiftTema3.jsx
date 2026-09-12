@@ -6,37 +6,38 @@ import { IoCopyOutline } from "react-icons/io5";
 import gift from "../../../../../assets/images/tema3/giftIcon.svg";
 import bungaPink from "../../../../../assets/images/tema3/bungaJuntaiPink.svg";
 import bungaHijau from "../../../../../assets/images/tema3/bungaJuntaiHijau.svg";
+import { FaWhatsapp } from "react-icons/fa";
 
 const WeddingGift = ({ invite }) => {
   const [copied, setCopied] = useState(null);
 
   const bankAccounts = [
     {
-      id: "groom",
-      number: invite?.groom_norek,
-      bank: invite?.groom_bank_name,
-      name: invite?.groom_name_bank,
-    },
-    {
       id: "bride",
       number: invite?.bride_norek,
       bank: invite?.bride_bank_name,
       name: invite?.bride_name_bank,
+    },
+    {
+      id: "groom",
+      number: invite?.groom_norek,
+      bank: invite?.groom_bank_name,
+      name: invite?.groom_name_bank,
     },
   ].filter((account) => account.number);
 
   const contacts = [
     {
       id: 1,
-      phone: "0811 2233 4455",
-      whatsapp: "6281122334455",
-      name: "Airin",
+      phone: "0877 7833 2021",
+      whatsapp: "6287778332021",
+      name: "Caca",
     },
     {
       id: 2,
-      phone: "0811 2233 4455",
-      whatsapp: "6281122334455",
-      name: "Airin",
+      phone: "0877 8095 5003",
+      whatsapp: "6287780955003",
+      name: "Faizal",
     },
   ];
 
@@ -169,6 +170,8 @@ const WeddingGift = ({ invite }) => {
                 rel="noopener noreferrer"
                 className="gift-contact-card"
               >
+                <FaWhatsapp className="gift-contact-icon" />
+
                 <span className="gift-contact-phone">{contact.phone}</span>
 
                 <span className="gift-contact-name">{contact.name}</span>
@@ -177,12 +180,6 @@ const WeddingGift = ({ invite }) => {
           ))}
         </div>
       </div>
-
-      <img
-        src={bungaPink}
-        alt=""
-        className="gift-flower gift-flower-middle-left"
-      />
 
       <img
         src={bungaPink}

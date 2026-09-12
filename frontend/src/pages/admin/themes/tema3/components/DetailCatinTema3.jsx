@@ -57,8 +57,8 @@ const DetailCatin = () => {
           <p className="section5-parent">
             Putri Pertama dari
             <br />
-            Bapak (Suwada)
-            <br />& Ibu (Nurhayati)
+            Bapak Suwada
+            <br />& Ibu Nurhayati
           </p>
         </div>
       </div>
@@ -76,10 +76,10 @@ const DetailCatin = () => {
           <p className="section5-name text-end">Faizal Ahmad Siddiq</p>
 
           <p className="section5-parent text-end">
-            Putra Pertama dari
+            Putra Kedua dari
             <br />
-            Bapak (Kardjamal)
-            <br />& Ibu (Gustia Supriyatin)
+            Bapak Kardjamai
+            <br />& Ibu Gustia Supriyatin
           </p>
         </div>
 

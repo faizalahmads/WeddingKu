@@ -81,7 +81,6 @@ const ModalTambahTamu = ({
       >
         <div className="modal-dialog modal-dialog-centered modal-dialog-scrollable">
           <div className="modal-content rounded-4 shadow">
-
             {/* HEADER */}
             <div className="modal-header border-0 pb-2">
               <h5 className="modal-title fw-bold">
@@ -96,10 +95,8 @@ const ModalTambahTamu = ({
             </div>
 
             <form onSubmit={submitForm}>
-
               {/* BODY */}
               <div className="modal-body">
-
                 {/* ========================
                     NAMA TAMU
                 ======================== */}
@@ -123,9 +120,7 @@ const ModalTambahTamu = ({
                     NOMOR TELEPON
                 ======================== */}
                 <div className="mb-3">
-                  <label className="fw-semibold mb-2">
-                    Nomor Telepon
-                  </label>
+                  <label className="fw-semibold mb-2">Nomor Telepon</label>
 
                   <input
                     type="tel"
@@ -143,8 +138,7 @@ const ModalTambahTamu = ({
                     ======================== */}
                     <div className="mb-3">
                       <label className="fw-semibold mb-2">
-                        Kategori Tamu{" "}
-                        <span className="text-danger">*</span>
+                        Kategori Tamu <span className="text-danger">*</span>
                       </label>
 
                       <select
@@ -164,8 +158,7 @@ const ModalTambahTamu = ({
                     ======================== */}
                     <div className="mb-3">
                       <label className="fw-semibold mb-2">
-                        CPP / CPW{" "}
-                        <span className="text-danger">*</span>
+                        CPP / CPW <span className="text-danger">*</span>
                       </label>
 
                       {isEdit && dataEdit.type === "Tamu Tambahan" ? (
@@ -182,9 +175,7 @@ const ModalTambahTamu = ({
                           onChange={(e) => setCppCpw(e.target.value)}
                           required
                         >
-                          <option value="">
-                            Pilih salah satu
-                          </option>
+                          <option value="">Pilih salah satu</option>
                           <option value="CPP">CPP</option>
                           <option value="CPW">CPW</option>
                         </select>
@@ -195,29 +186,18 @@ const ModalTambahTamu = ({
                         SOUVENIR
                     ======================== */}
                     <div className="mb-3">
-                      <label className="fw-semibold mb-2">
-                        Souvenir
-                      </label>
+                      <label className="fw-semibold mb-2">Souvenir</label>
 
                       <select
                         className="form-select"
                         value={souvenir}
-                        onChange={(e) =>
-                          setSouvenir(e.target.value)
-                        }
+                        onChange={(e) => setSouvenir(e.target.value)}
                       >
-                        <option value="">
-                          Pilih souvenir
-                        </option>
-                        <option value="Gelas">
-                          Gelas
-                        </option>
-                        <option value="Dompet">
-                          Dompet
-                        </option>
-                        <option value="Tidak Ada">
-                          Tidak Ada
-                        </option>
+                        <option value="">Pilih souvenir</option>
+                        <option value="Gelas">Gelas</option>
+                        <option value="Dompet">Dompet</option>
+                        <option value="Tumbler Mug">Tumbler Mug</option>
+                        <option value="Tidak Ada">Tidak Ada</option>
                       </select>
                     </div>
                   </>
@@ -230,12 +210,9 @@ const ModalTambahTamu = ({
                   type="submit"
                   className="btn btn-primary w-100 fw-semibold"
                 >
-                  {isEdit
-                    ? "Simpan Perubahan"
-                    : "Tambah"}
+                  {isEdit ? "Simpan Perubahan" : "Tambah"}
                 </button>
               </div>
-
             </form>
           </div>
         </div>

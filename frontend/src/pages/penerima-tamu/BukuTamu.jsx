@@ -4,6 +4,7 @@ import AdminLayout from "../../components/AdminLayout";
 import ModalTambahTamu from "../../components/modals/ModalTambahTamu"
 import "bootstrap/dist/css/bootstrap.min.css";
 import ModalConfirm from "../../components/modals/ModalConfirm";
+import Pagination from "../../components/Pagination";
 
 const BukuTamu = () => {
   const token = localStorage.getItem("token");
@@ -11,14 +12,20 @@ const BukuTamu = () => {
   const [isEdit, setIsEdit] = useState(false);
   const [dataEdit, setDataEdit] = useState(null);
   const [showTambahModal, setShowTambahModal] = useState(false);
+
   const [guests, setGuests] = useState([]);
+
   const [search, setSearch] = useState("");
   const [filter, setFilter] = useState("all");
+
   const [page, setPage] = useState(1);
   const [total, setTotal] = useState(0);
+
+  const limit = 10;
+
   const [showConfirmModal, setShowConfirmModal] = useState(false);
   const [selectedGuest, setSelectedGuest] = useState(null);
-  const [confirmType, setConfirmType] = useState(""); // "checkin" | "cancel"
+  const [confirmType, setConfirmType] = useState("");
 
   const fetchGuests = async () => {
     try {
@@ -29,7 +36,9 @@ const BukuTamu = () => {
             search,
             filter,
             page,
+            limit,
           },
+
           headers: {
             Authorization: `Bearer ${token}`,
           },
@@ -46,6 +55,17 @@ const BukuTamu = () => {
   useEffect(() => {
     fetchGuests();
   }, [search, filter, page]);
+
+  // reset page ketika search / filter berubah
+  useEffect(() => {
+    setPage(1);
+  }, [search, filter]);
+
+  const totalPages = Math.ceil(total / limit);
+
+  const handlePageChange = (newPage) => {
+    setPage(newPage);
+  };
 
   const handleCheckin = async (guest) => {
     try {
@@ -201,52 +221,75 @@ const BukuTamu = () => {
               </thead>
 
               <tbody>
-                {guests.map((guest, index) => (
-                  <tr key={guest.id}>
-                    <td>{index + 1}</td>
-                    <td>{guest.name}</td>
-                    <td>{guest.category}</td>
-                    <td>{guest.type}</td>
-                    <td>
-                      {guest.is_checked_in ? (
-                        <span className="badge bg-success">Hadir</span>
-                      ) : (
-                        <span className="badge bg-danger">Belum Hadir</span>
-                      )}
-                    </td>
-                    <td>
-                      {guest.is_checked_in ? (
-                        <button
-                          className="btn btn-link text-danger"
-                          onClick={() => {
-                            setSelectedGuest(guest);
-                            setConfirmType("cancel");
-                            setShowConfirmModal(true);
-                          }}
-                        >
-                          Batalkan
-                        </button>
-                      ) : (
-                        <button
-                          className="btn btn-link text-primary"
-                          onClick={() => {
-                            setSelectedGuest(guest);
-                            setConfirmType("checkin");
-                            setShowConfirmModal(true);
-                          }}
-                        >
-                          Check-in
-                        </button>
-                      )}
+                {guests.length > 0 ? (
+                  guests.map((guest, index) => (
+                    <tr key={guest.id}>
+                      <td>{(page - 1) * limit + index + 1}</td>
+
+                      <td>{guest.name}</td>
+
+                      <td>{guest.category}</td>
+
+                      <td>{guest.type}</td>
+
+                      <td>
+                        {guest.is_checked_in ? (
+                          <span className="badge bg-success">Hadir</span>
+                        ) : (
+                          <span className="badge bg-danger">Belum Hadir</span>
+                        )}
+                      </td>
+
+                      <td>
+                        {guest.is_checked_in ? (
+                          <button
+                            className="btn btn-link text-danger"
+                            onClick={() => {
+                              setSelectedGuest(guest);
+                              setConfirmType("cancel");
+                              setShowConfirmModal(true);
+                            }}
+                          >
+                            Batalkan
+                          </button>
+                        ) : (
+                          <button
+                            className="btn btn-link text-primary"
+                            onClick={() => {
+                              setSelectedGuest(guest);
+                              setConfirmType("checkin");
+                              setShowConfirmModal(true);
+                            }}
+                          >
+                            Check-in
+                          </button>
+                        )}
+                      </td>
+                    </tr>
+                  ))
+                ) : (
+                  <tr>
+                    <td colSpan="6" className="text-center text-muted">
+                      Tidak ada data tamu
                     </td>
                   </tr>
-                ))}
+                )}
               </tbody>
             </table>
           </div>
 
-          {/* TOTAL */}
-          <div className="mt-3 text-muted">Total data : {total}</div>
+          {/* TOTAL & PAGINATION */}
+          <div className="d-flex justify-content-between align-items-center mt-3">
+            <span className="text-muted small">Total data: {total}</span>
+
+            {totalPages > 1 && (
+              <Pagination
+                totalPages={totalPages}
+                currentPage={page}
+                onPageChange={handlePageChange}
+              />
+            )}
+          </div>
         </div>
         <ModalConfirm
           show={showConfirmModal}
