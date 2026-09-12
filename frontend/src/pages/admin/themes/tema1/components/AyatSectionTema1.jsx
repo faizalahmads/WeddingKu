@@ -1,8 +1,6 @@
 import { motion } from "framer-motion";
 
 import BgLetter from "../../../../../assets/images/tema3/bgLetter.svg";
-// import MusicPlayerBar from "../../../../../../src/components/MusicPlayerBar";
-// import BgMusic from "../../../../../assets/audio/Thank God I Found You  Cover by BuDaKhelxKat (Lyrics).mp3";
 
 const smoothEase = [0.25, 0.1, 0.25, 1];
 
@@ -87,10 +85,6 @@ const AyatSection = () => {
           </motion.span>
         </div>
       </div>
-
-      {/* <div className="music-player-wrapper">
-        <MusicPlayerBar src={BgMusic} autoPlay={open} />
-      </div> */}
     </motion.section>
   );
 };

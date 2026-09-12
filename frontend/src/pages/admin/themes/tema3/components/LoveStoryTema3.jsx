@@ -2,8 +2,8 @@ import React from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
 import { IoHeart } from "react-icons/io5";
 
-import photoStory1 from "../../../../../assets/images/tema3/bride.png";
-import photoStory2 from "../../../../../assets/images/tema3/groom.png";
+import photoStory1 from "../../../../../assets/images/tema3/brideStory.png";
+import photoStory2 from "../../../../../assets/images/tema3//groomStOry.png";
 import bungaStory from "../../../../../assets/images/tema3/bungaJuntaiHijau.svg";
 
 import waxSeal from "../../../../../assets/images/tema3/waxSeal.svg";
@@ -42,9 +42,7 @@ const LoveStoryTema3 = ({ invite }) => {
   const stories = defaultStories;
 
   return (
-    <section
-      className="section9"
-    >
+    <section className="section9">
       <div className="container-fluid px-0">
         {/* =========================
             TOP DECORATION
@@ -52,12 +50,15 @@ const LoveStoryTema3 = ({ invite }) => {
         <div className="love-story-visual position-relative mx-auto">
           {/* POLAROID KIRI */}
           <div className="story-polaroid story-polaroid-left">
-            <img src={photoStory1} alt="Love story 1" className="img-fluid" />
+            <div className="story-photo">
+              <img src={photoStory1} alt="Love story 1" />
+            </div>
           </div>
 
-          {/* POLAROID KANAN */}
           <div className="story-polaroid story-polaroid-right">
-            <img src={photoStory2} alt="Love story 2" className="img-fluid" />
+            <div className="story-photo">
+              <img src={photoStory2} alt="Love story 2" />
+            </div>
           </div>
 
           {/* BUNGA */}

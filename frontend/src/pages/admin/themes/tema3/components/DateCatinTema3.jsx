@@ -1,6 +1,6 @@
 import flower from "../../../../../assets/images/tema3/bungaJuntaiHijau.svg";
 import line from "../../../../../assets/images/tema3/line.svg";
-import building from "../../../../../assets/images/tema3/building.svg";
+import building from "../../../../../assets/images/tema3/building.png";
 
 const DateCatinTema3 = () => {
   return (

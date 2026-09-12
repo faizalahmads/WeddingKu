@@ -3047,38 +3047,64 @@ span .deskripsi-ayat {
 
 .story-polaroid {
   position: absolute;
+
   background: #f6f1e9;
+
   padding: 8px 8px 42px;
+
   box-shadow:
     0 8px 18px rgba(0, 0, 0, 0.16);
+
   z-index: 2;
+
+  box-sizing: border-box;
 }
 
-.story-polaroid img {
+
+/* AREA FOTO */
+.story-photo {
   width: 100%;
   height: 100%;
-  object-fit: cover;
-  display: block;
+
+  overflow: hidden;
 }
 
-/* kiri */
 
+/* FOTO */
+.story-photo img {
+  width: 100%;
+  height: 100%;
+
+  object-fit: cover;
+
+  display: block;
+
+  transition: transform 0.5s ease;
+}
+
+
+/* kiri */
 .story-polaroid-left {
   width: 150px;
   height: 195px;
+
   left: 72px;
   top: 65px;
+
   transform: rotate(-10deg);
 }
 
-/* kanan */
 
+/* kanan */
 .story-polaroid-right {
   width: 150px;
   height: 195px;
+
   right: 72px;
   top: 65px;
+
   transform: rotate(9deg);
+
   z-index: 3;
 }
 
@@ -3578,34 +3604,17 @@ span .deskripsi-ayat {
   top: -5.54%;
 }
 
-
-/* KANAN ATAS
-   Figma:
-   left: 1203
-   top: -342
-   width: 1701
-*/
-
 .closing-flower-right {
   width: 68.62%;
-
   left: 48.53%;
   top: -6.37%;
+  transform: scaleX(-1);
 }
 
 
 /* =========================================
    MAIN FRAME + ENVELOPE
 ========================================= */
-
-/*
-Figma:
-left: 201
-top: 773
-width: 2078
-height: 4009
-*/
-
 .closing-main-frame {
   position: absolute;
 

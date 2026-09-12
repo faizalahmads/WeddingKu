@@ -3,7 +3,7 @@ import "bootstrap/dist/css/bootstrap.min.css";
 
 import bungaKiriAtas from "../../../../../assets/images/tema3/bungaJuntaiHijau.svg";
 import bungaKananAtas from "../../../../../assets/images/tema3/bungaJuntaiHijau.svg";
-import frameEnvelope from "../../../../../assets/images/tema3/frameEnvelope.svg";
+import frameEnvelope from "../../../../../assets/images/tema3/frameEnvelope.png";
 import bungaKananBawah from "../../../../../assets/images/tema3/bungaJuntaiPink.svg";
 
 const ClosingSectionTema3 = ({ invite }) => {
