@@ -209,30 +209,30 @@ const DateCatinTema3 = () => {
         {/* =========================
             SAVE
         ========================== */}
-        <motion.div className="save-text-animation" variants={saveVariant}>
-          <div className="save-text-3">Save</div>
-        </motion.div>
+        <div className="save-text-3">
+          Save
+        </div>
 
         {/* =========================
             THE
         ========================== */}
-        <motion.div className="the-text-animation" variants={theVariant}>
-          <div className="the-text">the</div>
-        </motion.div>
+        <div className="the-text">
+          the
+        </div>
 
         {/* =========================
             DATE
         ========================== */}
-        <motion.div className="date-text-animation" variants={dateTitleVariant}>
-          <div className="date-text">Date</div>
-        </motion.div>
+        <div className="date-text">
+          Date
+        </div>
 
         {/* =========================
             MONTH
         ========================== */}
-        <motion.div className="month-text" variants={fadeUpVariant}>
+        <div className="month-text" variants={fadeUpVariant}>
           SEPTEMBER
-        </motion.div>
+        </div>
 
         {/* =========================
             EVENT INFORMATION
