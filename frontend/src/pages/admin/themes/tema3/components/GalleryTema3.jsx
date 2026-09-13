@@ -1,15 +1,15 @@
 import React from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
 
-import gallery1 from "../../../../../assets/images/tema1/gallery/g1.jpg";
-import gallery2 from "../../../../../assets/images/tema1/gallery/g2.jpg";
-import gallery3 from "../../../../../assets/images/tema1/gallery/g3.jpg";
-import gallery4 from "../../../../../assets/images/tema1/gallery/g4.jpg";
-import gallery5 from "../../../../../assets/images/tema1/gallery/g5.jpg";
-import gallery6 from "../../../../../assets/images/tema1/gallery/g6.jpg";
-import gallery7 from "../../../../../assets/images/tema1/gallery/g7.jpg";
-import gallery8 from "../../../../../assets/images/tema1/gallery/g8.jpg";
-import gallery9 from "../../../../../assets/images/tema1/gallery/g9.jpg";
+import gallery1 from "../../../../../assets/images/tema3/gallery/g1.jpg";
+import gallery2 from "../../../../../assets/images/tema3/gallery/g2.jpg";
+import gallery3 from "../../../../../assets/images/tema3/gallery/g3.jpg";
+import gallery4 from "../../../../../assets/images/tema3/gallery/g4.jpg";
+import gallery5 from "../../../../../assets/images/tema3/gallery/g5.jpg";
+import gallery6 from "../../../../../assets/images/tema3/gallery/g6.jpg";
+import gallery7 from "../../../../../assets/images/tema3/gallery/g7.jpg";
+import gallery8 from "../../../../../assets/images/tema3/gallery/g8.jpg";
+import gallery9 from "../../../../../assets/images/tema3/gallery/g9.jpg";
 
 const GalleryTema3 = ({ invite }) => {
   const defaultGallery = [

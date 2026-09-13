@@ -1983,7 +1983,7 @@ span .deskripsi-ayat {
 
 .section5-flower-left {
   left: -30px;
-  bottom: 60px;
+  bottom: -55px;
   width: 180px;
 }
 
@@ -2014,9 +2014,8 @@ span .deskripsi-ayat {
 
 .save-date-flower {
   position: absolute;
-  width: 54%;
-  left: 60%;
-  top: 2%;
+  width: 60%;
+  left: 57%;
   z-index: 5;
   object-fit: contain;
 }
@@ -2028,7 +2027,7 @@ span .deskripsi-ayat {
 
 .save-text-3 {
   position: absolute;
-  top: 9.82%;
+  top: 7%;
   color: white;
   font-family: "Slight", cursive;
   font-size: 3.5em;
@@ -2048,7 +2047,7 @@ span .deskripsi-ayat {
 .the-text {
   position: absolute;
   left: 22%;
-  top: 17%;
+  top: 15%;
   color: white;
   font-family: "Slight", cursive;
   font-size: 1.8em;
@@ -2067,7 +2066,7 @@ span .deskripsi-ayat {
 .date-text {
   position: absolute;
   left: 5%;
-  top: 27%;
+  top: 25%;
   color: white;
   font-family: "Slight", cursive;
   font-size: 3.5em;
@@ -2085,11 +2084,11 @@ span .deskripsi-ayat {
 
 .month-text {
   position: absolute;
-  left: 26.37%;
-  top: 38%;
+  left: 18%;
+  top: 37%;
   color: white;
   font-family: "Quattrocento", serif;
-  font-size: 2rem;
+  font-size: 2.5rem;
   font-weight: 700;
   line-height: 1;
   z-index: 5;
@@ -2106,7 +2105,7 @@ span .deskripsi-ayat {
   top: 53.5%;
   color: white;
   font-family: "Quattrocento";
-  font-size: 2.5rem;
+  font-size: 2.8rem;
   font-weight: 400;
   line-height: 1;
   z-index: 5;
@@ -2129,7 +2128,7 @@ span .deskripsi-ayat {
     auto
     1fr;
   align-items: center;
-  column-gap: 4%;
+  column-gap: 6%;
   z-index: 5;
 }
 
@@ -2179,11 +2178,11 @@ span .deskripsi-ayat {
 ===================================================== */
 
 .akad-column {
-  text-align: right;
+  text-align: center;
 }
 
 .akad-column .event-name {
-  text-align: right;
+  text-align: center;
   transform: translateX(-7%);
 }
 
@@ -2193,11 +2192,11 @@ span .deskripsi-ayat {
 ===================================================== */
 
 .resepsi-column {
-  text-align: left;
+  text-align: center;
 }
 
 .resepsi-column .event-name {
-  text-align: left;
+  text-align: center;
 }
 
 
@@ -2361,7 +2360,7 @@ span .deskripsi-ayat {
 .detail-acara-flower {
   display: block;
 
-  width: 120px;
+  width: 200px;
   height: 75px;
 
   object-fit: contain;
@@ -2592,7 +2591,6 @@ span .deskripsi-ayat {
 
 
 .gift-tema3-title {
-  margin-right: 50px;
   color: #ffffff;
   font-family: "SloopScriptPro";
   font-size: 3em;
@@ -2850,7 +2848,6 @@ span .deskripsi-ayat {
 .gift-icon {
   width: 80px;
   top: 70px;
-  margin-left: -40px;
 }
 
 .gift-contact-icon {
@@ -2885,7 +2882,7 @@ span .deskripsi-ayat {
 
 .gift-flower-top-right {
   width: 250px;
-  top: 20px;
+  top: 10px;
   right: -60px;
   transform: scaleX(-1);
 }
@@ -3112,15 +3109,41 @@ span .deskripsi-ayat {
    FLOWER
 ======================================== */
 
-.story-flower {
+/* Mengatur posisi + flip.
+   Jangan dianimasikan dengan Framer Motion. */
+.story-flower-position {
   position: absolute;
+
   width: 180px;
-  height: auto;
+
   right: -7px;
   top: -5px;
+
   z-index: 5;
+
   pointer-events: none;
+
+  /* flip horizontal tetap aman */
   transform: scaleX(-1);
+
+  transform-origin: top center;
+}
+
+/* wrapper untuk animasi masuk */
+.story-flower-enter {
+  width: 100%;
+}
+
+/* bunga */
+.story-flower {
+  position: relative;
+
+  width: 100%;
+  height: auto;
+
+  display: block;
+
+  transform-origin: 80% 8%;
 }
 
 /* ========================================
@@ -3655,19 +3678,11 @@ span .deskripsi-ayat {
    MESSAGE
 ========================================= */
 
-/*
-Figma:
-left: 488
-top: 1717
-width: 1430
-*/
-
 .closing-message {
   position: absolute;
-
   width: 57.68%;
 
-  left: 50%;
+  left: 20%;
   top: 31.99%;
 
   transform: translateX(-50%);
@@ -3769,6 +3784,50 @@ width: 1647
   z-index: 6;
 
   pointer-events: none;
+}
+
+/* ========================================
+   BUTTERFLY
+======================================== */
+
+.closing-butterfly-position {
+  position: absolute;
+  top: 18%;
+  right: 20%;
+
+  z-index: 10;
+
+  pointer-events: none;
+}
+
+/* Gerakan tubuh */
+.closing-butterfly-floating {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  transform-origin: bottom center;
+}
+
+/* Icon kupu-kupu */
+.closing-butterfly-wing {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  font-size: 38px;
+
+  color: #e8a1a8;
+
+  /*
+    sedikit glow supaya menyatu
+    dengan tema wedding
+  */
+  filter:
+    drop-shadow(0 2px 2px rgba(0, 0, 0, 0.25))
+    drop-shadow(0 0 4px rgba(255, 192, 203, 0.3));
+
+  transform-origin: center center;
 }
 
 

@@ -1,12 +1,139 @@
 import React, { useState } from "react";
+import { motion, AnimatePresence } from "framer-motion";
 import "bootstrap/dist/css/bootstrap.min.css";
 
-import { IoCopyOutline } from "react-icons/io5";
+import { IoCopyOutline, IoCheckmarkOutline } from "react-icons/io5";
+import { FaWhatsapp } from "react-icons/fa";
 
 import gift from "../../../../../assets/images/tema3/giftIcon.svg";
 import bungaPink from "../../../../../assets/images/tema3/bungaJuntaiPink.svg";
 import bungaHijau from "../../../../../assets/images/tema3/bungaJuntaiHijau.svg";
-import { FaWhatsapp } from "react-icons/fa";
+
+/* ========================================
+   EASING
+======================================== */
+
+const smoothEase = [0.16, 1, 0.3, 1];
+
+/* ========================================
+   SECTION
+======================================== */
+
+const sectionVariant = {
+  hidden: {},
+
+  show: {
+    transition: {
+      staggerChildren: 0.28,
+      delayChildren: 0.2,
+    },
+  },
+};
+
+/* ========================================
+   FADE UP
+======================================== */
+
+const fadeUpVariant = {
+  hidden: {
+    opacity: 0,
+    y: 20,
+  },
+
+  show: {
+    opacity: 1,
+    y: 0,
+
+    transition: {
+      duration: 1.5,
+      ease: smoothEase,
+    },
+  },
+};
+
+/* ========================================
+   TITLE
+======================================== */
+
+const titleVariant = {
+  hidden: {
+    opacity: 0,
+    y: 22,
+    scale: 0.97,
+  },
+
+  show: {
+    opacity: 1,
+    y: 0,
+    scale: 1,
+
+    transition: {
+      duration: 1.7,
+      ease: smoothEase,
+    },
+  },
+};
+
+/* ========================================
+   BANK WRAPPER
+======================================== */
+
+const bankWrapperVariant = {
+  hidden: {},
+
+  show: {
+    transition: {
+      staggerChildren: 0.22,
+      delayChildren: 0.15,
+    },
+  },
+};
+
+/* ========================================
+   BANK CARD
+======================================== */
+
+const bankCardVariant = {
+  hidden: {
+    opacity: 0,
+    y: 24,
+    scale: 0.97,
+  },
+
+  show: {
+    opacity: 1,
+    y: 0,
+    scale: 1,
+
+    transition: {
+      duration: 1.5,
+      ease: smoothEase,
+    },
+  },
+};
+
+/* ========================================
+   CONTACT
+======================================== */
+
+const contactVariant = {
+  hidden: {
+    opacity: 0,
+    y: 20,
+    scale: 0.97,
+  },
+
+  show: {
+    opacity: 1,
+    y: 0,
+    scale: 1,
+
+    transition: {
+      duration: 1.4,
+      ease: smoothEase,
+    },
+  },
+};
 
 const WeddingGift = ({ invite }) => {
   const [copied, setCopied] = useState(null);
@@ -18,6 +145,7 @@ const WeddingGift = ({ invite }) => {
       bank: invite?.bride_bank_name,
       name: invite?.bride_name_bank,
     },
+
     {
       id: "groom",
       number: invite?.groom_norek,
@@ -33,6 +161,7 @@ const WeddingGift = ({ invite }) => {
       whatsapp: "6287778332021",
       name: "Caca",
     },
+
     {
       id: 2,
       phone: "0877 8095 5003",
@@ -74,8 +203,6 @@ const WeddingGift = ({ invite }) => {
         }
       }
 
-      console.log("Berhasil copy:", number);
-
       setCopied(account.id);
 
       setTimeout(() => {
@@ -87,14 +214,24 @@ const WeddingGift = ({ invite }) => {
   };
 
   return (
-    <section className="section8">
-      {/* ORNAMEN ATAS */}
+    <motion.section
+      className="section8"
+      initial="hidden"
+      whileInView="show"
+      viewport={{
+        once: false,
+        amount: 0.2,
+      }}
+      variants={sectionVariant}
+    >
+      {/* BUNGA ATAS KIRI */}
       <img
         src={bungaHijau}
         alt=""
         className="gift-flower gift-flower-top-left"
       />
 
+      {/* BUNGA ATAS KANAN */}
       <img
         src={bungaHijau}
         alt=""
@@ -102,91 +239,337 @@ const WeddingGift = ({ invite }) => {
       />
 
       <div className="gift-tema3-wrapper container-fluid">
-        {/* TITLE */}
-        <div className="gift-tema3-header text-center">
-          <h2 className="gift-tema3-title">Wedding Gift</h2>
+        {/* =====================================
+            TITLE
+        ====================================== */}
 
-          <img src={gift} alt="" className="gift-icon" />
-        </div>
+        <motion.div
+          className="gift-tema3-header text-center"
+          variants={titleVariant}
+        >
+          <motion.h2
+            className="gift-tema3-title"
+            initial={{
+              opacity: 0,
+              y: 16,
+            }}
+            whileInView={{
+              opacity: 1,
+              y: 0,
+            }}
+            viewport={{
+              once: false,
+            }}
+            transition={{
+              duration: 1.5,
+              ease: smoothEase,
+            }}
+          >
+            Wedding Gift
+          </motion.h2>
 
-        {/* DESCRIPTION */}
-        <div className="gift-tema3-description text-center">
-          <p>
+          <motion.img
+            src={gift}
+            alt=""
+            className="gift-icon"
+            initial={{
+              opacity: 0,
+              scale: 0.85,
+              y: 10,
+            }}
+            whileInView={{
+              opacity: 1,
+              scale: 1,
+              y: 0,
+            }}
+            viewport={{
+              once: false,
+            }}
+            animate={{
+              y: [0, -2, 0],
+            }}
+            transition={{
+              opacity: {
+                duration: 1.4,
+              },
+
+              scale: {
+                duration: 1.4,
+                ease: smoothEase,
+              },
+
+              y: {
+                duration: 5,
+                repeat: Infinity,
+                ease: "easeInOut",
+              },
+            }}
+          />
+        </motion.div>
+
+        {/* =====================================
+            DESCRIPTION
+        ====================================== */}
+
+        <motion.div
+          className="gift-tema3-description text-center"
+          variants={fadeUpVariant}
+        >
+          <motion.p
+            initial={{
+              opacity: 0,
+              y: 12,
+            }}
+            whileInView={{
+              opacity: 1,
+              y: 0,
+            }}
+            viewport={{
+              once: false,
+            }}
+            transition={{
+              duration: 1.4,
+              ease: smoothEase,
+            }}
+          >
             Doa restu dan kehadiran Anda merupakan
             <br />
             karunia yang sangat berarti bagi kami.
-          </p>
+          </motion.p>
 
-          <p>
+          <motion.p
+            initial={{
+              opacity: 0,
+              y: 12,
+            }}
+            whileInView={{
+              opacity: 1,
+              y: 0,
+            }}
+            viewport={{
+              once: false,
+            }}
+            transition={{
+              duration: 1.4,
+              delay: 0.2,
+              ease: smoothEase,
+            }}
+          >
             Namun, jika memberi adalah ungkapan tanda kasih,
             <br />
             Anda dapat memberi melalui di bawah ini.
-          </p>
-        </div>
+          </motion.p>
+        </motion.div>
 
-        {/* BANK ACCOUNT */}
+        {/* =====================================
+            BANK ACCOUNT
+        ====================================== */}
+
         {bankAccounts.length > 0 && (
-          <div className="gift-bank-wrapper row g-3 justify-content-center">
+          <motion.div
+            className="gift-bank-wrapper row g-3 justify-content-center"
+            variants={bankWrapperVariant}
+          >
             {bankAccounts.map((account) => (
-              <div className="col-6 text-center" key={account.id}>
-                <div className="gift-bank-item">
-                  <p className="gift-bank-number">{account.number}</p>
+              <motion.div
+                className="col-6 text-center"
+                key={account.id}
+                variants={bankCardVariant}
+              >
+                <motion.div
+                  className="gift-bank-item"
+                  whileHover={{
+                    y: -3,
+                    scale: 1.015,
+                  }}
+                  transition={{
+                    duration: 0.35,
+                    ease: smoothEase,
+                  }}
+                >
+                  <motion.p
+                    className="gift-bank-number"
+                    initial={{
+                      opacity: 0,
+                      y: 8,
+                    }}
+                    whileInView={{
+                      opacity: 1,
+                      y: 0,
+                    }}
+                    viewport={{
+                      once: false,
+                    }}
+                    transition={{
+                      duration: 1.2,
+                      delay: 0.2,
+                      ease: smoothEase,
+                    }}
+                  >
+                    {account.number}
+                  </motion.p>
 
                   <p className="gift-bank-name">{account.bank || "-"}</p>
 
                   <p className="gift-bank-owner">a.n {account.name}</p>
 
-                  <button
+                  <motion.button
                     type="button"
                     className="gift-copy-btn"
                     onClick={() => handleCopy(account)}
+                    whileHover={{
+                      scale: 1.04,
+                    }}
+                    whileTap={{
+                      scale: 0.95,
+                    }}
+                    transition={{
+                      duration: 0.25,
+                    }}
                   >
-                    <IoCopyOutline />
+                    <AnimatePresence mode="wait">
+                      {copied === account.id ? (
+                        <motion.span
+                          key="copied"
+                          className="d-flex align-items-center gap-1"
+                          initial={{
+                            opacity: 0,
+                            y: 5,
+                          }}
+                          animate={{
+                            opacity: 1,
+                            y: 0,
+                          }}
+                          exit={{
+                            opacity: 0,
+                            y: -5,
+                          }}
+                          transition={{
+                            duration: 0.25,
+                          }}
+                        >
+                          <IoCheckmarkOutline />
 
-                    <span>{copied === account.id ? "Copied" : "Copy"}</span>
-                  </button>
-                </div>
-              </div>
+                          <span>Copied</span>
+                        </motion.span>
+                      ) : (
+                        <motion.span
+                          key="copy"
+                          className="d-flex align-items-center gap-1"
+                          initial={{
+                            opacity: 0,
+                          }}
+                          animate={{
+                            opacity: 1,
+                          }}
+                          exit={{
+                            opacity: 0,
+                          }}
+                          transition={{
+                            duration: 0.25,
+                          }}
+                        >
+                          <IoCopyOutline />
+
+                          <span>Copy</span>
+                        </motion.span>
+                      )}
+                    </AnimatePresence>
+                  </motion.button>
+                </motion.div>
+              </motion.div>
             ))}
-          </div>
+          </motion.div>
         )}
 
-        {/* DESCRIPTION PHYSICAL GIFT */}
-        <div className="gift-physical-description text-center">
+        {/* =====================================
+            PHYSICAL GIFT
+        ====================================== */}
+
+        <motion.div
+          className="gift-physical-description text-center"
+          variants={fadeUpVariant}
+        >
           <p>
             Dan bisa mengirimkan hadiah dalam bentuk fisik
             <br />
             bisa kirim melalui alamat di bawah dan konfirmasi ke nomor berikut:
           </p>
-        </div>
+        </motion.div>
 
-        {/* CONTACT / WHATSAPP */}
-        <div className="gift-contact-wrapper row g-3 justify-content-center">
+        {/* =====================================
+            CONTACT / WHATSAPP
+        ====================================== */}
+
+        <motion.div
+          className="gift-contact-wrapper row g-3 justify-content-center"
+          variants={{
+            hidden: {},
+
+            show: {
+              transition: {
+                staggerChildren: 0.2,
+                delayChildren: 0.15,
+              },
+            },
+          }}
+        >
           {contacts.map((contact) => (
-            <div className="col-6 text-center" key={contact.id}>
-              <a
+            <motion.div
+              className="col-6 text-center"
+              key={contact.id}
+              variants={contactVariant}
+            >
+              <motion.a
                 href={`https://wa.me/${contact.whatsapp}`}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="gift-contact-card"
+                whileHover={{
+                  y: -3,
+                  scale: 1.02,
+                }}
+                whileTap={{
+                  scale: 0.97,
+                }}
+                transition={{
+                  duration: 0.3,
+                  ease: smoothEase,
+                }}
               >
-                <FaWhatsapp className="gift-contact-icon" />
+                <motion.div
+                  animate={{
+                    scale: [1, 1.06, 1],
+                  }}
+                  transition={{
+                    duration: 4,
+                    repeat: Infinity,
+                    ease: "easeInOut",
+                  }}
+                >
+                  <FaWhatsapp className="gift-contact-icon" />
+                </motion.div>
 
                 <span className="gift-contact-phone">{contact.phone}</span>
 
                 <span className="gift-contact-name">{contact.name}</span>
-              </a>
-            </div>
+              </motion.a>
+            </motion.div>
           ))}
-        </div>
+        </motion.div>
       </div>
 
+      {/* =====================================
+          BUNGA BAWAH
+      ====================================== */}
+
+      {/* BUNGA BAWAH KANAN */}
       <img
         src={bungaPink}
         alt=""
         className="gift-flower gift-flower-bottom-right"
       />
-    </section>
+    </motion.section>
   );
 };
 
