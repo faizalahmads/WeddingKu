@@ -2047,7 +2047,7 @@ span .deskripsi-ayat {
 .the-text {
   position: absolute;
   left: 22%;
-  top: 15%;
+  top: 12%;
   color: white;
   font-family: "Slight", cursive;
   font-size: 1.8em;
@@ -2066,7 +2066,7 @@ span .deskripsi-ayat {
 .date-text {
   position: absolute;
   left: 5%;
-  top: 25%;
+  top: 20%;
   color: white;
   font-family: "Slight", cursive;
   font-size: 3.5em;
@@ -2472,6 +2472,16 @@ span .deskripsi-ayat {
 
 .detail-color-white {
   background: #fdf9f6;
+}
+
+@media (max-width: 390px) {
+.the-text {
+  top: 15%;
+}
+
+.date-text {
+  top: 25%;
+}
 }
 
 
