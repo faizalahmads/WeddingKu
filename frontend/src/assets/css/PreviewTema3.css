@@ -150,6 +150,13 @@
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
 }
 
+.qr-icon {
+  width: 30px;
+  height: 30px;
+  display: block;
+  flex-shrink: 0;
+}
+
 .music-toggle-btn {
   position: fixed;
   bottom: 24px;
@@ -171,6 +178,25 @@
   width: 28px;
   height: 28px;
   object-fit: contain;
+}
+
+.cassette-icon {
+  width: 32px;
+  height: 32px;
+  flex-shrink: 0;
+  display: block;
+}
+
+@media (max-width: 576px) {
+  .qr-icon {
+    width: 30px;
+    height: 30px;
+  }
+
+  .cassette-icon {
+    width: 32px;
+    height: 32px;
+  }
 }
 
 .section-1 {
@@ -2244,6 +2270,35 @@ span .deskripsi-ayat {
   object-fit: contain;
 }
 
+/* =========================================
+   MOBILE
+========================================= */
+
+@media (max-width: 576px) {
+  .save-text-3 {
+    font-family: "Slight", cursive;
+    font-size: 90px;
+  }
+
+  .the-text {
+    font-family: "Slight", cursive;
+    top: 15.5%;
+    left: 15%;
+    font-size: 45px;
+  }
+
+  .date-text{
+    font-family: "Slight", cursive;
+    font-size: 80px;
+    top: 22%;
+    left: -2%;
+  }
+
+  .month-text {
+    left: 20%;
+  }
+}
+
 /* =====================================================
    WRAPPER
 ===================================================== */
@@ -2286,7 +2341,7 @@ span .deskripsi-ayat {
 .detail-acara-title {
   margin: 0 0 20px;
   color: #ffffff;
-  font-family: "SloopScriptPro";
+  font-family: "SloopScriptPro", cursive;
   font-size: 75px;
   line-height: 0.8;
 }
@@ -2428,7 +2483,7 @@ span .deskripsi-ayat {
 /* TITLE */
 .detail-dress-title {
   color: #ffffff;
-  font-family: "SloopScriptPro";
+  font-family: "SloopScriptPro", cursive;
   font-size: 45px;
   line-height: 1;
 }
@@ -2602,7 +2657,7 @@ span .deskripsi-ayat {
 
 .gift-tema3-title {
   color: #ffffff;
-  font-family: "SloopScriptPro";
+  font-family: "SloopScriptPro", cursive;
   font-size: 3em;
   white-space: nowrap;
 }
@@ -2881,7 +2936,7 @@ span .deskripsi-ayat {
 
 .gift-flower-top-left {
   width: 200px;
-  top: 30px;
+  top: 0;
   left: -53px;
 }
 
@@ -2892,7 +2947,7 @@ span .deskripsi-ayat {
 
 .gift-flower-top-right {
   width: 250px;
-  top: 10px;
+  top: 0;
   right: -60px;
   transform: scaleX(-1);
 }
@@ -3180,7 +3235,7 @@ span .deskripsi-ayat {
 }
 
 .love-story-heading h2 {
-  font-family:"SloopScriptPro";
+  font-family:"SloopScriptPro", cursive;
   font-size: 75px;
   line-height: 0.9;
   color: #fff;
@@ -3255,7 +3310,7 @@ span .deskripsi-ayat {
 
 .story-text h3 {
   margin: 0 0 10px 0;
-  font-family:"SloopScriptPro";
+  font-family:"SloopScriptPro", cursive;
   font-size: 30px;
   line-height: 1;
   color: #fff;
@@ -3413,7 +3468,7 @@ span .deskripsi-ayat {
 .gallery-title {
   margin: 0;
   font-family:
-    "SloopScriptPro";
+    "SloopScriptPro", cursive;
   font-size: 4.5rem;
   font-weight: 400;
   line-height: 0.8;
@@ -3744,8 +3799,8 @@ span .deskripsi-ayat {
 /* NAMA */
 
 .closing-name {
-  font-family: "SloopScriptPro";
-  font-size: 2rem;
+  font-family: "Amoresa";
+  font-size: 42px;
   font-weight: 400;
   line-height: 0.92;
   white-space: nowrap;
@@ -3758,8 +3813,8 @@ span .deskripsi-ayat {
 
 .closing-and {
   font-family:
-    "SloopScriptPro";
-  font-size: 2rem;
+    "Amoresa";
+  font-size: 1rem;
   line-height: 1;
   transform: rotate(-15deg);
   margin:
@@ -3771,13 +3826,6 @@ span .deskripsi-ayat {
 /* =========================================
    BUNGA KANAN BAWAH
 ========================================= */
-
-/*
-Figma:
-left: 1040
-top: 4062
-width: 1647
-*/
 
 .closing-flower-bottom {
   position: absolute;
@@ -3851,7 +3899,8 @@ width: 1647
   }
 
   .closing-name {
-    font-size: 62px;
+    margin-top: 6%;
+    font-size: 42px;
   }
 
   .closing-and {
@@ -3881,19 +3930,12 @@ width: 1647
   }
 
   .closing-name {
-    font-size: clamp(
-      48px,
-      13vw,
-      60px
-    );
+    margin-top: 8%;
+    font-size: 2.5rem;
   }
 
   .closing-and {
-    font-size: clamp(
-      40px,
-      10vw,
-      50px
-    );
+    font-size: 2.5rem;
 
     margin:
       14px 0
@@ -3918,11 +3960,11 @@ width: 1647
   }
 
   .closing-name {
-    font-size: 48px;
+    font-size: 2.5rem;
   }
 
   .closing-and {
-    font-size: 39px;
+    font-size: 2.5rem;
 
     margin:
       12px 0

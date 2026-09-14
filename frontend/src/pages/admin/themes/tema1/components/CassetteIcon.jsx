@@ -3,8 +3,7 @@ import { motion } from "framer-motion";
 const CassetteIcon = ({ isPlaying }) => {
   return (
     <svg
-      width="32"
-      height="32"
+      className="cassette-icon"
       viewBox="0 0 100 100"
       fill="none"
       xmlns="http://www.w3.org/2000/svg"

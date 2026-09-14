@@ -12,7 +12,7 @@ const Cover = () => {
       initial="hidden"
       whileInView="show"
       viewport={{
-        once: false,
+        once: true,
         amount: 0.45,
       }}
     >
@@ -42,28 +42,23 @@ const Cover = () => {
           <motion.img
             src={coverImage}
             alt="Wedding Couple"
+            loading="lazy"
+            decoding="async"
             initial={{
-              scale: 1.12,
               opacity: 0,
+              scale: 1.06,
             }}
             whileInView={{
               opacity: 1,
-              scale: [1.08, 1.02, 1.08],
+              scale: 1,
             }}
             viewport={{
-              once: false,
-              amount: 0.4,
+              once: true,
+              amount: 0.25,
             }}
             transition={{
-              opacity: {
-                duration: 1.2,
-              },
-
-              scale: {
-                duration: 10,
-                repeat: Infinity,
-                ease: "easeInOut",
-              },
+              duration: 1.4,
+              ease: smoothEase,
             }}
           />
 
@@ -75,17 +70,19 @@ const Cover = () => {
               initial={{
                 opacity: 0,
                 y: -15,
-                letterSpacing: "20px",
+                scale: 0.96,
               }}
               whileInView={{
                 opacity: 1,
                 y: 0,
-                letterSpacing: "8px",
+                scale: 1,
               }}
-              viewport={{ once: false }}
+              viewport={{
+                once: true,
+              }}
               transition={{
                 duration: 0.9,
-                delay: 0.4,
+                delay: 0.3,
                 ease: smoothEase,
               }}
             >
@@ -143,7 +140,7 @@ const Cover = () => {
             initial="hidden"
             whileInView="show"
             viewport={{
-              once: false,
+              once: true,
               amount: 0.5,
             }}
             variants={{

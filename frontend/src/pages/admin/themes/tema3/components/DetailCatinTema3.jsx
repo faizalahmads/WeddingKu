@@ -174,7 +174,7 @@ const DetailCatin = () => {
       initial="hidden"
       whileInView="show"
       viewport={{
-        once: false,
+        once: true,
         amount: 0.35,
       }}
       variants={containerVariant}
@@ -230,7 +230,7 @@ const DetailCatin = () => {
             x: 0,
           }}
           viewport={{
-            once: false,
+            once: true,
           }}
           transition={{
             duration: 0.8,
@@ -252,22 +252,9 @@ const DetailCatin = () => {
       {/* =========================
           AMPERSAND
       ========================== */}
-      <motion.div
-        className="section5-and"
-        variants={andVariant}
-        animate={{
-          y: [0, -4, 0],
-        }}
-        transition={{
-          y: {
-            duration: 3,
-            repeat: Infinity,
-            ease: "easeInOut",
-          },
-        }}
-      >
+      <div className="section5-and">
         &
-      </motion.div>
+      </div>
 
       {/* =========================
           MEMPELAI PRIA
@@ -287,7 +274,7 @@ const DetailCatin = () => {
             x: 0,
           }}
           viewport={{
-            once: false,
+            once: true,
           }}
           transition={{
             duration: 0.8,
@@ -335,7 +322,7 @@ const DetailCatin = () => {
           x: 0,
         }}
         viewport={{
-          once: false,
+          once: true,
         }}
         animate={{
           y: [0, -7, 0],
@@ -382,7 +369,7 @@ const DetailCatin = () => {
           x: 0,
         }}
         viewport={{
-          once: false,
+          once: true,
         }}
         animate={{
           y: [0, 7, 0],

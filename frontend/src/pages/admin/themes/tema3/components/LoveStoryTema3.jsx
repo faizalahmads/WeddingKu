@@ -123,7 +123,7 @@ const LoveStoryTema3 = ({ invite }) => {
       initial="hidden"
       whileInView="show"
       viewport={{
-        once: false,
+        once: true,
         amount: 0.2,
       }}
       variants={sectionVariant}
@@ -155,7 +155,7 @@ const LoveStoryTema3 = ({ invite }) => {
               scale: 1,
             }}
             viewport={{
-              once: false,
+              once: true,
               amount: 0.3,
             }}
             transition={{
@@ -164,28 +164,14 @@ const LoveStoryTema3 = ({ invite }) => {
             }}
           >
             {/* Gerakan foto setelah masuk */}
-            <motion.div
-              className="story-photo"
-              animate={{
-                y: [0, -3, 0],
-                rotate: [0, -0.5, 0],
-              }}
-              transition={{
-                y: {
-                  duration: 7,
-                  repeat: Infinity,
-                  ease: "easeInOut",
-                },
-
-                rotate: {
-                  duration: 8,
-                  repeat: Infinity,
-                  ease: "easeInOut",
-                },
-              }}
-            >
-              <img src={photoStory1} alt="Love story 1" />
-            </motion.div>
+            <div className="story-photo">
+              <img
+                src={photoStory1}
+                alt="Love story 1"
+                loading="lazy"
+                decoding="async"
+              />
+            </div>
           </motion.div>
 
           {/* =====================================
@@ -209,7 +195,7 @@ const LoveStoryTema3 = ({ invite }) => {
               scale: 1,
             }}
             viewport={{
-              once: false,
+              once: true,
               amount: 0.3,
             }}
             transition={{
@@ -261,7 +247,7 @@ const LoveStoryTema3 = ({ invite }) => {
                 scale: 1,
               }}
               viewport={{
-                once: false,
+                once: true,
                 amount: 0.3,
               }}
               transition={{
@@ -315,7 +301,7 @@ const LoveStoryTema3 = ({ invite }) => {
               rotate: 0,
             }}
             viewport={{
-              once: false,
+              once: true,
             }}
             transition={{
               duration: 1.6,
@@ -344,7 +330,7 @@ const LoveStoryTema3 = ({ invite }) => {
               letterSpacing: "0px",
             }}
             viewport={{
-              once: false,
+              once: true,
             }}
             transition={{
               duration: 1.8,
@@ -385,7 +371,7 @@ const LoveStoryTema3 = ({ invite }) => {
                     scale: 1,
                   }}
                   viewport={{
-                    once: false,
+                    once: true,
                   }}
                   transition={{
                     duration: 1.2,
@@ -422,7 +408,7 @@ const LoveStoryTema3 = ({ invite }) => {
                     x: 0,
                   }}
                   viewport={{
-                    once: false,
+                    once: true,
                     amount: 0.3,
                   }}
                   transition={{
@@ -441,7 +427,7 @@ const LoveStoryTema3 = ({ invite }) => {
                       y: 0,
                     }}
                     viewport={{
-                      once: false,
+                      once: true,
                     }}
                     transition={{
                       duration: 1.3,
@@ -463,7 +449,7 @@ const LoveStoryTema3 = ({ invite }) => {
                       y: 0,
                     }}
                     viewport={{
-                      once: false,
+                      once: true,
                     }}
                     transition={{
                       duration: 1.5,

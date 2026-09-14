@@ -234,7 +234,7 @@ const ClosingSectionTema3 = ({ invite }) => {
                 TEXT CONTENT
             ========================== */}
 
-            <motion.div
+            <div
               className="closing-content"
               variants={{
                 hidden: {},
@@ -268,20 +268,20 @@ const ClosingSectionTema3 = ({ invite }) => {
                   COUPLE NAME
               ========================== */}
 
-              <motion.div className="closing-couple" variants={coupleVariant}>
-                <motion.div className="closing-name" variants={nameVariant}>
+              <div className="closing-couple" variants={coupleVariant}>
+                <div className="closing-name" variants={nameVariant}>
                   {brideName}
-                </motion.div>
+                </div>
 
-                <motion.div className="closing-and" variants={andVariant}>
+                <div className="closing-and" variants={andVariant}>
                   &amp;
-                </motion.div>
+                </div>
 
-                <motion.div className="closing-name" variants={nameVariant}>
+                <div className="closing-name" variants={nameVariant}>
                   {groomName}
-                </motion.div>
-              </motion.div>
-            </motion.div>
+                </div>
+              </div>
+            </div>
 
             {/* =========================
                 BUNGA KANAN BAWAH

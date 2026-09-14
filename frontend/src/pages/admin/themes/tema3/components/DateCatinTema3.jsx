@@ -195,7 +195,7 @@ const DateCatinTema3 = () => {
       initial="hidden"
       whileInView="show"
       viewport={{
-        once: false,
+        once: true,
         amount: 0.3,
       }}
       variants={containerVariant}
@@ -266,7 +266,7 @@ const DateCatinTema3 = () => {
                 scaleX: 1,
               }}
               viewport={{
-                once: false,
+                once: true,
               }}
               transition={{
                 duration: 1.4,
@@ -286,7 +286,7 @@ const DateCatinTema3 = () => {
                 y: 0,
               }}
               viewport={{
-                once: false,
+                once: true,
               }}
               transition={{
                 duration: 1.3,
@@ -308,7 +308,7 @@ const DateCatinTema3 = () => {
                 y: 0,
               }}
               viewport={{
-                once: false,
+                once: true,
               }}
               transition={{
                 duration: 1.3,
@@ -332,7 +332,7 @@ const DateCatinTema3 = () => {
                 scaleX: 1,
               }}
               viewport={{
-                once: false,
+                once: true,
               }}
               transition={{
                 duration: 1.4,
@@ -369,7 +369,7 @@ const DateCatinTema3 = () => {
                 scaleX: 1,
               }}
               viewport={{
-                once: false,
+                once: true,
               }}
               transition={{
                 duration: 1.4,
@@ -389,7 +389,7 @@ const DateCatinTema3 = () => {
                 y: 0,
               }}
               viewport={{
-                once: false,
+                once: true,
               }}
               transition={{
                 duration: 1.3,
@@ -411,7 +411,7 @@ const DateCatinTema3 = () => {
                 y: 0,
               }}
               viewport={{
-                once: false,
+                once: true,
               }}
               transition={{
                 duration: 1.3,
@@ -435,7 +435,7 @@ const DateCatinTema3 = () => {
                 scaleX: 1,
               }}
               viewport={{
-                once: false,
+                once: true,
               }}
               transition={{
                 duration: 1.4,

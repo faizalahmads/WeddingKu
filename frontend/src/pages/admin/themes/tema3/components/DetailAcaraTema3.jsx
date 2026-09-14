@@ -120,7 +120,7 @@ const DetailAcara = () => {
       initial="hidden"
       whileInView="show"
       viewport={{
-        once: false,
+        once: true,
         amount: 0.25,
       }}
       variants={containerVariant}
@@ -303,7 +303,7 @@ const DetailAcara = () => {
               scale: 1,
             }}
             viewport={{
-              once: false,
+              once: true,
             }}
             whileHover={{
               scale: 1.04,
@@ -378,7 +378,7 @@ const DetailAcara = () => {
             initial="hidden"
             whileInView="show"
             viewport={{
-              once: false,
+              once: true,
             }}
             variants={{
               hidden: {},

@@ -219,7 +219,7 @@ const WeddingGift = ({ invite }) => {
       initial="hidden"
       whileInView="show"
       viewport={{
-        once: false,
+        once: true,
         amount: 0.2,
       }}
       variants={sectionVariant}
@@ -258,7 +258,7 @@ const WeddingGift = ({ invite }) => {
               y: 0,
             }}
             viewport={{
-              once: false,
+              once: true,
             }}
             transition={{
               duration: 1.5,
@@ -283,7 +283,7 @@ const WeddingGift = ({ invite }) => {
               y: 0,
             }}
             viewport={{
-              once: false,
+              once: true,
             }}
             animate={{
               y: [0, -2, 0],
@@ -325,7 +325,7 @@ const WeddingGift = ({ invite }) => {
               y: 0,
             }}
             viewport={{
-              once: false,
+              once: true,
             }}
             transition={{
               duration: 1.4,
@@ -347,7 +347,7 @@ const WeddingGift = ({ invite }) => {
               y: 0,
             }}
             viewport={{
-              once: false,
+              once: true,
             }}
             transition={{
               duration: 1.4,
@@ -398,7 +398,7 @@ const WeddingGift = ({ invite }) => {
                       y: 0,
                     }}
                     viewport={{
-                      once: false,
+                      once: true,
                     }}
                     transition={{
                       duration: 1.2,
