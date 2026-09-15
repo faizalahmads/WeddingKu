@@ -268,43 +268,7 @@ const WeddingGift = ({ invite }) => {
             Wedding Gift
           </motion.h2>
 
-          <motion.img
-            src={gift}
-            alt=""
-            className="gift-icon"
-            initial={{
-              opacity: 0,
-              scale: 0.85,
-              y: 10,
-            }}
-            whileInView={{
-              opacity: 1,
-              scale: 1,
-              y: 0,
-            }}
-            viewport={{
-              once: true,
-            }}
-            animate={{
-              y: [0, -2, 0],
-            }}
-            transition={{
-              opacity: {
-                duration: 1.4,
-              },
-
-              scale: {
-                duration: 1.4,
-                ease: smoothEase,
-              },
-
-              y: {
-                duration: 5,
-                repeat: Infinity,
-                ease: "easeInOut",
-              },
-            }}
-          />
+          <img src={gift} alt="" className="gift-icon gift-icon-float" />
         </motion.div>
 
         {/* =====================================
@@ -537,18 +501,9 @@ const WeddingGift = ({ invite }) => {
                   ease: smoothEase,
                 }}
               >
-                <motion.div
-                  animate={{
-                    scale: [1, 1.06, 1],
-                  }}
-                  transition={{
-                    duration: 4,
-                    repeat: Infinity,
-                    ease: "easeInOut",
-                  }}
-                >
+                <div className="gift-whatsapp-icon">
                   <FaWhatsapp className="gift-contact-icon" />
-                </motion.div>
+                </div>
 
                 <span className="gift-contact-phone">{contact.phone}</span>
 

@@ -209,28 +209,22 @@ const DateCatinTema3 = () => {
         {/* =========================
             SAVE
         ========================== */}
-        <div className="save-text-3">
-          Save
-        </div>
+        <div className="save-text-3">Save</div>
 
         {/* =========================
             THE
         ========================== */}
-        <div className="the-text">
-          the
-        </div>
+        <div className="the-text">the</div>
 
         {/* =========================
             DATE
         ========================== */}
-        <div className="date-text">
-          Date
-        </div>
+        <div className="date-text">Date</div>
 
         {/* =========================
             MONTH
         ========================== */}
-        <div className="month-text" variants={fadeUpVariant}>
+        <div className="month-text">
           SEPTEMBER
         </div>
 
@@ -253,93 +247,13 @@ const DateCatinTema3 = () => {
             className="event-column akad-column"
             variants={akadVariant}
           >
-            <motion.img
-              src={line}
-              alt=""
-              className="event-line"
-              initial={{
-                opacity: 0,
-                scaleX: 0,
-              }}
-              whileInView={{
-                opacity: 1,
-                scaleX: 1,
-              }}
-              viewport={{
-                once: true,
-              }}
-              transition={{
-                duration: 1.4,
-                delay: 0.4,
-                ease: smoothEase,
-              }}
-            />
+            <img src={line} alt="" className="event-line" />
 
-            <motion.div
-              className="event-name"
-              initial={{
-                opacity: 0,
-                y: 10,
-              }}
-              whileInView={{
-                opacity: 1,
-                y: 0,
-              }}
-              viewport={{
-                once: true,
-              }}
-              transition={{
-                duration: 1.3,
-                delay: 0.45,
-                ease: smoothEase,
-              }}
-            >
-              Akad
-            </motion.div>
+            <div className="event-name">Akad</div>
 
-            <motion.div
-              className="event-time"
-              initial={{
-                opacity: 0,
-                y: 8,
-              }}
-              whileInView={{
-                opacity: 1,
-                y: 0,
-              }}
-              viewport={{
-                once: true,
-              }}
-              transition={{
-                duration: 1.3,
-                delay: 0.6,
-                ease: smoothEase,
-              }}
-            >
-              Pukul 08.00 WIB
-            </motion.div>
+            <div className="event-time">Pukul 08.00 WIB</div>
 
-            <motion.img
-              src={line}
-              alt=""
-              className="event-line"
-              initial={{
-                opacity: 0,
-                scaleX: 0,
-              }}
-              whileInView={{
-                opacity: 1,
-                scaleX: 1,
-              }}
-              viewport={{
-                once: true,
-              }}
-              transition={{
-                duration: 1.4,
-                delay: 0.7,
-                ease: smoothEase,
-              }}
-            />
+            <img src={line} alt="" className="event-line" />
           </motion.div>
 
           {/* =========================
@@ -352,98 +266,32 @@ const DateCatinTema3 = () => {
           {/* =========================
               RESEPSI
           ========================== */}
-          <motion.div
+          <div
             className="event-column resepsi-column"
             variants={resepsiVariant}
           >
-            <motion.img
+            <img
               src={line}
-              alt=""
               className="event-line"
-              initial={{
-                opacity: 0,
-                scaleX: 0,
-              }}
-              whileInView={{
-                opacity: 1,
-                scaleX: 1,
-              }}
-              viewport={{
-                once: true,
-              }}
-              transition={{
-                duration: 1.4,
-                delay: 0.4,
-                ease: smoothEase,
-              }}
             />
 
-            <motion.div
+            <div
               className="event-name"
-              initial={{
-                opacity: 0,
-                y: 10,
-              }}
-              whileInView={{
-                opacity: 1,
-                y: 0,
-              }}
-              viewport={{
-                once: true,
-              }}
-              transition={{
-                duration: 1.3,
-                delay: 0.45,
-                ease: smoothEase,
-              }}
             >
               Resepsi
-            </motion.div>
+            </div>
 
-            <motion.div
+            <div
               className="event-time"
-              initial={{
-                opacity: 0,
-                y: 8,
-              }}
-              whileInView={{
-                opacity: 1,
-                y: 0,
-              }}
-              viewport={{
-                once: true,
-              }}
-              transition={{
-                duration: 1.3,
-                delay: 0.6,
-                ease: smoothEase,
-              }}
             >
               Pukul 11.00 WIB
-            </motion.div>
+            </div>
 
-            <motion.img
+            <img
               src={line}
-              alt=""
               className="event-line"
-              initial={{
-                opacity: 0,
-                scaleX: 0,
-              }}
-              whileInView={{
-                opacity: 1,
-                scaleX: 1,
-              }}
-              viewport={{
-                once: true,
-              }}
-              transition={{
-                duration: 1.4,
-                delay: 0.7,
-                ease: smoothEase,
-              }}
             />
-          </motion.div>
+          </div>
         </motion.div>
 
         {/* =========================

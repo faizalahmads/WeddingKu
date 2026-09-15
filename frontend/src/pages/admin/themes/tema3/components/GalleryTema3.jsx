@@ -24,15 +24,6 @@ const GalleryTema3 = ({ invite }) => {
     gallery9,
   ];
 
-  /*
-    Kalau nanti gallery sudah berasal dari database:
-
-    const galleryImages =
-      invite?.gallery?.length > 0
-        ? invite.gallery
-        : defaultGallery;
-  */
-
   const galleryImages = defaultGallery;
 
   return (

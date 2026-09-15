@@ -356,110 +356,15 @@ const LoveStoryTema3 = ({ invite }) => {
                 key={story.id || index}
                 variants={storyVariant}
               >
-                {/* =====================================
-                    HEART TIMELINE
-                ====================================== */}
+                <div className="story-heart">
+                  <IoHeart />
+                </div>
 
-                <motion.div
-                  className="story-heart"
-                  initial={{
-                    opacity: 0,
-                    scale: 0.5,
-                  }}
-                  whileInView={{
-                    opacity: 1,
-                    scale: 1,
-                  }}
-                  viewport={{
-                    once: true,
-                  }}
-                  transition={{
-                    duration: 1.2,
-                    delay: 0.25,
-                    ease: smoothEase,
-                  }}
-                >
-                  <motion.div
-                    animate={{
-                      scale: [1, 1.07, 1],
-                    }}
-                    transition={{
-                      duration: 3.5,
-                      repeat: Infinity,
-                      ease: "easeInOut",
-                    }}
-                  >
-                    <IoHeart />
-                  </motion.div>
-                </motion.div>
+                <div className="story-text">
+                  <h3>{story.title}</h3>
 
-                {/* =====================================
-                    TEXT
-                ====================================== */}
-
-                <motion.div
-                  className="story-text"
-                  initial={{
-                    opacity: 0,
-                    x: 18,
-                  }}
-                  whileInView={{
-                    opacity: 1,
-                    x: 0,
-                  }}
-                  viewport={{
-                    once: true,
-                    amount: 0.3,
-                  }}
-                  transition={{
-                    duration: 1.5,
-                    delay: 0.25,
-                    ease: smoothEase,
-                  }}
-                >
-                  <motion.h3
-                    initial={{
-                      opacity: 0,
-                      y: 10,
-                    }}
-                    whileInView={{
-                      opacity: 1,
-                      y: 0,
-                    }}
-                    viewport={{
-                      once: true,
-                    }}
-                    transition={{
-                      duration: 1.3,
-                      delay: 0.3,
-                      ease: smoothEase,
-                    }}
-                  >
-                    {story.title}
-                  </motion.h3>
-
-                  <motion.p
-                    className="mb-0"
-                    initial={{
-                      opacity: 0,
-                      y: 12,
-                    }}
-                    whileInView={{
-                      opacity: 1,
-                      y: 0,
-                    }}
-                    viewport={{
-                      once: true,
-                    }}
-                    transition={{
-                      duration: 1.5,
-                      delay: 0.45,
-                      ease: smoothEase,
-                    }}
-                  >
-                    {story.description}
-                  </motion.p>
-                </motion.div>
+                  <p className="mb-0">{story.description}</p>
+                </div>
               </motion.div>
             ))}
           </motion.div>

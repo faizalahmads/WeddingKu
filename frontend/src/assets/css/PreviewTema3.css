@@ -406,7 +406,7 @@
 
 .judul .nama-pengantin {
   color: #FFF6E7;
-  font-family: Marck Script;
+  font-family: "Sloop Script Pro";
   font-size: 3em;
   font-weight: 400;
 }
@@ -1410,6 +1410,21 @@ span .deskripsi-ayat {
   white-space: nowrap;
 }
 
+.gift-whatsapp-icon {
+  animation: whatsappPulse 5s ease-in-out infinite;
+}
+
+@keyframes whatsappPulse {
+  0%,
+  100% {
+    transform: scale(1);
+  }
+
+  50% {
+    transform: scale(1.04);
+  }
+}
+
 .music-player-wrapper {
   margin-top: 720px;
   display: flex;
@@ -1774,7 +1789,7 @@ span .deskripsi-ayat {
 
   .bride,
   .groom {
-    font-size: 60px;
+    font-size: 55px;
   }
 
   .and {
@@ -1814,7 +1829,7 @@ span .deskripsi-ayat {
 @media (max-width: 375px) {
 
   .cover-image {
-    width: 94%;
+    width: 85%;
   }
 
   .the {
@@ -1823,16 +1838,24 @@ span .deskripsi-ayat {
 
   .bride,
   .groom {
-    font-size: 62px;
+    font-size: 40px;
 
-    letter-spacing: -4px;
+    letter-spacing: 5px;
   }
 
   .and {
     font-size: 40px;
   }
 
-  .name-bride,
+  .couple-name {
+    top: 57%;
+    gap: 5px;
+  }
+
+  .name-bride{
+    left: 25%;
+    font-size: 36px;
+  }
   .name-groom {
     font-size: 36px;
   }
@@ -2182,7 +2205,6 @@ span .deskripsi-ayat {
   display: block;
 }
 
-
 /* =====================================================
    EVENT NAME
 ===================================================== */
@@ -2191,13 +2213,12 @@ span .deskripsi-ayat {
   margin-top: 4px;
   width: 100%;
   color: white;
-  font-family: "SloopScriptPro", cursive;
+  font-family: "Sloop Script Pro", cursive;
   font-size: 2.5rem;
   font-weight: 400;
   line-height: 1;
   white-space: nowrap;
 }
-
 
 /* =====================================================
    AKAD
@@ -2212,7 +2233,6 @@ span .deskripsi-ayat {
   transform: translateX(-7%);
 }
 
-
 /* =====================================================
    RESEPSI
 ===================================================== */
@@ -2224,7 +2244,6 @@ span .deskripsi-ayat {
 .resepsi-column .event-name {
   text-align: center;
 }
-
 
 /* =====================================================
    EVENT TIME
@@ -2241,7 +2260,6 @@ span .deskripsi-ayat {
   margin-bottom: 2px;
 }
 
-
 /* =====================================================
    EVENT DAY
 ===================================================== */
@@ -2254,7 +2272,6 @@ span .deskripsi-ayat {
   line-height: 1;
   white-space: nowrap;
 }
-
 
 /* =====================================================
    BUILDING
@@ -2277,25 +2294,63 @@ span .deskripsi-ayat {
 @media (max-width: 576px) {
   .save-text-3 {
     font-family: "Slight", cursive;
-    font-size: 90px;
+    font-size: 50px;
   }
 
   .the-text {
     font-family: "Slight", cursive;
-    top: 15.5%;
-    left: 15%;
-    font-size: 45px;
+    top: 14%;
+    left: 20%;
+    font-size: 35px;
   }
 
   .date-text{
     font-family: "Slight", cursive;
-    font-size: 80px;
+    font-size: 55px;
     top: 22%;
     left: -2%;
   }
 
   .month-text {
     left: 20%;
+  }
+}
+
+@media (max-width: 360px) {
+  .the-text {
+    top: 14%;
+  }
+
+  .event-wrapper {
+    width: 70%;
+    column-gap: 6%;
+  }
+
+  .date-text {
+    top: 25%;
+  }
+
+  .month-text {
+    font-size: 2.5rem;
+    left: 22%;
+  }
+
+  .event-name{
+    font-size: 2.2rem;
+  }
+
+  .event-time{
+    font-size: 1rem;
+  }
+
+  .event-day{
+    font-size: 4rem;
+    font-family: "Quattrocento Bold";
+  }
+
+  .year-text{
+    font-size: 2.8rem;
+    left: 36%;
   }
 }
 
@@ -2341,7 +2396,7 @@ span .deskripsi-ayat {
 .detail-acara-title {
   margin: 0 0 20px;
   color: #ffffff;
-  font-family: "SloopScriptPro", cursive;
+  font-family: "Sloop Script Pro";
   font-size: 75px;
   line-height: 0.8;
 }
@@ -2419,11 +2474,40 @@ span .deskripsi-ayat {
   height: 75px;
 
   object-fit: contain;
+}
 
-  /*
-    Kalau bungaJuntaiHijau terlalu besar / bentuknya
-    berbeda, bagian ini tinggal ganti asset.
-  */
+/* ==========================================
+   FLOWER ANIMATION - CSS
+========================================== */
+
+.flower-float-left {
+  animation: flowerFloatLeft 7s ease-in-out infinite;
+}
+
+.flower-float-right {
+  animation: flowerFloatRight 7.5s ease-in-out infinite;
+}
+
+@keyframes flowerFloatLeft {
+  0%,
+  100% {
+    transform: translate3d(0, 0, 0) rotate(-2deg);
+  }
+
+  50% {
+    transform: translate3d(0, -5px, 0) rotate(1deg);
+  }
+}
+
+@keyframes flowerFloatRight {
+  0%,
+  100% {
+    transform: translate3d(0, 0, 0) rotate(2deg);
+  }
+
+  50% {
+    transform: translate3d(0, 5px, 0) rotate(-1deg);
+  }
 }
 
 
@@ -2483,7 +2567,7 @@ span .deskripsi-ayat {
 /* TITLE */
 .detail-dress-title {
   color: #ffffff;
-  font-family: "SloopScriptPro", cursive;
+  font-family: "Sloop Script Pro", cursive;
   font-size: 45px;
   line-height: 1;
 }
@@ -2527,16 +2611,6 @@ span .deskripsi-ayat {
 
 .detail-color-white {
   background: #fdf9f6;
-}
-
-@media (max-width: 390px) {
-.the-text {
-  top: 15%;
-}
-
-.date-text {
-  top: 25%;
-}
 }
 
 
@@ -2637,7 +2711,7 @@ span .deskripsi-ayat {
   margin: 0 auto;
 
   padding:
-    230px
+    220px
     25px
     180px;
 
@@ -2657,9 +2731,10 @@ span .deskripsi-ayat {
 
 .gift-tema3-title {
   color: #ffffff;
-  font-family: "SloopScriptPro", cursive;
+  font-family: "Sloop Script Pro", cursive;
   font-size: 3em;
   white-space: nowrap;
+  margin-bottom: 5%;
 }
 
 
@@ -2708,7 +2783,7 @@ span .deskripsi-ayat {
 .gift-bank-number {
   margin: 0;
   font-family: "Cormorant Garamond";
-  font-size: 16px;
+  font-size: 20px;
   line-height: 1.2;
 }
 
@@ -2717,7 +2792,7 @@ span .deskripsi-ayat {
 .gift-bank-name {
   margin: 4px 0 0;
   font-family: "Cormorant Garamond";
-  font-size: 16px;
+  font-size: 20px;
   line-height: 1.1;
 }
 
@@ -2729,7 +2804,7 @@ span .deskripsi-ayat {
     0
     22px;
   font-family: "Cormorant Garamond";
-  font-size: 16px;
+  font-size: 20px;
 }
 
 
@@ -2894,7 +2969,7 @@ span .deskripsi-ayat {
 
 .gift-contact-phone {
   position: relative;
-  font-size: 16px;
+  font-size: 20px;
   line-height: 1.2;
   z-index: 2;
 }
@@ -2905,7 +2980,7 @@ span .deskripsi-ayat {
 .gift-contact-name {
   position: relative;
   margin-top: 4px;
-  font-size: 16px;
+  font-size: 20px;
   line-height: 1;
   z-index: 2;
 }
@@ -2918,6 +2993,21 @@ span .deskripsi-ayat {
 .gift-contact-icon {
   font-size: 1.5rem;
   margin-bottom: 8px;
+}
+
+.gift-icon-float {
+  animation: giftFloat 6s ease-in-out infinite;
+}
+
+@keyframes giftFloat {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+
+  50% {
+    transform: translateY(-3px);
+  }
 }
 
 /* =====================================================
@@ -2974,44 +3064,34 @@ span .deskripsi-ayat {
   bottom: -40px;
 }
 
-
 /* =====================================================
-   MOBILE KECIL
+   MOBILE Sedang
 ===================================================== */
 
-@media (max-width: 375px) {
-
-  .gift-tema3-wrapper {
-    padding:
-      210px
-      18px
-      150px;
-  }
-
-
+@media (max-width: 576px) {
   .gift-tema3-header {
-    margin-bottom: 110px;
+    margin-bottom: 20px;
   }
 
 
   .gift-tema3-title {
-    font-size: 70px;
+    font-size: 50px;
   }
 
 
   .gift-tema3-description p,
   .gift-physical-description p {
-    font-size: 18px;
+    font-size: 20px;
   }
 
 
   .gift-bank-number {
-    font-size: 19px;
+    font-size: 20px;
   }
 
 
   .gift-bank-name {
-    font-size: 25px;
+    font-size: 20px;
   }
 
 
@@ -3027,12 +3107,12 @@ span .deskripsi-ayat {
       5px
       9px;
 
-    font-size: 14px;
+    font-size: 16px;
   }
 
 
   .gift-copy-btn svg {
-    font-size: 19px;
+    font-size: 16px;
   }
 
 
@@ -3044,12 +3124,12 @@ span .deskripsi-ayat {
 
 
   .gift-contact-phone {
-    font-size: 17px;
+    font-size: 20px;
   }
 
 
   .gift-contact-name {
-    font-size: 21px;
+    font-size: 20px;
   }
 
 
@@ -3063,8 +3143,89 @@ span .deskripsi-ayat {
   }
 
 
-  .gift-flower-middle-left {
-    width: 155px;
+  .gift-flower-bottom-right {
+    width: 205px;
+  }
+
+}
+
+
+/* =====================================================
+   MOBILE KECIL
+===================================================== */
+
+@media (max-width: 360px) {
+  .gift-tema3-header {
+    margin-bottom: 20px;
+  }
+
+
+  .gift-tema3-title {
+    font-size: 50px;
+  }
+
+
+  .gift-tema3-description p,
+  .gift-physical-description p {
+    font-size: 20px;
+  }
+
+
+  .gift-bank-number {
+    font-size: 20px;
+  }
+
+
+  .gift-bank-name {
+    font-size: 20px;
+  }
+
+
+  .gift-bank-owner {
+    font-size: 20px;
+  }
+
+
+  .gift-copy-btn {
+    min-width: 80px;
+
+    padding:
+      5px
+      9px;
+
+    font-size: 16px;
+  }
+
+
+  .gift-copy-btn svg {
+    font-size: 16px;
+  }
+
+
+  .gift-contact-card {
+    max-width: 145px;
+
+    min-height: 95px;
+  }
+
+
+  .gift-contact-phone {
+    font-size: 20px;
+  }
+
+
+  .gift-contact-name {
+    font-size: 20px;
+  }
+
+
+  .gift-flower-top-left {
+    width: 205px;
+  }
+
+
+  .gift-flower-top-right {
+    width: 220px;
   }
 
 
@@ -3144,6 +3305,21 @@ span .deskripsi-ayat {
   transition: transform 0.5s ease;
 }
 
+.story-photo-float {
+  animation: storyPhotoFloat 8s ease-in-out infinite;
+}
+
+@keyframes storyPhotoFloat {
+  0%,
+  100% {
+    transform: translateY(0) rotate(0deg);
+  }
+
+  50% {
+    transform: translateY(3px) rotate(0.3deg);
+  }
+}
+
 
 /* kiri */
 .story-polaroid-left {
@@ -3211,6 +3387,21 @@ span .deskripsi-ayat {
   transform-origin: 80% 8%;
 }
 
+.detail-flower-float {
+  animation: detailFlowerFloat 8s ease-in-out infinite;
+}
+
+@keyframes detailFlowerFloat {
+  0%,
+  100% {
+    transform: translate3d(0, 0, 0) rotate(-1deg);
+  }
+
+  50% {
+    transform: translate3d(0, -4px, 0) rotate(1deg);
+  }
+}
+
 /* ========================================
    WAX SEAL
 ======================================== */
@@ -3235,7 +3426,7 @@ span .deskripsi-ayat {
 }
 
 .love-story-heading h2 {
-  font-family:"SloopScriptPro", cursive;
+  font-family:"Sloop Script Pro", cursive;
   font-size: 75px;
   line-height: 0.9;
   color: #fff;
@@ -3310,7 +3501,7 @@ span .deskripsi-ayat {
 
 .story-text h3 {
   margin: 0 0 10px 0;
-  font-family:"SloopScriptPro", cursive;
+  font-family:"Sloop Script Pro", cursive;
   font-size: 30px;
   line-height: 1;
   color: #fff;
@@ -3367,7 +3558,7 @@ span .deskripsi-ayat {
    SMALL MOBILE
 ======================================== */
 
-@media (max-width: 390px) {
+@media (max-width: 360px) {
   .love-story-section {
     padding-top: 55px;
     padding-bottom: 120px;
@@ -3386,7 +3577,7 @@ span .deskripsi-ayat {
   .story-polaroid-right {
     width: 125px;
     height: 170px;
-    right: 80px;
+    right: 65px;
   }
 
   .story-flower {
@@ -3457,6 +3648,7 @@ span .deskripsi-ayat {
 
 .gallery-title-wrapper {
   width: 100%;
+  margin-bottom: 5%;
   position: relative;
   display: flex;
   justify-content: center;
@@ -3468,7 +3660,7 @@ span .deskripsi-ayat {
 .gallery-title {
   margin: 0;
   font-family:
-    "SloopScriptPro", cursive;
+    "Sloop Script Pro", cursive;
   font-size: 4.5rem;
   font-weight: 400;
   line-height: 0.8;
@@ -3618,7 +3810,7 @@ span .deskripsi-ayat {
    SMALL MOBILE
 ========================================= */
 
-@media (max-width: 390px) {
+@media (max-width: 360px) {
   .gallery-collage {
     width: 86%;
     max-width: 390px;
@@ -3799,7 +3991,7 @@ span .deskripsi-ayat {
 /* NAMA */
 
 .closing-name {
-  font-family: "Amoresa";
+  font-family: "Sloop Script Pro";
   font-size: 42px;
   font-weight: 400;
   line-height: 0.92;
@@ -3899,11 +4091,13 @@ span .deskripsi-ayat {
   }
 
   .closing-name {
-    margin-top: 6%;
-    font-size: 42px;
+    margin-top: 2%;
+    margin-right: 10%;
+    font-size: 50px;
   }
 
   .closing-and {
+    margin-right: 5%;
     font-size: 50px;
   }
 }
@@ -3930,12 +4124,12 @@ span .deskripsi-ayat {
   }
 
   .closing-name {
-    margin-top: 8%;
+    margin-top: 2%;
     font-size: 2.5rem;
   }
 
   .closing-and {
-    font-size: 2.5rem;
+    font-size: 2rem;
 
     margin:
       14px 0
@@ -3948,23 +4142,23 @@ span .deskripsi-ayat {
    SMALL MOBILE
 ========================================= */
 
-@media (max-width: 390px) {
+@media (max-width: 360px) {
   .closing-message {
-    width: 61%;
+    width: 62%;
 
-    font-size: 12px;
+    font-size: 11px;
   }
 
   .closing-couple {
-    top: 46.5%;
+    top: 45%;
   }
 
   .closing-name {
-    font-size: 2.5rem;
+    font-size: 2rem;
   }
 
   .closing-and {
-    font-size: 2.5rem;
+    font-size: 2rem;
 
     margin:
       12px 0

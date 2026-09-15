@@ -5,6 +5,23 @@ import coverImage from "../../../../../assets/images/tema3/coverCatin.png";
 
 const smoothEase = [0.22, 1, 0.36, 1];
 
+const cardVariant = {
+  hidden: {
+    opacity: 0,
+    y: 35,
+  },
+
+  show: {
+    opacity: 1,
+    y: 0,
+
+    transition: {
+      duration: 1.1,
+      ease: smoothEase,
+    },
+  },
+};
+
 const Cover = () => {
   return (
     <motion.section
@@ -16,50 +33,15 @@ const Cover = () => {
         amount: 0.45,
       }}
     >
-      <motion.div
-        className="cover-card"
-        variants={{
-          hidden: {
-            opacity: 0,
-            y: 50,
-            scale: 0.96,
-          },
-
-          show: {
-            opacity: 1,
-            y: 0,
-            scale: 1,
-            transition: {
-              duration: 1.1,
-              ease: smoothEase,
-            },
-          },
-        }}
-      >
+      <motion.div className="cover-card" variants={cardVariant}>
         {/* Foto utama */}
         <div className="cover-image">
           {/* Background / Couple Image */}
-          <motion.img
+          <img
             src={coverImage}
             alt="Wedding Couple"
             loading="lazy"
             decoding="async"
-            initial={{
-              opacity: 0,
-              scale: 1.06,
-            }}
-            whileInView={{
-              opacity: 1,
-              scale: 1,
-            }}
-            viewport={{
-              once: true,
-              amount: 0.25,
-            }}
-            transition={{
-              duration: 1.4,
-              ease: smoothEase,
-            }}
           />
 
           {/* Typography */}

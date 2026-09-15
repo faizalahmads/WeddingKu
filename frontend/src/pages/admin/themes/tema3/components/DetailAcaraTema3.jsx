@@ -133,27 +133,9 @@ const DetailAcara = () => {
           className="detail-acara-item text-center"
           variants={akadVariant}
         >
-          <motion.h2
-            className="detail-acara-title"
-            initial={{
-              opacity: 0,
-              y: 18,
-            }}
-            whileInView={{
-              opacity: 1,
-              y: 0,
-            }}
-            viewport={{ once: false }}
-            transition={{
-              duration: 1.3,
-              delay: 0.2,
-              ease: smoothEase,
-            }}
-          >
-            Akad
-          </motion.h2>
+          <h2 className="detail-acara-title">Akad</h2>
 
-          <motion.div
+          <div
             className="detail-acara-content"
             initial={{
               opacity: 0,
@@ -163,7 +145,7 @@ const DetailAcara = () => {
               opacity: 1,
               y: 0,
             }}
-            viewport={{ once: false }}
+            viewport={{ once: true }}
             transition={{
               duration: 1.5,
               delay: 0.4,
@@ -183,7 +165,7 @@ const DetailAcara = () => {
               <br />
               Daerah Khusus Ibukota Jakarta 14360
             </p>
-          </motion.div>
+          </div>
         </motion.div>
 
         {/* =====================================
@@ -199,33 +181,16 @@ const DetailAcara = () => {
             opacity: 1,
             scale: 1,
           }}
-          viewport={{ once: false }}
+          viewport={{ once: true }}
           transition={{
             duration: 1.8,
             ease: smoothEase,
           }}
         >
-          <motion.img
+          <img
             src={flower}
             alt=""
-            className="detail-acara-flower"
-            animate={{
-              y: [0, -4, 0],
-              rotate: [-1, 1, -1],
-            }}
-            transition={{
-              y: {
-                duration: 7,
-                repeat: Infinity,
-                ease: "easeInOut",
-              },
-
-              rotate: {
-                duration: 8,
-                repeat: Infinity,
-                ease: "easeInOut",
-              },
-            }}
+            className="detail-acara-flower detail-flower-float"
           />
         </motion.div>
 
@@ -246,7 +211,7 @@ const DetailAcara = () => {
               opacity: 1,
               y: 0,
             }}
-            viewport={{ once: false }}
+            viewport={{ once: true }}
             transition={{
               duration: 1.3,
               delay: 0.2,
@@ -266,7 +231,7 @@ const DetailAcara = () => {
               opacity: 1,
               y: 0,
             }}
-            viewport={{ once: false }}
+            viewport={{ once: true }}
             transition={{
               duration: 1.5,
               delay: 0.4,
@@ -339,7 +304,7 @@ const DetailAcara = () => {
               opacity: 1,
               y: 0,
             }}
-            viewport={{ once: false }}
+            viewport={{ once: true }}
             transition={{
               duration: 1.4,
               ease: smoothEase,
@@ -358,7 +323,7 @@ const DetailAcara = () => {
               opacity: 1,
               y: 0,
             }}
-            viewport={{ once: false }}
+            viewport={{ once: true }}
             transition={{
               duration: 1.4,
               delay: 0.25,
