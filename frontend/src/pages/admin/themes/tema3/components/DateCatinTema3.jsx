@@ -266,7 +266,7 @@ const DateCatinTema3 = () => {
           {/* =========================
               RESEPSI
           ========================== */}
-          <div
+          <motion.div
             className="event-column resepsi-column"
             variants={resepsiVariant}
           >
@@ -291,7 +291,7 @@ const DateCatinTema3 = () => {
               src={line}
               className="event-line"
             />
-          </div>
+          </motion.div>
         </motion.div>
 
         {/* =========================

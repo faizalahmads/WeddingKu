@@ -106,15 +106,6 @@ const LoveStoryTema3 = ({ invite }) => {
     },
   ];
 
-  /*
-    Nanti kalau data story sudah berasal dari DB:
-
-    const stories =
-      invite?.stories?.length > 0
-        ? invite.stories
-        : defaultStories;
-  */
-
   const stories = defaultStories;
 
   return (

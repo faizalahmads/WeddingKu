@@ -83,7 +83,7 @@ const Cover = () => {
                   opacity: 1,
                   x: 0,
                 }}
-                viewport={{ once: false }}
+                viewport={{ once: true }}
                 transition={{
                   duration: 1,
                   delay: 0.6,
@@ -104,7 +104,7 @@ const Cover = () => {
                   opacity: 1,
                   x: 0,
                 }}
-                viewport={{ once: false }}
+                viewport={{ once: true }}
                 transition={{
                   duration: 1,
                   delay: 0.75,

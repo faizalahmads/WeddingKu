@@ -120,7 +120,7 @@ const EnvelopeSection = ({ open, showLetter, isSlide2, onOpen, guestName }) => {
         <br />
         <span className="text">Bapak/Ibu/Saudara/i</span>
         <br />
-        <span className="nama-tamu">{guestName} & Partner</span>
+        <span className="nama-tamu">{guestName}</span>
       </motion.div>
     </motion.section>
   );

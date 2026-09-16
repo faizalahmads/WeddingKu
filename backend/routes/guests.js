@@ -387,4 +387,155 @@ router.put("/guests/:id", async (req, res) => {
   }
 });
 
+router.get("/rsvp/messages/:invitationId", async (req, res) => {
+  const { invitationId } = req.params;
+
+  try {
+    const [rows] = await db.query(
+      `
+        SELECT
+          id,
+          name AS guest_name,
+          rsvp_status,
+          rsvp_message,
+          rsvp_at
+        FROM guests
+        WHERE invitation_id = ?
+          AND rsvp_message IS NOT NULL
+          AND TRIM(rsvp_message) != ''
+        ORDER BY rsvp_at DESC
+        `,
+      [invitationId],
+    );
+
+    return res.json({
+      success: true,
+      data: rows,
+    });
+  } catch (err) {
+    console.error("GET RSVP messages error:", err);
+
+    return res.status(500).json({
+      success: false,
+      message: "Gagal mengambil doa dan ucapan",
+    });
+  }
+});
+
+// =====================================================
+// GET RSVP TAMU
+// =====================================================
+router.get("/rsvp/:code", async (req, res) => {
+  const { code } = req.params;
+
+  try {
+    const [rows] = await db.query(
+      `
+      SELECT
+        id,
+        name,
+        code,
+        invitation_id,
+        rsvp_status,
+        rsvp_guest_count,
+        rsvp_message,
+        rsvp_at
+      FROM guests
+      WHERE code = ?
+      LIMIT 1
+      `,
+      [code]
+    );
+
+    if (rows.length === 0) {
+      return res.status(404).json({
+        success: false,
+        message: "Tamu tidak ditemukan",
+      });
+    }
+
+    return res.json({
+      success: true,
+      data: rows[0],
+    });
+  } catch (err) {
+    console.error("GET RSVP error:", err);
+
+    return res.status(500).json({
+      success: false,
+      message: "Gagal mengambil data RSVP",
+    });
+  }
+});
+
+
+// =====================================================
+// PUT / UPDATE RSVP TAMU
+// =====================================================
+router.put("/rsvp/:code", async (req, res) => {
+  const { code } = req.params;
+  const { status, message } = req.body;
+
+  const allowedStatus = ["hadir", "tidak_hadir"];
+
+  if (!allowedStatus.includes(status)) {
+    return res.status(400).json({
+      success: false,
+      message: "Status RSVP tidak valid",
+    });
+  }
+
+  try {
+    const [guestRows] = await db.query(
+      `
+      SELECT
+        id,
+        name,
+        invitation_id
+      FROM guests
+      WHERE code = ?
+      LIMIT 1
+      `,
+      [code],
+    );
+
+    if (guestRows.length === 0) {
+      return res.status(404).json({
+        success: false,
+        message: "Tamu tidak ditemukan",
+      });
+    }
+
+    await db.query(
+      `
+      UPDATE guests
+      SET
+        rsvp_status = ?,
+        rsvp_message = ?,
+        rsvp_at = NOW()
+      WHERE code = ?
+      `,
+      [status, message?.trim() || null, code],
+    );
+
+    return res.json({
+      success: true,
+      message: "Konfirmasi RSVP berhasil disimpan",
+      data: {
+        guest_name: guestRows[0].name,
+        invitation_id: guestRows[0].invitation_id,
+        rsvp_status: status,
+        rsvp_message: message?.trim() || null,
+      },
+    });
+  } catch (err) {
+    console.error("PUT RSVP error:", err);
+
+    return res.status(500).json({
+      success: false,
+      message: "Gagal menyimpan RSVP",
+    });
+  }
+});
+
 module.exports = router;
