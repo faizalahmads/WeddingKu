@@ -73,19 +73,19 @@
 
 .wedding-side-bg {
   position: absolute;
-
   inset: 0;
 
   width: 100%;
   height: 100%;
 
   object-fit: cover;
-  object-position: center;
+
+  /* posisi gambar */
+  object-position: 65% 80%;
 
   display: block;
 
   pointer-events: none;
-
   backface-visibility: hidden;
 }
 
@@ -4718,12 +4718,71 @@ span .deskripsi-ayat {
 
 /* LIST */
 
+/* ========================================
+   RSVP MESSAGE LIST
+======================================== */
+
 .rsvp-message-list {
   display: flex;
-
   flex-direction: column;
 
   gap: 14px;
+
+  width: 100%;
+
+  overflow: visible;
+}
+
+
+/* ========================================
+   JIKA UCAPAN > 5
+======================================== */
+
+.rsvp-message-list.is-scrollable {
+  /*
+    Tinggi area kira-kira untuk
+    menampilkan ±5 card.
+  */
+  max-height: 520px;
+
+  overflow-y: auto;
+  overflow-x: hidden;
+
+  padding-right: 8px;
+
+  scroll-behavior: smooth;
+
+  overscroll-behavior: contain;
+
+  -webkit-overflow-scrolling: touch;
+}
+
+
+/* CHROME / SAFARI */
+
+.rsvp-message-list.is-scrollable::-webkit-scrollbar {
+  width: 4px;
+}
+
+.rsvp-message-list.is-scrollable::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.rsvp-message-list.is-scrollable::-webkit-scrollbar-thumb {
+  background: rgba(117, 63, 70, 0.35);
+
+  border-radius: 999px;
+}
+
+
+/* FIREFOX */
+
+.rsvp-message-list.is-scrollable {
+  scrollbar-width: thin;
+
+  scrollbar-color:
+    rgba(117, 63, 70, 0.35)
+    transparent;
 }
 
 /* CARD */

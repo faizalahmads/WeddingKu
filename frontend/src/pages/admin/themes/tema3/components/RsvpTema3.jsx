@@ -10,19 +10,18 @@ const smoothEase = [0.16, 1, 0.3, 1];
 
 const RsvpTema3 = ({ invite }) => {
   const [status, setStatus] = useState("");
-
   const [message, setMessage] = useState("");
-
   const [loading, setLoading] = useState(false);
 
   const [messages, setMessages] = useState([]);
-
   const [loadingMessages, setLoadingMessages] = useState(false);
 
   const [notification, setNotification] = useState({
     type: "",
     message: "",
   });
+
+  const hasMoreMessages = messages.length > 5;
 
   /* =========================
      SET DATA RSVP TAMU
@@ -324,23 +323,27 @@ const RsvpTema3 = ({ invite }) => {
           ) : messages.length === 0 ? (
             <p className="rsvp-message-empty">Belum ada doa dan ucapan.</p>
           ) : (
-            <div className="rsvp-message-list">
-              <AnimatePresence>
+            <div
+              className={`rsvp-message-list ${
+                hasMoreMessages ? "is-scrollable" : ""
+              }`}
+            >
+              <AnimatePresence initial={false}>
                 {messages.map((item, index) => (
                   <motion.div
                     key={item.id}
                     className="rsvp-message-card"
                     initial={{
                       opacity: 0,
-                      y: 20,
+                      y: 15,
                     }}
                     animate={{
                       opacity: 1,
                       y: 0,
                     }}
                     transition={{
-                      duration: 0.7,
-                      delay: index * 0.08,
+                      duration: 0.45,
+                      delay: Math.min(index * 0.04, 0.2),
                       ease: smoothEase,
                     }}
                   >

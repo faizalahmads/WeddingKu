@@ -1,6 +1,6 @@
 import { motion } from "framer-motion";
 
-import CouplePhoto from "../../../../../assets/images/tema3/bg-merah.webp";
+import CouplePhoto from "../../../../../assets/images/tema3/gallery/g9.webp";
 import Flower from "../../../../../assets/images/tema3/bungaJuntaiHijau.webp";
 
 const WeddingSideHero = () => {
@@ -30,8 +30,6 @@ const WeddingSideHero = () => {
       />
 
       <div className="wedding-side-overlay" />
-
-      <img src={Flower} alt="" className="side-flower side-flower-top" />
 
       <div className="wedding-side-content">
         <span className="side-small-title">THE WEDDING OF</span>
