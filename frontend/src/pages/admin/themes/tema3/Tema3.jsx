@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, lazy, Suspense } from "react";
 import axios from "axios";
 
 import WeddingSideHero from "./components/WeddingSideHero.JSX";
@@ -10,11 +10,15 @@ import InfoCation from "../tema3/components/InfoCatinTema3.jsx";
 import SaveTheDate from "../tema3/components/DateCatinTema3.jsx";
 import DetailCatin from "../tema3/components/DetailCatinTema3.jsx";
 import DetailAcara from "../tema3/components/DetailAcaraTema3.jsx";
-import WeddingGift from "../tema3/components/WeddingGiftTema3.jsx";
-import Rsvp from "./components/RsvpTema3.jsx";
-import LoveStory from "../tema3/components/LoveStoryTema3.jsx";
-import Gallery from "../tema3/components/GalleryTema3.jsx";
-import ClosingSection from "./components/ClosingSectionTema3.jsx";
+const LoveStory = lazy(() => import("../tema3/components/LoveStoryTema3.jsx"));
+const Gallery = lazy(() => import("../tema3/components/GalleryTema3.jsx"));
+const WeddingGift = lazy(
+  () => import("../tema3/components/WeddingGiftTema3.jsx"),
+);
+const Rsvp = lazy(() => import("./components/RsvpTema3.jsx"));
+const ClosingSection = lazy(
+  () => import("./components/ClosingSectionTema3.jsx"),
+);
 
 import { useSectionScrollLock } from "../tema1/hooks/useSectionScrollLock";
 import "../../../../assets/css/PreviewTema3.css";
@@ -112,15 +116,19 @@ const Tema3 = () => {
 
         {open && <DetailAcara />}
 
-        {open && <LoveStory />}
+        {open && (
+          <Suspense fallback={null}>
+            <LoveStory />
 
-        {open && <Gallery />}
+            <Gallery />
 
-        {open && <WeddingGift invite={invite} />}
+            <WeddingGift invite={invite} />
 
-        {open && <Rsvp invite={invite} />}
+            <Rsvp invite={invite} />
 
-        {open && <ClosingSection />}
+            <ClosingSection />
+          </Suspense>
+        )}
       </div>
 
       {open && <QRButton onClick={() => setShowQR(true)} />}

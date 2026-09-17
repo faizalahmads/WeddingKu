@@ -3,8 +3,8 @@ import { motion } from "framer-motion";
 import BungaKiri from "../../../../../assets/images/tema3/bungaJuntaiPink.webp";
 import BungaKanan from "../../../../../assets/images/tema3/bungaJuntaiHijau.webp";
 import Basmalah from "../../../../../assets/images/tema3/basmalah.svg";
-import FotoBride from "../../../../../assets/images/tema3/bride.png";
-import FotoGroom from "../../../../../assets/images/tema3/groom.png";
+import FotoBride from "../../../../../assets/images/tema3/brideStory.png";
+import FotoGroom from "../../../../../assets/images/tema3/groomStory.png";
 import FrameCatin from "../../../../../assets/images/tema3/frameCatin.svg";
 
 const smoothEase = [0.16, 1, 0.3, 1];

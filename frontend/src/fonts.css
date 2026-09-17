@@ -2,65 +2,77 @@
   font-family: 'Madelyn';
   src: url('./assets/fonts/Madelyn-Trial-Regular.woff2') format('woff2'),
        url('./assets/fonts/Madelyn-Trial-Regular.otf') format('opentype');
+  font-display: swap;
 }
 
 @font-face {
   font-family: 'Symphony Pro';
   src: url('./assets/fonts/symphony-pro-regular.woff2') format('woff2'),
   url('./assets/fonts/symphony-pro-regular.otf') format('opentype');
+  font-display: swap;
 }
 
 @font-face {
   font-family: 'Awesome Lathusca';
   src: url('./assets/fonts/Awesome-Lathusca.woff2') format('woff2'),
   url('./assets/fonts/Awesome-Lathusca.TTF') format('truetype');
+  font-display: swap;
 }
 
 @font-face {
   font-family: 'Tan Mon Cheri';
   src: url('./assets/fonts/TAN-MON-CHERI.woff2') format('woff2'),
   url('./assets/fonts/TAN-MON-CHERI.TTF') format('truetype');
+  font-display: swap;
 }
 
 @font-face {
   font-family: 'Revive 80 Signature';
   src: url('./assets/fonts/81E0C4B2-FF2D-44F0-A7B7-7481EFCF941D1632.32B7BEB9-6275-41E7-B567-04BF934.woff2') format('woff2'),
   url('./assets/fonts/81E0C4B2-FF2D-44F0-A7B7-7481EFCF941D1632.32B7BEB9-6275-41E7-B567-04BF934.TTF') format('truetype');
+  font-display: swap;
 }
 
 @font-face {
   font-family: 'Sloop';
   src: url('./assets/fonts/SLOOP-SCRIPTTHREE.woff2') format('woff2'),
   url('./assets/fonts/SLOOP-SCRIPTTHREE.TTF') format('truetype');
+  font-display: swap;
 }
 
 @font-face {
   font-family: 'Sloop Script Pro';
   src: url('./assets/fonts/SloopScriptPro-Regular.woff2') format('woff2');
+  font-display: swap;
 }
 
 @font-face {
   font-family: 'Amoresa';
   src: url('./assets/fonts/amoresa.woff2') format('woff2'),
   url('./assets/fonts/amoresa.ttf') format('truetype');
+  font-display: swap;
 }
 
 @font-face {
   font-family: 'Slight';
   src: url('./assets/fonts/Slight-Regular.woff2') format('woff2');
+  font-display: swap;
 }
 
 @font-face {
   font-family: 'Quattrocento';
   src: url('./assets/fonts/Quattrocento.woff2') format('woff2');
+  font-display: swap;
 }
 
 @font-face {
   font-family: 'Quattrocento Bold';
   src: url('./assets/fonts/QuattrocentoBold.woff2') format('woff2');
+  font-display: swap;
 }
 
 @font-face {
   font-family: 'Cormorant Garamond';
   src: url('./assets/fonts/CormorantGaramond-Regular.woff2') format('woff2');
+  font-display: swap;
 }
