@@ -281,15 +281,23 @@ router.get("/undangan/admin/:id", async (req, res) => {
 router.get("/guests/summary/:adminId", async (req, res) => {
   const { adminId } = req.params;
 
-  const query = `
-    SELECT type, category, COUNT(*) AS count
-    FROM guests
-    WHERE admin_id = ?
-    GROUP BY type, category
-  `;
+  try {
+    /* =========================
+       SUMMARY TAMU
+    ========================= */
 
-   try {
-    const [results] = await db.query(query, [adminId]);
+    const [guestResults] = await db.query(
+      `
+      SELECT
+        type,
+        category,
+        COUNT(*) AS count
+      FROM guests
+      WHERE admin_id = ?
+      GROUP BY type, category
+      `,
+      [adminId],
+    );
 
     const summary = {
       CPP: 0,
@@ -300,22 +308,66 @@ router.get("/guests/summary/:adminId", async (req, res) => {
       total: 0,
     };
 
-    results.forEach((row) => {
-      if (row.type === "CPP") summary.CPP += row.count;
-      if (row.type === "CPW") summary.CPW += row.count;
-      if (row.type === "Tamu Tambahan") summary.TamuTambahan += row.count;
+    guestResults.forEach((row) => {
+      if (row.type === "CPP") {
+        summary.CPP += row.count;
+      }
 
-      if (row.category === "VIP") summary.VIP += row.count;
-      if (row.category === "Reguler") summary.Reguler += row.count;
+      if (row.type === "CPW") {
+        summary.CPW += row.count;
+      }
+
+      if (row.type === "Tamu Tambahan") {
+        summary.TamuTambahan += row.count;
+      }
+
+      if (row.category === "VIP") {
+        summary.VIP += row.count;
+      }
+
+      if (row.category === "Reguler") {
+        summary.Reguler += row.count;
+      }
 
       summary.total += row.count;
     });
 
-    res.json(summary);
+    /* =========================
+       SUMMARY SOUVENIR
+    ========================= */
 
-     } catch (err) {
+    const [souvenirResults] = await db.query(
+      `
+      SELECT
+        souvenir,
+        COUNT(*) AS count
+      FROM guests
+      WHERE admin_id = ?
+        AND souvenir IS NOT NULL
+        AND TRIM(souvenir) != ''
+      GROUP BY souvenir
+      ORDER BY count DESC
+      `,
+      [adminId],
+    );
+
+    summary.souvenirs = souvenirResults.map((item) => ({
+      name: item.souvenir,
+      count: Number(item.count),
+    }));
+
+    summary.totalSouvenir = souvenirResults.reduce(
+      (total, item) => total + Number(item.count),
+      0,
+    );
+
+    return res.json(summary);
+  } catch (err) {
     console.error("Database error:", err);
-    res.status(500).json({ error: "Database query error" });
+
+    return res.status(500).json({
+      error: "Database query error",
+    });
   }
 });
 
@@ -537,5 +589,53 @@ router.put("/rsvp/:code", async (req, res) => {
     });
   }
 });
+
+// =====================================================
+// GET: RECENT RSVP COMMENTS
+// =====================================================
+router.get(
+  "/dashboard/recent-comments/:adminId",
+  async (req, res) => {
+    const { adminId } = req.params;
+
+    try {
+      const [rows] = await db.query(
+        `
+        SELECT
+          id,
+          name AS guest_name,
+          rsvp_status,
+          rsvp_message,
+          rsvp_at
+
+        FROM guests
+
+        WHERE admin_id = ?
+          AND rsvp_message IS NOT NULL
+          AND TRIM(rsvp_message) != ''
+
+        ORDER BY rsvp_at DESC
+        `,
+        [adminId],
+      );
+
+      return res.json({
+        success: true,
+        data: rows,
+      });
+    } catch (err) {
+      console.error(
+        "Recent comments error:",
+        err,
+      );
+
+      return res.status(500).json({
+        success: false,
+        message:
+          "Gagal mengambil komentar RSVP",
+      });
+    }
+  },
+);
 
 module.exports = router;

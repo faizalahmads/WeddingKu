@@ -16,12 +16,16 @@ import {
   IoTimeOutline,
   IoCreateOutline,
   IoEyeOutline,
+  IoGiftOutline,
 } from "react-icons/io5";
 
 ChartJS.register(ArcElement, Tooltip, Legend);
 
 const Dashboard = () => {
   const navigate = useNavigate();
+
+  const [invitation, setInvitation] = useState(null);
+  const [invitationLoading, setInvitationLoading] = useState(true);
 
   // ===== BE: state & fetch data (diambil dari kode lama) =====
   const [totalTamu, setTotalTamu] = useState({
@@ -31,9 +35,50 @@ const Dashboard = () => {
     VIP: 0,
     Reguler: 0,
     total: 0,
+
+    souvenirs: [],
   });
 
   const [isLoading, setIsLoading] = useState(true);
+
+  const [recentComments, setRecentComments] = useState([]);
+
+  const [commentsLoading, setCommentsLoading] = useState(true);
+
+  useEffect(() => {
+    const adminId = localStorage.getItem("admin_id");
+
+    if (!adminId) {
+      setCommentsLoading(false);
+      return;
+    }
+
+    const fetchRecentComments = async () => {
+      try {
+        setCommentsLoading(true);
+
+        const res = await fetch(
+          `${import.meta.env.VITE_API_URL}/api/dashboard/recent-comments/${adminId}`,
+        );
+
+        if (!res.ok) {
+          throw new Error(`HTTP error ${res.status}`);
+        }
+
+        const result = await res.json();
+
+        setRecentComments(result.data || []);
+      } catch (err) {
+        console.error("Gagal fetch komentar:", err);
+
+        setRecentComments([]);
+      } finally {
+        setCommentsLoading(false);
+      }
+    };
+
+    fetchRecentComments();
+  }, []);
 
   useEffect(() => {
     const adminId = localStorage.getItem("admin_id");
@@ -55,6 +100,127 @@ const Dashboard = () => {
         setIsLoading(false);
       });
   }, []);
+
+  useEffect(() => {
+    const adminId = localStorage.getItem("admin_id");
+
+    if (!adminId) {
+      setInvitationLoading(false);
+      return;
+    }
+
+    const fetchInvitation = async () => {
+      try {
+        setInvitationLoading(true);
+
+        const res = await fetch(
+          `${import.meta.env.VITE_API_URL}/api/invitations/admin/${adminId}`,
+        );
+
+        if (!res.ok) {
+          throw new Error(`HTTP error ${res.status}`);
+        }
+
+        const data = await res.json();
+
+        setInvitation(data);
+      } catch (err) {
+        console.error("Gagal mengambil data invitation:", err);
+
+        setInvitation(null);
+      } finally {
+        setInvitationLoading(false);
+      }
+    };
+
+    fetchInvitation();
+  }, []);
+
+  const parseLocalDate = (dateValue) => {
+    if (!dateValue) return null;
+
+    const dateString = String(dateValue).trim();
+
+    // Ambil hanya bagian YYYY-MM-DD
+    // Aman untuk:
+    // 2026-09-26
+    // 2026-09-26T00:00:00.000Z
+    // 2026-09-26 00:00:00
+
+    const match = dateString.match(/^(\d{4})-(\d{2})-(\d{2})/);
+
+    if (!match) {
+      return null;
+    }
+
+    const year = Number(match[1]);
+    const month = Number(match[2]);
+    const day = Number(match[3]);
+
+    const date = new Date(year, month - 1, day, 0, 0, 0);
+
+    if (Number.isNaN(date.getTime())) {
+      return null;
+    }
+
+    return date;
+  };
+
+  const formatEventDate = (dateString) => {
+    const date = parseLocalDate(dateString);
+
+    if (!date) {
+      return "-";
+    }
+
+    return date.toLocaleDateString("id-ID", {
+      day: "2-digit",
+      month: "long",
+      year: "numeric",
+    });
+  };
+
+  const calculateCountdown = (dateString) => {
+    const targetDate = parseLocalDate(dateString);
+
+    if (!targetDate) {
+      return {
+        days: null,
+        text: "Event date not set",
+        status: "empty",
+      };
+    }
+
+    const today = new Date();
+
+    today.setHours(0, 0, 0, 0);
+
+    const diffTime = targetDate.getTime() - today.getTime();
+
+    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+
+    if (diffDays > 0) {
+      return {
+        days: diffDays,
+        text: "Days Remaining",
+        status: "upcoming",
+      };
+    }
+
+    if (diffDays === 0) {
+      return {
+        days: 0,
+        text: "Today",
+        status: "today",
+      };
+    }
+
+    return {
+      days: Math.abs(diffDays),
+      text: "Days Ago",
+      status: "finished",
+    };
+  };
 
   // 🔹 Dataset untuk chart
   const data = {
@@ -94,6 +260,13 @@ const Dashboard = () => {
     { name: "Reguler", count: totalTamu.Reguler, max: 10 },
   ];
 
+  const kategoriSouvenir = totalTamu.souvenirs || [];
+
+  const totalSouvenir = kategoriSouvenir.reduce(
+    (total, item) => total + Number(item.count || 0),
+    0,
+  );
+
   // 🔹 Hitung persentase RSVP (contoh: confirmed dari total, fallback 0 jika total 0)
   const confirmedCount = totalTamu.CPP + totalTamu.CPW; // sesuaikan dengan field asli jika BE punya field "confirmed"
   const responseRate =
@@ -110,6 +283,12 @@ const Dashboard = () => {
   if (isLoading) {
     return <div className="text-center py-5">Loading data...</div>;
   }
+
+  const eventDate =
+    invitation?.wedding_date ||
+    null;
+
+  const eventCountdown = calculateCountdown(eventDate);
 
   return (
     <div>
@@ -254,6 +433,69 @@ const Dashboard = () => {
                 </div>
               </div>
             </div>
+
+            <div className="col-12 col-md-6">
+              <div className="card stat-card h-100">
+                <div className="card-body">
+                  <p className="stat-label mb-3">CATEGORY SOUVENIR</p>
+
+                  {kategoriSouvenir.length === 0 ? (
+                    <p className="stat-sub mb-0">Belum ada data souvenir</p>
+                  ) : (
+                    kategoriSouvenir.map((item, index) => {
+                      const percentage =
+                        totalTamu.total > 0
+                          ? Math.min(
+                              (Number(item.count) / totalSouvenir) * 100,
+                              100,
+                            )
+                          : 0;
+
+                      return (
+                        <div key={item.name}>
+                          <div className="category-row mb-2">
+                            <span>{item.name}</span>
+
+                            <span className="category-value">{item.count}</span>
+                          </div>
+
+                          <div
+                            className={`progress category-progress ${
+                              index !== kategoriSouvenir.length - 1
+                                ? "mb-3"
+                                : ""
+                            }`}
+                          >
+                            <div
+                              className="progress-bar bg-dark"
+                              style={{
+                                width: `${percentage}%`,
+                              }}
+                            />
+                          </div>
+                        </div>
+                      );
+                    })
+                  )}
+                </div>
+              </div>
+            </div>
+
+            <div className="col-12 col-md-6">
+              <div className="card stat-card h-100">
+                <div className="card-body">
+                  <div className="stat-icon mb-2">
+                    <IoGiftOutline size={18} />
+                  </div>
+
+                  <p className="stat-label mb-1">TOTAL SOUVENIR</p>
+
+                  <h3 className="stat-value mb-1">{totalSouvenir}</h3>
+
+                  <p className="stat-sub mb-0">Souvenir Assigned</p>
+                </div>
+              </div>
+            </div>
           </div>
 
           {/* Row 3: Invitation status + Countdown/Breakdown */}
@@ -305,17 +547,40 @@ const Dashboard = () => {
               <div className="card countdown-card">
                 <div className="card-body">
                   <p className="countdown-label mb-2">Event Countdown</p>
-                  <h2 className="countdown-value mb-3">
-                    14 <span className="countdown-unit">Days Remaining</span>
-                  </h2>
+
+                  {invitationLoading ? (
+                    <p className="countdown-loading mb-3">Loading...</p>
+                  ) : eventCountdown.days === null ? (
+                    <h2 className="countdown-value mb-3">
+                      -
+                      <span className="countdown-unit">Event date not set</span>
+                    </h2>
+                  ) : eventCountdown.status === "today" ? (
+                    <h2 className="countdown-value mb-3">Today</h2>
+                  ) : (
+                    <h2 className="countdown-value mb-3">
+                      {eventCountdown.days}
+
+                      <span className="countdown-unit">
+                        {eventCountdown.text}
+                      </span>
+                    </h2>
+                  )}
 
                   <div className="d-flex justify-content-between countdown-detail">
                     <span>Date</span>
-                    <span className="fw-semibold">Dec 24, 2024</span>
+
+                    <span className="fw-semibold countdown-detail-value">
+                      {formatEventDate(invitation?.wedding_date)}
+                    </span>
                   </div>
+
                   <div className="d-flex justify-content-between countdown-detail">
                     <span>Venue</span>
-                    <span className="fw-semibold">Grand Ballroom</span>
+
+                    <span className="fw-semibold countdown-detail-value">
+                      {invitation?.location || "-"}
+                    </span>
                   </div>
                 </div>
               </div>
@@ -355,25 +620,35 @@ const Dashboard = () => {
             </div>
           </div>
 
-          {/* Row 4: Recent activity */}
+          {/* Row 4: Recent Comments */}
           <div className="row g-3">
             <div className="col-12 col-lg-8">
               <div className="card">
                 <div className="card-body">
                   <div className="d-flex align-items-center gap-2 mb-3">
                     <IoTimeOutline size={16} />
-                    <span className="stat-label mb-0">Recent Activity</span>
+
+                    <span className="stat-label mb-0">Recent Comments</span>
                   </div>
 
-                  <ActivityItem
-                    name="Amel confirmed RSVP"
-                    time="2 minutes ago"
-                  />
-                  <ActivityItem
-                    name="New guest added: John Doe"
-                    time="1 hour ago"
-                    isLast
-                  />
+                  {commentsLoading ? (
+                    <div className="activity-empty">Loading comments...</div>
+                  ) : recentComments.length === 0 ? (
+                    <div className="activity-empty">Belum ada doa & ucapan</div>
+                  ) : (
+                    <div className="recent-activity-list">
+                      {recentComments.map((comment, index) => (
+                        <CommentItem
+                          key={comment.id}
+                          name={comment.guest_name}
+                          message={comment.rsvp_message}
+                          status={comment.rsvp_status}
+                          time={formatRelativeTime(comment.rsvp_at)}
+                          isLast={index === recentComments.length - 1}
+                        />
+                      ))}
+                    </div>
+                  )}
                 </div>
               </div>
             </div>
@@ -386,18 +661,94 @@ const Dashboard = () => {
   );
 };
 
-const ActivityItem = ({ name, time, isLast }) => (
-  <div
-    className={`d-flex align-items-center justify-content-between activity-item ${isLast ? "" : "mb-2"}`}
-  >
-    <div className="d-flex align-items-center gap-2">
+const getActivityText = (activity) => {
+  switch (activity.activity_type) {
+    case "guest_added":
+      return `Tamu baru ditambahkan: ${activity.guest_name}`;
+
+    case "rsvp":
+      if (activity.activity_status === "hadir") {
+        return `${activity.guest_name} mengonfirmasi hadir`;
+      }
+
+      if (activity.activity_status === "tidak_hadir") {
+        return `${activity.guest_name} mengonfirmasi tidak hadir`;
+      }
+
+      return `${activity.guest_name} memperbarui RSVP`;
+
+    case "checkin":
+      return `${activity.guest_name} telah check-in`;
+
+    default:
+      return activity.guest_name;
+  }
+};
+
+const formatRelativeTime = (date) => {
+  if (!date) return "-";
+
+  const activityDate = new Date(date);
+  const now = new Date();
+
+  const diff = now.getTime() - activityDate.getTime();
+
+  const seconds = Math.floor(diff / 1000);
+
+  if (seconds < 60) {
+    return "Just now";
+  }
+
+  const minutes = Math.floor(seconds / 60);
+
+  if (minutes < 60) {
+    return `${minutes} minute${minutes > 1 ? "s" : ""} ago`;
+  }
+
+  const hours = Math.floor(minutes / 60);
+
+  if (hours < 24) {
+    return `${hours} hour${hours > 1 ? "s" : ""} ago`;
+  }
+
+  const days = Math.floor(hours / 24);
+
+  if (days < 7) {
+    return `${days} day${days > 1 ? "s" : ""} ago`;
+  }
+
+  return activityDate.toLocaleDateString("id-ID", {
+    day: "2-digit",
+    month: "short",
+    year: "numeric",
+  });
+};
+
+const CommentItem = ({ name, message, status, time, isLast }) => (
+  <div className={`activity-item ${isLast ? "" : "mb-3"}`}>
+    <div className="d-flex align-items-start gap-2">
       <div className="activity-avatar" />
-      <div>
-        <p className="activity-name mb-0">{name}</p>
+
+      <div className="activity-content">
+        <div className="d-flex align-items-center gap-2">
+          <p className="activity-name mb-0">{name}</p>
+
+          {status && (
+            <span
+              className={`activity-status ${
+                status === "hadir" ? "hadir" : "tidak-hadir"
+              }`}
+            >
+              {status === "hadir" ? "Hadir" : "Tidak Hadir"}
+            </span>
+          )}
+        </div>
+
+        <p className="activity-text mb-1">“{message}”</p>
+
         <p className="activity-time mb-0">{time}</p>
       </div>
     </div>
-    <button className="btn btn-link btn-sm activity-view">View</button>
   </div>
 );
 
