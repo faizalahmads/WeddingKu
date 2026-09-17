@@ -1,6 +1,6 @@
 import { motion } from "framer-motion";
 
-import BgLetter from "../../../../../assets/images/tema3/bgLetter.svg";
+import BgLetter from "../../../../../assets/images/tema3/bgLetter.webp";
 
 const smoothEase = [0.25, 0.1, 0.25, 1];
 

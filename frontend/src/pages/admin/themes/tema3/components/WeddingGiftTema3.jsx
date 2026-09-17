@@ -1,34 +1,18 @@
 import React, { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import "bootstrap/dist/css/bootstrap.min.css";
 
 import { IoCopyOutline, IoCheckmarkOutline } from "react-icons/io5";
 import { FaWhatsapp } from "react-icons/fa";
 
 import gift from "../../../../../assets/images/tema3/giftIcon.svg";
-import bungaPink from "../../../../../assets/images/tema3/bungaJuntaiPink.svg";
-import bungaHijau from "../../../../../assets/images/tema3/bungaJuntaiHijau.svg";
+import bungaPink from "../../../../../assets/images/tema3/bungaJuntaiPink.webp";
+import bungaHijau from "../../../../../assets/images/tema3/bungaJuntaiHijau.webp";
 
 /* ========================================
    EASING
 ======================================== */
 
 const smoothEase = [0.16, 1, 0.3, 1];
-
-/* ========================================
-   SECTION
-======================================== */
-
-const sectionVariant = {
-  hidden: {},
-
-  show: {
-    transition: {
-      staggerChildren: 0.28,
-      delayChildren: 0.2,
-    },
-  },
-};
 
 /* ========================================
    FADE UP
@@ -214,15 +198,8 @@ const WeddingGift = ({ invite }) => {
   };
 
   return (
-    <motion.section
+    <section
       className="section8"
-      initial="hidden"
-      whileInView="show"
-      viewport={{
-        once: true,
-        amount: 0.2,
-      }}
-      variants={sectionVariant}
     >
       {/* BUNGA ATAS KIRI */}
       <img
@@ -524,7 +501,7 @@ const WeddingGift = ({ invite }) => {
         alt=""
         className="gift-flower gift-flower-bottom-right"
       />
-    </motion.section>
+    </section>
   );
 };
 

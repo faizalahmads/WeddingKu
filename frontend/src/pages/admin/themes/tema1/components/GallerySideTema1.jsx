@@ -1,15 +1,15 @@
 import { useState, useEffect, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 
-import Foto1 from "../../../../../assets/images/tema3/gallery/g1.jpg";
-import Foto2 from "../../../../../assets/images/tema3/gallery/g2.jpg";
-import Foto3 from "../../../../../assets/images/tema3/gallery/g3.jpg";
-import Foto4 from "../../../../../assets/images/tema3/gallery/g4.jpg";
-import Foto5 from "../../../../../assets/images/tema3/gallery/g5.jpg";
-import Foto6 from "../../../../../assets/images/tema3/gallery/g6.jpg";
-import Foto7 from "../../../../../assets/images/tema3/gallery/g7.jpg";
-import Foto8 from "../../../../../assets/images/tema3/gallery/g8.jpg";
-import Foto9 from "../../../../../assets/images/tema3/gallery/g9.jpg";
+import Foto1 from "../../../../../assets/images/tema3/gallery/g1.webp";
+import Foto2 from "../../../../../assets/images/tema3/gallery/g2.webp";
+import Foto3 from "../../../../../assets/images/tema3/gallery/g3.webp";
+import Foto4 from "../../../../../assets/images/tema3/gallery/g4.webp";
+import Foto5 from "../../../../../assets/images/tema3/gallery/g5.webp";
+import Foto6 from "../../../../../assets/images/tema3/gallery/g6.webp";
+import Foto7 from "../../../../../assets/images/tema3/gallery/g7.webp";
+import Foto8 from "../../../../../assets/images/tema3/gallery/g8.webp";
+import Foto9 from "../../../../../assets/images/tema3/gallery/g9.webp";
 
 const GallerySideTema1 = () => {
   const [currentSlide, setCurrentSlide] = useState(0);

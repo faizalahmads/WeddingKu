@@ -1,137 +1,224 @@
+/* =========================================
+   DESKTOP LAYOUT
+========================================= */
+
 .desktopLayout {
-  display: flex;
+  position: relative;
+
   width: 100%;
+
   min-height: 100dvh;
+
+  display: flex;
+
+  /* PENTING */
+  justify-content: flex-end;
+
+  background: #111;
 }
 
-.gallery-side {
-  position: sticky;
-  top: 0;
-  align-self: flex-start;
 
-  flex: 1;
+/* =========================================
+   SIDE HERO DESKTOP
+========================================= */
+
+.wedding-side {
+  position: fixed;
+
+  top: 0;
+  bottom: 0;
+  left: 0;
+
+  /* sisakan 463px di kanan */
+  right: 463px;
+
   height: 100dvh;
 
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  gap: 20px;
-
   overflow: hidden;
-  padding: 40px;
+
+  background: #111;
+
+  z-index: 0;
 }
 
-.gallery-main {
-  position: relative;
-  z-index: 3;
-  flex: 1;
-  width: 100%;
 
-  display: flex;
-  justify-content: center;
-  align-items: center;
-
-  overflow: hidden;
-}
-
-.gallery-thumbs {
-  position: relative;
-  z-index: 3;
-
-  display: flex;
-  gap: 10px;
-  max-width: 100%;
-  overflow-x: auto;
-  padding: 4px;
-}
-
-.thumb-img {
-  width: 90px;
-  height: 60px;
-  object-fit: cover;
-  border-radius: 8px;
-
-  opacity: 0.55;
-  border: 2px solid transparent;
-  cursor: pointer;
-  flex-shrink: 0;
-
-  transition: all 0.3s ease;
-}
-
-.thumb-img:hover {
-  opacity: 0.85;
-}
-
-.thumb-img.active {
-  opacity: 1;
-  border-color: #FFF6E7;
-  transform: scale(1.05);
-}
+/* =========================================
+   UNDANGAN
+========================================= */
 
 .wrapperTema1 {
   position: relative;
-  width: 100%;
+
+  /* PENTING */
+  width: 463px;
   max-width: 463px;
+
   min-height: 100dvh;
+
+  /* PENTING */
+  margin-left: auto;
+
   overflow: hidden;
-  box-shadow: -10px 0 30px rgba(0,0,0,0.25);
+
+  background: #590000;
+
+  box-shadow:
+    -10px 0 30px rgba(0, 0, 0, 0.25);
+
+  z-index: 10;
 }
 
-.gallery-bg {
+
+/* FOTO */
+
+.wedding-side-bg {
   position: absolute;
+
   inset: 0;
+
   width: 100%;
   height: 100%;
+
   object-fit: cover;
-  filter: blur(18px);
-  transform: scale(1.15);
-  opacity: 0.45;
+  object-position: center;
+
+  display: block;
+
+  pointer-events: none;
+
+  backface-visibility: hidden;
+}
+
+
+/* OVERLAY */
+
+.wedding-side-overlay {
+  position: absolute;
+
+  inset: 0;
+
+  background:
+    linear-gradient(
+      180deg,
+      rgba(5, 15, 10, 0.2) 0%,
+      rgba(5, 15, 10, 0.55) 100%
+    );
+
   z-index: 1;
 }
 
-.gallery-overlay {
-  position: absolute;
-  inset: 0;
-  background: #590000;
-  z-index: 2;
-}
 
-.gallery-img {
+/* CONTENT */
+
+.wedding-side-content {
   position: absolute;
 
-  max-width: 78%;
-  max-height: 78vh;
+  left: 50%;
+  bottom: 10%;
 
+  transform: translateX(-50%);
 
-  object-fit: cover;
+  width: 90%;
 
-  border-radius: 32px;
-  border: 1px solid rgba(255,255,255,0.08);
-  box-shadow:
-    0 30px 80px rgba(0,0,0,0.35),
-    0 10px 30px rgba(0,0,0,0.2);
+  text-align: center;
+
+  color: #fff6e7;
 
   z-index: 3;
 }
 
-.gallery-side::after {
-  content: "";
 
+.side-small-title {
+  display: block;
+
+  margin-bottom: 14px;
+
+  font-size: 12px;
+
+  letter-spacing: 5px;
+}
+
+
+.wedding-side-content h1 {
+  margin: 0;
+
+  font-family: "Sloop Script Pro", cursive;
+
+  font-size: clamp(55px, 6vw, 110px);
+
+  font-weight: 400;
+
+  line-height: 0.9;
+}
+
+
+.wedding-side-content h1 span {
+  display: inline-block;
+
+  margin: 0 20px;
+}
+
+
+.side-divider {
+  width: 50px;
+  height: 1px;
+
+  margin: 28px auto;
+
+  background: rgba(255, 246, 231, 0.7);
+}
+
+
+.side-date {
+  margin: 0 0 8px;
+
+  font-size: 16px;
+
+  letter-spacing: 3px;
+}
+
+
+.side-location {
+  margin: 0;
+
+  font-size: 13px;
+
+  opacity: 0.8;
+
+  letter-spacing: 1px;
+}
+
+
+/* ORNAMEN */
+
+.side-flower {
   position: absolute;
 
-  width: 500px;
-  height: 500px;
-
-  background: rgba(255,255,255,0.05);
-
-  filter: blur(120px);
-
-  border-radius: 50%;
+  pointer-events: none;
 
   z-index: 2;
 }
+
+
+.side-flower-top {
+  top: -5%;
+  left: -3%;
+
+  width: 30%;
+
+  opacity: 0.8;
+}
+
+
+/* MOBILE */
+
+@media (max-width: 768px) {
+  .wedding-side {
+    display: none;
+  }
+}
+
+/*BATES GALLERY*/
 
 .qr-toggle-btn {
   position: fixed;
@@ -205,7 +292,7 @@
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  background-image: url('../../assets/images/tema3/hordeng.png');
+  background-image: url('../../assets/images/tema3/hordeng.webp');
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
@@ -216,7 +303,7 @@
   width: 100%;
   min-height: 100dvh;
 
-  background-image: url('../../assets/images/tema3/bg-merah.png');
+  background-image: url('../../assets/images/tema3/bg-merah.webp');
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
@@ -232,7 +319,7 @@
   position: relative;
   min-height: 100dvh;
 
-  background-image: url('../../assets/images/tema3/hordeng.png');
+  background-image: url('../../assets/images/tema3/hordeng.webp');
   background-size: 240% 120%;
   background-position: 30% center;
   background-repeat: no-repeat;
@@ -247,7 +334,7 @@
   position: relative;
   width: 100%;
   min-height: 100dvh;
-  background-image: url('../../assets/images/tema3/bg-merah.png');
+  background-image: url('../../assets/images/tema3/bg-merah.webp');
   background-size: 100% auto;
   background-repeat: repeat-y;
   display: flex;
@@ -266,7 +353,7 @@
   align-items: center;
   overflow: hidden;
   z-index: 1;
-  background-image: url('../../assets/images/tema3/bg-merah.png');
+  background-image: url('../../assets/images/tema3/bg-merah.webp');
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
@@ -294,7 +381,7 @@
   position: absolute;
   inset: 0;
 
-  background-image: url('../../assets/images/tema3/bg-hijau.png');
+  background-image: url('../../assets/images/tema3/bg-hijau.webp');
   background-size: 100% 100%;
   background-position: center;
   background-repeat: no-repeat;
@@ -316,7 +403,7 @@
   width: 100%;
   min-height: 100dvh;
 
-  background-image: url('../../assets/images/tema3/bg-hijau.png');
+  background-image: url('../../assets/images/tema3/bg-hijau.webp');
   background-size: 100% 100%;
   background-position: center;
   background-repeat: no-repeat;
@@ -332,7 +419,7 @@
   width: 100%;
   min-height: 100dvh;
 
-  background-image: url('../../assets/images/tema3/bg-merah.png');
+  background-image: url('../../assets/images/tema3/bg-merah.webp');
   background-size: 100% 100%;
   background-position: center;
   background-repeat: no-repeat;
@@ -348,7 +435,7 @@
   width: 100%;
   min-height: 100dvh;
 
-  background-image: url('../../assets/images/tema3/bg-merah.png');
+  background-image: url('../../assets/images/tema3/bg-merah.webp');
   background-size: 100% 100%;
   background-position: center;
   background-repeat: no-repeat;
@@ -364,7 +451,7 @@
   width: 100%;
   min-height: 100dvh;
 
-  background-image: url('../../assets/images/tema3/bg-hijau.png');
+  background-image: url('../../assets/images/tema3/bg-hijau.webp');
   background-size: 100% 100%;
   background-position: center;
   background-repeat: no-repeat;
@@ -380,7 +467,7 @@
   width: 100%;
   min-height: 100dvh;
 
-  background-image: url('../../assets/images/tema3/hordeng.png');
+  background-image: url('../../assets/images/tema3/hordeng.webp');
   background-size: 100% 100%;
   background-position: center;
   background-repeat: no-repeat;

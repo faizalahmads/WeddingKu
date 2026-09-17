@@ -5,25 +5,10 @@ import { IoHeart } from "react-icons/io5";
 
 import photoStory1 from "../../../../../assets/images/tema3/brideStory.png";
 import photoStory2 from "../../../../../assets/images/tema3/groomStOry.png";
-import bungaStory from "../../../../../assets/images/tema3/bungaJuntaiHijau.svg";
+import bungaStory from "../../../../../assets/images/tema3/bungaJuntaiHijau.webp";
 import waxSeal from "../../../../../assets/images/tema3/waxSeal.svg";
 
 const smoothEase = [0.16, 1, 0.3, 1];
-
-/* ========================================
-   SECTION
-======================================== */
-
-const sectionVariant = {
-  hidden: {},
-
-  show: {
-    transition: {
-      staggerChildren: 0.3,
-      delayChildren: 0.15,
-    },
-  },
-};
 
 /* ========================================
    HEADING
@@ -109,15 +94,8 @@ const LoveStoryTema3 = ({ invite }) => {
   const stories = defaultStories;
 
   return (
-    <motion.section
+    <section
       className="section9"
-      initial="hidden"
-      whileInView="show"
-      viewport={{
-        once: true,
-        amount: 0.2,
-      }}
-      variants={sectionVariant}
     >
       <div className="container-fluid px-0">
         {/* =====================================
@@ -361,7 +339,7 @@ const LoveStoryTema3 = ({ invite }) => {
           </motion.div>
         </div>
       </div>
-    </motion.section>
+    </section>
   );
 };
 

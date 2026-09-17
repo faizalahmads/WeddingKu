@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
 
-import GallerySide from "../tema1/components/GallerySideTema1";
+import WeddingSideHero from "./components/WeddingSideHero.JSX";
 import CatinSide from "../tema1/components/CatinSectionTema1.jsx";
 import EnvelopeSection from "../tema1/components/EnvelopeSectionTema1.jsx";
 import WeddingCardSection from "../tema1/components/WeddingCardSectionTema1.jsx";
@@ -82,7 +82,7 @@ const Tema3 = () => {
 
   return (
     <div className="desktopLayout">
-      <GallerySide />
+      <WeddingSideHero />
 
       <div className="wrapperTema1">
         <EnvelopeSection

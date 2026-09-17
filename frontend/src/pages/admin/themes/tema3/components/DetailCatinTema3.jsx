@@ -1,7 +1,7 @@
 import { motion } from "framer-motion";
 
-import BungaKiri from "../../../../../assets/images/tema3/bungaJuntaiPink.svg";
-import BungaKanan from "../../../../../assets/images/tema3/bungaJuntaiHijau.svg";
+import BungaKiri from "../../../../../assets/images/tema3/bungaJuntaiPink.webp";
+import BungaKanan from "../../../../../assets/images/tema3/bungaJuntaiHijau.webp";
 import Basmalah from "../../../../../assets/images/tema3/basmalah.svg";
 import FotoBride from "../../../../../assets/images/tema3/bride.png";
 import FotoGroom from "../../../../../assets/images/tema3/groom.png";

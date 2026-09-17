@@ -40,7 +40,6 @@ const Cover = () => {
           <img
             src={coverImage}
             alt="Wedding Couple"
-            loading="lazy"
             decoding="async"
           />
 

@@ -3,10 +3,10 @@ import { motion } from "framer-motion";
 import "bootstrap/dist/css/bootstrap.min.css";
 import { GiButterfly } from "react-icons/gi";
 
-import bungaKiriAtas from "../../../../../assets/images/tema3/bungaJuntaiHijau.svg";
-import bungaKananAtas from "../../../../../assets/images/tema3/bungaJuntaiHijau.svg";
-import frameEnvelope from "../../../../../assets/images/tema3/frameEnvelope.png";
-import bungaKananBawah from "../../../../../assets/images/tema3/bungaJuntaiPink.svg";
+import bungaKiriAtas from "../../../../../assets/images/tema3/bungaJuntaiHijau.webp";
+import bungaKananAtas from "../../../../../assets/images/tema3/bungaJuntaiHijau.webp";
+import frameEnvelope from "../../../../../assets/images/tema3/frameEnvelope.webp";
+import bungaKananBawah from "../../../../../assets/images/tema3/bungaJuntaiPink.webp";
 
 const smoothEase = [0.16, 1, 0.3, 1];
 
